@@ -1,0 +1,69 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		}, {
+			"path": "pages/category/category",
+			"style": {
+				"navigationBarTitleText": "分类",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/book/book",
+			"style": {
+				"navigationBarTitleText": "书架",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/user/user",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"enablePullDownRefresh": false
+			}
+
+		}
+	],
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#1296db",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [{
+				"pagePath": "pages/index/index",
+				"iconPath": "static/icon/home.png",
+				"selectedIconPath": "static/icon/home-select.png",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/category/category",
+				"iconPath": "static/icon/category.png",
+				"selectedIconPath": "static/icon/category-select.png",
+				"text": "分类"
+			},
+			{
+				"pagePath": "pages/book/book",
+				"iconPath": "static/icon/book.png",
+				"selectedIconPath": "static/icon/book-select.png",
+				"text": "书架"
+			},
+			{
+				"pagePath": "pages/user/user",
+				"iconPath": "static/icon/user.png",
+				"selectedIconPath": "static/icon/user-select.png",
+				"text": "用户"
+			}
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "漫画",
+		"navigationBarBackgroundColor": "#fff",
+		"backgroundColor": "#F8F8F8"
+	},
+	"uniIdRouter": {}
+}

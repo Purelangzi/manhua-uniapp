@@ -1,0 +1,47 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/category/category",
+    "pages/book/book",
+    "pages/user/user"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "漫画",
+    "navigationBarBackgroundColor": "#fff",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#1296db",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/icon/home.png",
+        "selectedIconPath": "static/icon/home-select.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/category/category",
+        "iconPath": "static/icon/category.png",
+        "selectedIconPath": "static/icon/category-select.png",
+        "text": "分类"
+      },
+      {
+        "pagePath": "pages/book/book",
+        "iconPath": "static/icon/book.png",
+        "selectedIconPath": "static/icon/book-select.png",
+        "text": "书架"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "iconPath": "static/icon/user.png",
+        "selectedIconPath": "static/icon/user-select.png",
+        "text": "用户"
+      }
+    ]
+  },
+  "usingComponents": {}
+}
