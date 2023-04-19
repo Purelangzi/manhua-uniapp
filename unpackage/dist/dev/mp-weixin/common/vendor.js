@@ -1,11 +1,4 @@
 "use strict";
-const _export_sfc = (sfc, props) => {
-  const target = sfc.__vccOpts || sfc;
-  for (const [key, val] of props) {
-    target[key] = val;
-  }
-  return target;
-};
 function makeMap(str, expectsLowerCase) {
   const map = /* @__PURE__ */ Object.create(null);
   const list = str.split(",");
@@ -159,6 +152,46 @@ const looseToNumber = (val) => {
   const n2 = parseFloat(val);
   return isNaN(n2) ? val : n2;
 };
+const LOCALE_ZH_HANS = "zh-Hans";
+const LOCALE_ZH_HANT = "zh-Hant";
+const LOCALE_EN = "en";
+const LOCALE_FR = "fr";
+const LOCALE_ES = "es";
+function include(str, parts) {
+  return !!parts.find((part) => str.indexOf(part) !== -1);
+}
+function startsWith(str, parts) {
+  return parts.find((part) => str.indexOf(part) === 0);
+}
+function normalizeLocale(locale, messages) {
+  if (!locale) {
+    return;
+  }
+  locale = locale.trim().replace(/_/g, "-");
+  if (messages && messages[locale]) {
+    return locale;
+  }
+  locale = locale.toLowerCase();
+  if (locale === "chinese") {
+    return LOCALE_ZH_HANS;
+  }
+  if (locale.indexOf("zh") === 0) {
+    if (locale.indexOf("-hans") > -1) {
+      return LOCALE_ZH_HANS;
+    }
+    if (locale.indexOf("-hant") > -1) {
+      return LOCALE_ZH_HANT;
+    }
+    if (include(locale, ["-tw", "-hk", "-mo", "-cht"])) {
+      return LOCALE_ZH_HANT;
+    }
+    return LOCALE_ZH_HANS;
+  }
+  const lang = startsWith(locale, [LOCALE_EN, LOCALE_FR, LOCALE_ES]);
+  if (lang) {
+    return lang;
+  }
+}
 const LINEFEED = "\n";
 const SLOT_DEFAULT_NAME = "d";
 const ON_SHOW = "onShow";
@@ -384,46 +417,6 @@ E.prototype = {
   }
 };
 var E$1 = E;
-const LOCALE_ZH_HANS = "zh-Hans";
-const LOCALE_ZH_HANT = "zh-Hant";
-const LOCALE_EN = "en";
-const LOCALE_FR = "fr";
-const LOCALE_ES = "es";
-function include(str, parts) {
-  return !!parts.find((part) => str.indexOf(part) !== -1);
-}
-function startsWith(str, parts) {
-  return parts.find((part) => str.indexOf(part) === 0);
-}
-function normalizeLocale(locale, messages) {
-  if (!locale) {
-    return;
-  }
-  locale = locale.trim().replace(/_/g, "-");
-  if (messages && messages[locale]) {
-    return locale;
-  }
-  locale = locale.toLowerCase();
-  if (locale === "chinese") {
-    return LOCALE_ZH_HANS;
-  }
-  if (locale.indexOf("zh") === 0) {
-    if (locale.indexOf("-hans") > -1) {
-      return LOCALE_ZH_HANS;
-    }
-    if (locale.indexOf("-hant") > -1) {
-      return LOCALE_ZH_HANT;
-    }
-    if (include(locale, ["-tw", "-hk", "-mo", "-cht"])) {
-      return LOCALE_ZH_HANT;
-    }
-    return LOCALE_ZH_HANS;
-  }
-  const lang = startsWith(locale, [LOCALE_EN, LOCALE_FR, LOCALE_ES]);
-  if (lang) {
-    return lang;
-  }
-}
 function getBaseSystemInfo() {
   return wx.getSystemInfoSync();
 }
@@ -1576,6 +1569,13 @@ var protocols = /* @__PURE__ */ Object.freeze({
 });
 const wx$1 = initWx();
 var index = initUni(shims, protocols, wx$1);
+const _export_sfc = (sfc, props) => {
+  const target = sfc.__vccOpts || sfc;
+  for (const [key, val] of props) {
+    target[key] = val;
+  }
+  return target;
+};
 function warn$1(msg, ...args) {
   console.warn(`[Vue warn] ${msg}`, ...args);
 }
@@ -7619,6 +7619,7 @@ exports._export_sfc = _export_sfc;
 exports.createPinia = createPinia;
 exports.createSSRApp = createSSRApp;
 exports.defineComponent = defineComponent;
+exports.defineStore = defineStore;
 exports.e = e;
 exports.index = index;
 exports.n = n;

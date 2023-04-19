@@ -2,6 +2,8 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const common_vendor = require("./common/vendor.js");
 const uni_modules_vkUviewUi_index = require("./uni_modules/vk-uview-ui/index.js");
+const uni_modules_piniaPluginUnistorage_index = require("./uni_modules/pinia-plugin-unistorage/index.js");
+const utils_showMsg = require("./utils/showMsg.js");
 require("./uni_modules/vk-uview-ui/libs/mixin/mixin.js");
 require("./uni_modules/vk-uview-ui/libs/request/index.js");
 require("./uni_modules/vk-uview-ui/libs/function/deepMerge.js");
@@ -47,8 +49,11 @@ const _sfc_main = {
 const App = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__file", "F:/HBuilderProjects/manhua/App.vue"]]);
 function createApp() {
   const app = common_vendor.createSSRApp(App);
+  const store = common_vendor.createPinia();
+  store.use(uni_modules_piniaPluginUnistorage_index.createUnistorage());
   app.use(uni_modules_vkUviewUi_index.uView);
-  app.use(common_vendor.createPinia());
+  app.use(store);
+  common_vendor.index.$showMsg = utils_showMsg.showToast;
   return {
     app,
     Pinia: common_vendor.Pinia

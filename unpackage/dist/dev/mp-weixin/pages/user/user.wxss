@@ -44,10 +44,13 @@
   padding: 0 15%;
 }
 .user-login-popup.data-v-0f7520f0 .u-drawer-content {
-  padding: 0 60rpx;
+  padding: 0 65rpx;
+}
+.user-login-popup.data-v-0f7520f0 .u-drawer__scroll-view {
+  height: auto;
 }
 .user-login-popup .popup-title.data-v-0f7520f0 {
-  margin-top: 20rpx;
+  margin: 20rpx 0;
   text-align: center;
   font-weight: bold;
 }
@@ -58,4 +61,9 @@
   margin: 15rpx 0;
   text-align: right;
   color: #cdcdcd;
+}
+.user-login-popup .user-wx .other-login.data-v-0f7520f0 {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 20rpx;
 }

@@ -1,5 +1,3 @@
-const baseUrl = 'http://127.0.0.1:7001'
-
 type Data = string | object | ArrayBuffer
 interface ReqParams {
 	url : string,
@@ -7,9 +5,10 @@ interface ReqParams {
 	data ?: Data,
 }
 
-const request = (options : ReqParams) => {
+const baseUrl = 'http://127.0.0.1:7001'
+const request = (options : ReqParams):Promise<any> => {
 	uni.showLoading({
-		title: '数据加载中'
+		title: '加载中'
 	})
 	let header = {}
 	switch (options.method) {
@@ -24,6 +23,12 @@ const request = (options : ReqParams) => {
 			}
 			break;
 	}
+	
+	const userJson = uni.getStorageSync('USER')
+	if(userJson){
+		const {token} = JSON.parse(userJson)
+		header['token'] = 'Bearer' + token
+	}
 	return new Promise((resolve, reject) => {
 		uni.request({
 			url: baseUrl + options.url,
@@ -36,26 +41,15 @@ const request = (options : ReqParams) => {
 				} else {
 					switch (res.statusCode) {
 						case 400:
-							uni.showToast({
-								title: '错误的请求',
-								icon: "error"
-							})
+							uni.$showMsg({title:'错误的请求'})
 							reject(res)
 							break;
 						case 401:
-							uni.showToast({
-								title: 'Token 过期',
-								icon: "error",
-								duration: 1000
-							})
+							uni.$showMsg({title:'Token 过期'})
 							reject(res)
 							break;
 						default:
-							uni.showToast({
-								title: `${(res.data as any).msg}` || '错误',
-								icon: "error",
-								duration: 3000
-							})
+							uni.$showMsg({msg:(res.data as any).msg})
 							reject(res)
 							break;
 					}
@@ -70,6 +64,7 @@ const request = (options : ReqParams) => {
 		})
 	})
 }
+
 export default {
 	get(url : string, data ?: Data) {
 		return request({ url, method: "GET", data })

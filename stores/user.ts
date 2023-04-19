@@ -7,11 +7,12 @@ export const useUser = defineStore('USER', {
 		userInfo:{},
 		token:''
 	}),
-	unistorage: true,
+	unistorage:true,
 	actions: {
-		logOut() {
-			this.token =''
-		},
+		logOut(){
+			this.$reset()
+			uni.removeStorageSync('USER')
+		}
 	},
 	getters:{
 		
