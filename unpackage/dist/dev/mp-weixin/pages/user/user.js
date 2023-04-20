@@ -50,9 +50,11 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const { userInfo, userForm } = common_vendor.toRefs(state);
     common_vendor.onLoad(() => {
       if (userStore.token) {
+        state.show = false;
         userInfo.value.username = userStore.userInfo.username;
         userInfo.value.avatar = userStore.userInfo.avatar;
-        state.show = false;
+      } else {
+        state.show = true;
       }
     });
     common_vendor.onShow(() => {
@@ -87,7 +89,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const checkRegister = () => {
       state.userForm.account = "";
       state.userForm.password = "";
-      state.isRegist = true;
+      state.userForm.username = "";
+      state.isRegist = !state.isRegist;
     };
     const handleLogOut = () => {
       userStore.logOut();
@@ -97,34 +100,39 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
     const handleWxLogin = async () => {
       common_vendor.index.getUserProfile({
-        desc: "拿到个人信息用户注册昵称",
-        success: async (res) => {
-          const { avatarUrl, nickName } = res.userInfo;
-          const res1 = await getCode();
-          console.log(res1);
+        desc: "获取用户个人信息",
+        success: async (infoRes) => {
+          const { avatarUrl, nickName } = infoRes.userInfo;
+          const codeWx = await getWxCode();
           const params = {
             avatar: avatarUrl,
             username: nickName,
-            code: res1.code
+            code: codeWx
           };
-          const res2 = await api_index.userWxLogin(params);
-          console.log(res2);
-          if (res2.code === 200) {
+          const { code, data, msg } = await api_index.userWxLogin(params);
+          if (code === 200) {
+            console.log("微信一键登录存储token和用户信息");
             userStore.$patch((state2) => {
-              console.log("微信一键登录存储token和用户信息");
-              state2.userInfo = res2.userInfo;
-              state2.token = res2.token;
+              state2.userInfo = data.userInfo;
+              state2.token = data.token;
             });
+            userInfo.value.avatar = data.userInfo.avatar;
+            userInfo.value.username = data.userInfo.username;
+            state.show = false;
           }
+          common_vendor.index.showToast({
+            title: msg || "",
+            icon: "none"
+          });
         }
       });
     };
-    const getCode = async () => {
+    const getWxCode = async () => {
       return new Promise((resolve, reject) => {
         common_vendor.index.login({
           provider: "weixin",
           success: (res) => {
-            resolve(res);
+            resolve(res.code);
           },
           fail: (err) => {
             common_vendor.index.showToast({
@@ -136,6 +144,16 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         });
       });
     };
+    const handleUser = () => {
+      if (userInfo.value.username.length) {
+        common_vendor.index.navigateTo({
+          url: "/pages/user/user-info"
+        });
+      } else {
+        state.show = true;
+        console.log(state.show);
+      }
+    };
     return (_ctx, _cache) => {
       return common_vendor.e({
         a: common_vendor.p({
@@ -144,83 +162,84 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           size: "large"
         }),
         b: common_vendor.t(common_vendor.unref(userInfo).username ? common_vendor.unref(userInfo).username : "登录后查看更多精彩"),
-        c: common_vendor.p({
-          title: "会员中心"
-        }),
+        c: common_vendor.o(handleUser),
         d: common_vendor.p({
-          title: "浏览记录"
+          title: "个人中心",
+          icon: "integral"
         }),
         e: common_vendor.p({
-          title: "关注/收藏"
+          title: "浏览记录",
+          icon: "clock"
         }),
         f: common_vendor.p({
-          title: "设置"
+          title: "关注/收藏",
+          icon: "heart"
         }),
-        g: common_vendor.unref(userInfo).username
+        g: common_vendor.p({
+          title: "设置",
+          icon: "setting"
+        }),
+        h: common_vendor.unref(userInfo).username
       }, common_vendor.unref(userInfo).username ? {
-        h: common_vendor.o(handleLogOut),
-        i: common_vendor.p({
+        i: common_vendor.o(handleLogOut),
+        j: common_vendor.p({
           ["custom-style"]: customStyleExit,
           ripple: true
         })
       } : {}, {
-        j: common_vendor.o(($event) => common_vendor.unref(userForm).account = $event),
-        k: common_vendor.p({
+        k: common_vendor.o(($event) => common_vendor.unref(userForm).account = $event),
+        l: common_vendor.p({
           modelValue: common_vendor.unref(userForm).account
         }),
-        l: common_vendor.p({
+        m: common_vendor.p({
           label: "+86"
         }),
-        m: common_vendor.o(($event) => common_vendor.unref(userForm).password = $event),
-        n: common_vendor.p({
+        n: common_vendor.o(($event) => common_vendor.unref(userForm).password = $event),
+        o: common_vendor.p({
           type: "password",
           modelValue: common_vendor.unref(userForm).password
         }),
-        o: common_vendor.p({
+        p: common_vendor.p({
           label: "密码"
         }),
-        p: state.isRegist
+        q: state.isRegist
       }, state.isRegist ? {
-        q: common_vendor.o(($event) => common_vendor.unref(userForm).username = $event),
-        r: common_vendor.p({
+        r: common_vendor.o(($event) => common_vendor.unref(userForm).username = $event),
+        s: common_vendor.p({
           modelValue: common_vendor.unref(userForm).username
         }),
-        s: common_vendor.p({
+        t: common_vendor.p({
           label: "昵称"
         })
       } : {}, {
-        t: common_vendor.sr("uForm", "0f7520f0-8,0f7520f0-7"),
-        v: common_vendor.p({
+        v: common_vendor.sr("uForm", "0f7520f0-8,0f7520f0-7"),
+        w: common_vendor.p({
           model: common_vendor.unref(userForm)
         }),
-        w: !state.isRegist
-      }, !state.isRegist ? {
-        x: common_vendor.o(checkRegister)
-      } : {}, {
-        y: common_vendor.t(!state.isRegist ? "登录" : "注册"),
-        z: common_vendor.o(handleLogin),
-        A: common_vendor.p({
+        x: common_vendor.t(state.isRegist ? "登录" : "注册"),
+        y: common_vendor.o(checkRegister),
+        z: common_vendor.t(!state.isRegist ? "登录" : "注册"),
+        A: common_vendor.o(handleLogin),
+        B: common_vendor.p({
           ["custom-style"]: customStyleLogin,
           shape: "circle",
           ripple: true
         }),
-        B: common_vendor.p({
+        C: common_vendor.p({
           name: "weixin-fill",
           label: "微信登录",
           ["margin-left"]: "10rpx",
           ["label-color"]: "#fff"
         }),
-        C: common_vendor.o(handleWxLogin),
-        D: common_vendor.p({
+        D: common_vendor.o(handleWxLogin),
+        E: common_vendor.p({
           ["custom-style"]: customStyleWx,
           shape: "circle",
           ripple: true
         }),
-        E: common_vendor.o(($event) => state.show = $event),
-        F: common_vendor.p({
+        F: common_vendor.o(($event) => state.show = $event),
+        G: common_vendor.p({
           mode: "bottom",
-          height: "60%",
-          ["mask-close-able"]: false,
           modelValue: state.show
         })
       });

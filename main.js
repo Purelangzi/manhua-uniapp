@@ -45,7 +45,7 @@ import {
 } from 'vue'
 import * as Pinia from 'pinia';
 import { createUnistorage } from './uni_modules/pinia-plugin-unistorage'
-import showToast from '@/utils/showMsg'
+// import showToast from '@/utils/showMsg'
 
 
 export function createApp() {
@@ -54,7 +54,7 @@ export function createApp() {
 	store.use(createUnistorage())
 	app.use(uView)
 	app.use(store);
-	uni.$showMsg = showToast
+	// uni.$showMsg = showToast
 	return {
 		app,
 		Pinia

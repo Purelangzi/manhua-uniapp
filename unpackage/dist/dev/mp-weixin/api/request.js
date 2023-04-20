@@ -35,15 +35,15 @@ const request = (options) => {
         } else {
           switch (res.statusCode) {
             case 400:
-              common_vendor.index.$showMsg({ title: "错误的请求" });
+              showToast({ title: "错误的请求" });
               reject(res);
               break;
             case 401:
-              common_vendor.index.$showMsg({ title: "Token 过期" });
+              showToast({ title: "Token 过期" });
               reject(res);
               break;
             default:
-              common_vendor.index.$showMsg({ msg: res.data.msg });
+              showToast({ msg: res.data.msg });
               reject(res);
               break;
           }
@@ -56,6 +56,13 @@ const request = (options) => {
         common_vendor.index.hideLoading();
       }
     });
+  });
+};
+const showToast = ({ title, icon = "error", duration, msg }) => {
+  common_vendor.index.showToast({
+    title: title || msg || "error",
+    icon,
+    duration
   });
 };
 const request$1 = {

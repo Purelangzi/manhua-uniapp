@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/category/category",
     "pages/book/book",
-    "pages/user/user"
+    "pages/user/user",
+    "pages/user/user-info"
   ],
   "window": {
     "navigationBarTextStyle": "black",

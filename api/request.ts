@@ -4,6 +4,12 @@ interface ReqParams {
 	method : 'GET' | 'POST' | 'DELETE' | 'PUT',
 	data ?: Data,
 }
+interface ShowToast {
+	title ?: string,
+	icon ?: 'error' | 'success' | 'loading' | 'none',
+	duration ?: number,
+	msg ?: string,
+}
 
 const baseUrl = 'http://127.0.0.1:7001'
 const request = (options : ReqParams):Promise<any> => {
@@ -41,15 +47,15 @@ const request = (options : ReqParams):Promise<any> => {
 				} else {
 					switch (res.statusCode) {
 						case 400:
-							uni.$showMsg({title:'错误的请求'})
+							showToast({title:'错误的请求'})
 							reject(res)
 							break;
 						case 401:
-							uni.$showMsg({title:'Token 过期'})
+							showToast({title:'Token 过期'})
 							reject(res)
 							break;
 						default:
-							uni.$showMsg({msg:(res.data as any).msg})
+							showToast({msg:(res.data as any).msg})
 							reject(res)
 							break;
 					}
@@ -64,7 +70,13 @@ const request = (options : ReqParams):Promise<any> => {
 		})
 	})
 }
-
+const showToast = ({ title, icon = 'error', duration, msg } : ShowToast) => {
+	uni.showToast({
+		title: title || msg || 'error',
+		icon,
+		duration
+	})
+}
 export default {
 	get(url : string, data ?: Data) {
 		return request({ url, method: "GET", data })

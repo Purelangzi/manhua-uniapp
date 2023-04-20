@@ -23,6 +23,7 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
+/* 背景图片 */
 .u-drawer.data-v-c93a8fd2 {
   display: block;
   position: fixed;

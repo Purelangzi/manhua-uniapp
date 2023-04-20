@@ -1,23 +1,23 @@
 <template>
 	<view class="user">
-		<view class="user-header">
+		<view class="user-header" @click="handleUser">
 			<u-avatar :src="userInfo.avatar?userInfo.avatar:'/static/image/default-avatar.png'" shape="circle"
 				size="large"></u-avatar>
 			<text class="user-name">{{userInfo.username?userInfo.username:'登录后查看更多精彩'}}</text>
 		</view>
 		<view class="user-options">
 			<u-cell-group>
-				<u-cell-item title="会员中心"></u-cell-item>
-				<u-cell-item title="浏览记录"></u-cell-item>
-				<u-cell-item title="关注/收藏"></u-cell-item>
-				<u-cell-item title="设置"></u-cell-item>
+				<u-cell-item title="个人中心" icon="integral"></u-cell-item>
+				<u-cell-item title="浏览记录" icon="clock"></u-cell-item>
+				<u-cell-item title="关注/收藏" icon="heart"></u-cell-item>
+				<u-cell-item title="设置" icon="setting"></u-cell-item>
 				<view class="logOut" v-if="userInfo.username">
 					<u-button :custom-style="customStyleExit" :ripple="true" @click="handleLogOut">退出登录</u-button>
 				</view>
 			</u-cell-group>
 		</view>
 		<view class="user-login-popup">
-			<u-popup v-model="state.show" mode="bottom" height="60%" :mask-close-able="false">
+			<u-popup v-model="state.show" mode="bottom">
 				<view class="popup-title">登录后更精彩</view>
 				<view class="login-form">
 					<u-form :model="userForm" ref="uForm">
@@ -26,17 +26,20 @@
 						<u-form-item v-if="state.isRegist" label="昵称"><u-input
 								v-model="userForm.username" /></u-form-item>
 					</u-form>
-					<view v-if="!state.isRegist" class="checkout-register" @click="checkRegister">切换到注册</view>
+					<view class="checkout-register" @click="checkRegister">切换到{{state.isRegist?'登录':'注册'}}</view>
 					<u-button :custom-style="customStyleLogin" shape="circle" @click="handleLogin" :ripple="true">
 						{{!state.isRegist?'登录':'注册'}}
 					</u-button>
 				</view>
+				<!-- #ifdef MP-WEIXIN -->
 				<view class="user-wx">
 					<text class="other-login">其它登录方式</text>
 					<u-button :custom-style="customStyleWx" shape="circle" :ripple="true" @click="handleWxLogin">
 						<u-icon name="weixin-fill" label="微信登录" margin-left="10rpx" label-color="#fff"></u-icon>
 					</u-button>
 				</view>
+				<!-- #endif -->
+				
 			</u-popup>
 		</view>
 	</view>
@@ -72,9 +75,11 @@
 
 	onLoad(() => {
 		if (userStore.token) {
+			state.show = false
 			userInfo.value.username = userStore.userInfo.username
 			userInfo.value.avatar = userStore.userInfo.avatar
-			state.show = false
+		}else{
+			state.show = true
 		}
 	})
 	onShow(() => {
@@ -114,7 +119,8 @@
 	const checkRegister = () => {
 		state.userForm.account = ''
 		state.userForm.password = ''
-		state.isRegist = true
+		state.userForm.username = ''
+		state.isRegist = !state.isRegist
 
 	}
 	const handleLogOut = () => {
@@ -125,34 +131,40 @@
 	}
 	const handleWxLogin = async () => {
 		uni.getUserProfile({
-			desc: '拿到个人信息用户注册昵称',
-			success: async (res) => {
-				const { avatarUrl, nickName } = res.userInfo
-				const res1:any = await getCode()
-				console.log(res1);
+			desc: '获取用户个人信息',
+			success: async (infoRes) => {
+				const { avatarUrl, nickName } = infoRes.userInfo
+				const codeWx = await getWxCode()
 				const params = {
 					avatar:avatarUrl,
 					username:nickName,
-					code:res1.code as string
+					code:codeWx as string
 				}
-				const res2 = await userWxLogin(params)
-				console.log(res2);
-				if(res2.code === 200){
+				const {code,data,msg} = await userWxLogin(params)
+				if(code === 200){
+					console.log('微信一键登录存储token和用户信息');
 					userStore.$patch((state : any) => {
-						console.log('微信一键登录存储token和用户信息');
-						state.userInfo = res2.userInfo
-						state.token = res2.token
+						state.userInfo = data.userInfo
+						state.token = data.token
 					})
+					userInfo.value.avatar = data.userInfo.avatar
+					userInfo.value.username = data.userInfo.username
+					state.show = false
 				}
+				uni.showToast({
+					title:msg || '',
+					icon:'none'
+				})
+				
 			}
 		})
 	}
-	const getCode = async () => {
+	const getWxCode = async () => {
 		return new Promise((resolve, reject) => {
 			uni.login({
 				provider: 'weixin',
 				success: (res) => {
-					resolve(res)
+					resolve(res.code)
 				},
 				fail: (err) => {
 					uni.showToast({
@@ -163,8 +175,16 @@
 				}
 			})
 		})
-
-
+	}
+	const handleUser = () => {
+		if(userInfo.value.username.length){
+			uni.navigateTo({
+				url:'/pages/user/user-info'
+			})
+		}else{
+			state.show = true
+			console.log(state.show);
+		}
 	}
 </script>
 
@@ -219,6 +239,7 @@
 		}
 
 		.user-wx {
+			margin-bottom: 20rpx;
 			.other-login {
 				font-weight: 600;
 				display: block;

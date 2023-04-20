@@ -1,4 +1,4 @@
-interface ShowToast {
+/* interface ShowToast {
 	title ?: string,
 	icon ?: 'error' | 'success' | 'loading' | 'none',
 	duration ?: number,
@@ -11,4 +11,4 @@ const showToast = ({ title, icon = 'error', duration = 1500, msg } : ShowToast) 
 		duration
 	})
 }
-export default showToast
+export default showToast */
