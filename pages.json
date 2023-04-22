@@ -11,7 +11,6 @@
 				"navigationBarTitleText": "分类",
 				"enablePullDownRefresh": false
 			}
-
 		}, {
 			"path": "pages/book/book",
 			"style": {
@@ -33,7 +32,27 @@
 				"enablePullDownRefresh": false,
 				"navigationBarBackgroundColor": "#ffa73c"
 			}
-
+		}, {
+			"path": "pages/userUpdate/userName",
+			"style": {
+				"navigationBarTitleText": "修改昵称",
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor": "#ffa73c"
+			}
+		}, {
+			"path": "pages/userUpdate/email",
+			"style": {
+				"navigationBarTitleText": "修改邮箱",
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor": "#ffa73c"
+			}
+		}, {
+			"path": "pages/userUpdate/phone",
+			"style": {
+				"navigationBarTitleText": "修改手机号",
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor": "#ffa73c"
+			}
 		}
 	],
 	"tabBar": {

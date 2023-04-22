@@ -34,6 +34,9 @@ if (!Math) {
   "./pages/book/book.js";
   "./pages/user/user.js";
   "./pages/user/user-info.js";
+  "./pages/userUpdate/userName.js";
+  "./pages/userUpdate/email.js";
+  "./pages/userUpdate/phone.js";
 }
 const _sfc_main = {
   onLaunch: function() {

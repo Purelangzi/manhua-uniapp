@@ -1,5 +1,6 @@
 "use strict";
 const common_vendor = require("../common/vendor.js");
+const utils_showMsg = require("../utils/showMsg.js");
 const baseUrl = "http://127.0.0.1:7001";
 const request = (options) => {
   common_vendor.index.showLoading({
@@ -30,39 +31,32 @@ const request = (options) => {
       data: options.data,
       header,
       success: (res) => {
-        if (res.statusCode === 200) {
-          resolve(res.data);
-        } else {
-          switch (res.statusCode) {
-            case 400:
-              showToast({ title: "错误的请求" });
-              reject(res);
-              break;
-            case 401:
-              showToast({ title: "Token 过期" });
-              reject(res);
-              break;
-            default:
-              showToast({ msg: res.data.msg });
-              reject(res);
-              break;
-          }
+        common_vendor.index.hideLoading();
+        switch (res.statusCode) {
+          case 200:
+            resolve(res.data);
+            break;
+          case 400:
+            utils_showMsg.showMsg({ title: "错误的请求", icon: "error" });
+            reject(res.data);
+            break;
+          case 401:
+            utils_showMsg.showMsg({ title: "Token 过期", icon: "error" });
+            reject(res.data);
+            break;
+          default:
+            utils_showMsg.showMsg({ title: res.data.msg, icon: "error" });
+            reject(res.data);
+            break;
         }
       },
       fail: (err) => {
+        common_vendor.index.hideLoading();
         reject(err);
       },
       complete: () => {
-        common_vendor.index.hideLoading();
       }
     });
-  });
-};
-const showToast = ({ title, icon = "error", duration, msg }) => {
-  common_vendor.index.showToast({
-    title: title || msg || "error",
-    icon,
-    duration
   });
 };
 const request$1 = {

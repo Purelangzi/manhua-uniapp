@@ -1,6 +1,7 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 const stores_user = require("../../stores/user.js");
+const utils_showMsg = require("../../utils/showMsg.js");
 if (!Array) {
   const _easycom_u_avatar2 = common_vendor.resolveComponent("u-avatar");
   const _easycom_u_cell_item2 = common_vendor.resolveComponent("u-cell-item");
@@ -18,23 +19,74 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   setup(__props) {
     const userStore = stores_user.useUser();
     const { userInfo } = common_vendor.storeToRefs(userStore);
+    common_vendor.reactive({});
     common_vendor.onLoad(() => {
+    });
+    common_vendor.onShow(() => {
     });
     common_vendor.onMounted(() => {
     });
-    const handleUploadAvatar = () => {
+    const handleOnAvatar = async () => {
+      const filePath = await chooseImage(1);
+      const res = await uploadImage(filePath);
+      console.log(res);
+    };
+    const chooseImage = async (count) => {
+      return new Promise((resolve, reject) => {
+        common_vendor.index.chooseImage({
+          count,
+          sizeType: ["original", "compressed"],
+          //可以指定是原图还是压缩图，默认二者都有
+          sourceType: ["album"],
+          //从相册选择
+          success: (res) => {
+            if (res.tempFiles[0].size / 1024 > 1024 * 2) {
+              common_vendor.index.showToast({
+                title: "图片不能大于2M,请重新上传"
+              });
+              utils_showMsg.showMsg({ title: "图片不能大于2M,请重新上传", duration: 3e3 });
+              return;
+            }
+            resolve(res.tempFilePaths[0]);
+          }
+        });
+      }).catch((e) => {
+        console.log(e);
+      });
+    };
+    const uploadImage = async (filePath) => {
+      return new Promise((resolve, reject) => {
+        common_vendor.index.uploadFile({
+          url: "http://127.0.0.1:7001/api/ali/uploadFile",
+          filePath,
+          name: "files",
+          header: {
+            "token": "Bearer " + userStore.token
+          },
+          success: (uploadFileRes) => {
+            const res = JSON.parse(uploadFileRes.data);
+            if (uploadFileRes.statusCode == 200) {
+              utils_showMsg.showMsg({ title: res.data.msg });
+              resolve(res.data);
+            } else {
+              console.log(res);
+              utils_showMsg.showMsg({ title: res.msg || "error" });
+            }
+          }
+        });
+      }).catch((e) => {
+        console.log(e);
+      });
     };
     return (_ctx, _cache) => {
-      var _a;
       return {
-        a: common_vendor.p({
-          src: (_a = common_vendor.unref(userInfo)) == null ? void 0 : _a.avatar,
+        a: common_vendor.o(handleOnAvatar),
+        b: common_vendor.p({
+          src: common_vendor.unref(userInfo).avatar,
           mode: "square"
         }),
-        b: common_vendor.o(($event) => handleUploadAvatar()),
         c: common_vendor.p({
-          title: "头像",
-          arrow: false
+          title: "头像"
         }),
         d: common_vendor.p({
           title: "昵称",

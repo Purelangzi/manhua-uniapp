@@ -1,14 +1,19 @@
-/* interface ShowToast {
-	title ?: string,
+interface ShowToast {
+	title: string,
 	icon ?: 'error' | 'success' | 'loading' | 'none',
 	duration ?: number,
-	msg ?: string,
 }
-const showToast = ({ title, icon = 'error', duration = 1500, msg } : ShowToast) => {
+/** 封装 uni.showToast消息提示
+ * @title 文字
+ * @icon 图标
+ * @duration 持续时间 单位毫秒
+ * 
+ */
+const showMsg = ({ title, icon = 'none', duration = 1500}: ShowToast) => {
 	uni.showToast({
-		title: title || msg || 'error',
+		title,
 		icon,
 		duration
 	})
 }
-export default showToast */
+export default showMsg

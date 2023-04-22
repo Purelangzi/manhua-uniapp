@@ -2,6 +2,7 @@
 const common_vendor = require("../../common/vendor.js");
 const api_index = require("../../api/index.js");
 const stores_user = require("../../stores/user.js");
+const utils_showMsg = require("../../utils/showMsg.js");
 require("../../api/request.js");
 if (!Array) {
   const _easycom_u_avatar2 = common_vendor.resolveComponent("u-avatar");
@@ -31,6 +32,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "user",
   setup(__props) {
     const userStore = stores_user.useUser();
+    const loginFrom = common_vendor.ref();
     const state = common_vendor.reactive({
       userInfo: {
         avatar: "",
@@ -41,11 +43,34 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         password: "13539660702",
         username: ""
       },
+      rules: {
+        account: [
+          {
+            required: true,
+            message: "手机号不能为空",
+            trigger: ["change", "blur"]
+          },
+          {
+            required: true,
+            pattern: /^1[3-9]\d{9}$/,
+            message: "请输入正确的手机号",
+            trigger: ["change"]
+          }
+        ],
+        password: [
+          {
+            required: true,
+            message: "密码不能为空",
+            trigger: ["change", "blur"]
+          }
+        ],
+        username: [{ required: true, message: "昵称不能为空", trigger: ["change", "blur"] }]
+      },
       show: true,
-      isRegist: false
+      isRegist: false,
+      customStyleLogin: { backgroundColor: "#ff6b07", color: "#fff", marginTop: "85rpx" }
     });
     const customStyleExit = { backgroundColor: "#ffa73c", color: "#fff" };
-    const customStyleLogin = { backgroundColor: "#ff6b07", color: "#fff" };
     const customStyleWx = { backgroundColor: "#01a95e", color: "#fff" };
     const { userInfo, userForm } = common_vendor.toRefs(state);
     common_vendor.onLoad(() => {
@@ -61,11 +86,31 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     });
     common_vendor.onMounted(() => {
     });
+    common_vendor.onReady(() => {
+      loginFrom.value.setRules(state.rules);
+    });
+    common_vendor.watch(() => state.isRegist, (newVal) => {
+      common_vendor.nextTick$1(() => {
+        console.log(1);
+        loginFrom.value.resetFields();
+        loginFrom.value.setRules(state.rules);
+      });
+      if (newVal === true) {
+        state.customStyleLogin.marginTop = "50rpx";
+      }
+    });
+    common_vendor.watch(() => state.show, (newVal) => {
+      if (newVal === true)
+        common_vendor.nextTick$1(() => {
+          loginFrom.value.resetFields();
+          loginFrom.value.setRules(state.rules);
+        });
+    });
     const handleLogin = async () => {
       const { account, password } = common_vendor.toRefs(state.userForm);
       const option = state.isRegist ? api_index.userRegister(state.userForm) : api_index.userLogin({ account: account.value, password: password.value });
-      const { code, data, msg } = await option;
-      if (code === 200) {
+      try {
+        const { data, msg } = await option;
         if (!state.isRegist) {
           const { avatar, username } = data.userInfo;
           state.userInfo.avatar = avatar;
@@ -79,17 +124,15 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         } else {
           state.isRegist = false;
         }
-        common_vendor.index.showToast({
-          title: msg,
-          icon: "success",
-          duration: 1500
-        });
+        utils_showMsg.showMsg({ title: msg, icon: "success" });
+      } catch (e) {
       }
     };
     const checkRegister = () => {
-      state.userForm.account = "";
-      state.userForm.password = "";
-      state.userForm.username = "";
+      common_vendor.nextTick$1(() => {
+        loginFrom.value.resetFields();
+        loginFrom.value.setRules(state.rules);
+      });
       state.isRegist = !state.isRegist;
     };
     const handleLogOut = () => {
@@ -109,8 +152,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             username: nickName,
             code: codeWx
           };
-          const { code, data, msg } = await api_index.userWxLogin(params);
-          if (code === 200) {
+          try {
+            const { data, msg } = await api_index.userWxLogin(params);
             console.log("微信一键登录存储token和用户信息");
             userStore.$patch((state2) => {
               state2.userInfo = data.userInfo;
@@ -119,11 +162,9 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             userInfo.value.avatar = data.userInfo.avatar;
             userInfo.value.username = data.userInfo.username;
             state.show = false;
+            utils_showMsg.showMsg({ title: msg || "" });
+          } catch (e) {
           }
-          common_vendor.index.showToast({
-            title: msg || "",
-            icon: "none"
-          });
         }
       });
     };
@@ -135,23 +176,29 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             resolve(res.code);
           },
           fail: (err) => {
-            common_vendor.index.showToast({
-              title: "登录失败,错误码：" + err.code,
-              icon: "none"
-            });
+            utils_showMsg.showMsg({ title: "登录失败,错误码：" + err.code });
             reject(err);
           }
         });
       });
     };
-    const handleUser = () => {
+    const handleClickAvatar = () => {
       if (userInfo.value.username.length) {
         common_vendor.index.navigateTo({
           url: "/pages/user/user-info"
         });
       } else {
+        state.isRegist = false;
         state.show = true;
-        console.log(state.show);
+      }
+    };
+    const handleUserOption = (url) => {
+      if (!userStore.userInfo.token) {
+        state.isRegist = false;
+      } else {
+        common_vendor.index.navigateTo({
+          url
+        });
       }
     };
     return (_ctx, _cache) => {
@@ -162,83 +209,100 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           size: "large"
         }),
         b: common_vendor.t(common_vendor.unref(userInfo).username ? common_vendor.unref(userInfo).username : "登录后查看更多精彩"),
-        c: common_vendor.o(handleUser),
-        d: common_vendor.p({
+        c: common_vendor.o(handleClickAvatar),
+        d: common_vendor.o(($event) => handleUserOption("/pages/user/user-Info")),
+        e: common_vendor.p({
           title: "个人中心",
           icon: "integral"
         }),
-        e: common_vendor.p({
+        f: common_vendor.p({
           title: "浏览记录",
           icon: "clock"
         }),
-        f: common_vendor.p({
+        g: common_vendor.p({
           title: "关注/收藏",
           icon: "heart"
         }),
-        g: common_vendor.p({
+        h: common_vendor.p({
           title: "设置",
           icon: "setting"
         }),
-        h: common_vendor.unref(userInfo).username
+        i: common_vendor.unref(userInfo).username
       }, common_vendor.unref(userInfo).username ? {
-        i: common_vendor.o(handleLogOut),
-        j: common_vendor.p({
+        j: common_vendor.o(handleLogOut),
+        k: common_vendor.p({
           ["custom-style"]: customStyleExit,
           ripple: true
         })
       } : {}, {
-        k: common_vendor.o(($event) => common_vendor.unref(userForm).account = $event),
-        l: common_vendor.p({
+        l: common_vendor.o(common_vendor.m(($event) => common_vendor.unref(userForm).account = $event, {
+          trim: true
+        }, true)),
+        m: common_vendor.p({
           modelValue: common_vendor.unref(userForm).account
         }),
-        m: common_vendor.p({
+        n: common_vendor.p({
+          prop: "account",
           label: "+86"
         }),
-        n: common_vendor.o(($event) => common_vendor.unref(userForm).password = $event),
-        o: common_vendor.p({
+        o: common_vendor.o(common_vendor.m(($event) => common_vendor.unref(userForm).password = $event, {
+          trim: true
+        }, true)),
+        p: common_vendor.p({
           type: "password",
           modelValue: common_vendor.unref(userForm).password
         }),
-        p: common_vendor.p({
+        q: common_vendor.p({
+          prop: "password",
           label: "密码"
         }),
-        q: state.isRegist
+        r: state.isRegist
       }, state.isRegist ? {
-        r: common_vendor.o(($event) => common_vendor.unref(userForm).username = $event),
-        s: common_vendor.p({
+        s: common_vendor.o(common_vendor.m(($event) => common_vendor.unref(userForm).username = $event, {
+          trim: true
+        }, true)),
+        t: common_vendor.p({
           modelValue: common_vendor.unref(userForm).username
         }),
-        t: common_vendor.p({
+        v: common_vendor.p({
+          prop: "username",
           label: "昵称"
         })
       } : {}, {
-        v: common_vendor.sr("uForm", "0f7520f0-8,0f7520f0-7"),
-        w: common_vendor.p({
+        w: common_vendor.sr(loginFrom, "0f7520f0-8,0f7520f0-7", {
+          "k": "loginFrom"
+        }),
+        x: common_vendor.p({
           model: common_vendor.unref(userForm)
         }),
-        x: common_vendor.t(state.isRegist ? "登录" : "注册"),
-        y: common_vendor.o(checkRegister),
-        z: common_vendor.t(!state.isRegist ? "登录" : "注册"),
-        A: common_vendor.o(handleLogin),
-        B: common_vendor.p({
-          ["custom-style"]: customStyleLogin,
+        y: !state.isRegist
+      }, !state.isRegist ? {
+        z: common_vendor.o(checkRegister)
+      } : {}, {
+        A: state.customStyleLogin
+      }, state.customStyleLogin ? {
+        B: common_vendor.t(!state.isRegist ? "登录" : "注册"),
+        C: common_vendor.o(handleLogin),
+        D: common_vendor.p({
+          ["custom-style"]: state.customStyleLogin,
           shape: "circle",
           ripple: true
-        }),
-        C: common_vendor.p({
+        })
+      } : {}, {
+        E: common_vendor.p({
           name: "weixin-fill",
           label: "微信登录",
           ["margin-left"]: "10rpx",
           ["label-color"]: "#fff"
         }),
-        D: common_vendor.o(handleWxLogin),
-        E: common_vendor.p({
+        F: common_vendor.o(handleWxLogin),
+        G: common_vendor.p({
           ["custom-style"]: customStyleWx,
           shape: "circle",
           ripple: true
         }),
-        F: common_vendor.o(($event) => state.show = $event),
-        G: common_vendor.p({
+        H: common_vendor.o(($event) => state.show = $event),
+        I: common_vendor.p({
           mode: "bottom",
           modelValue: state.show
         })
