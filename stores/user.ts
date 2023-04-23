@@ -10,8 +10,13 @@ export const useUser = defineStore('USER', {
 	unistorage:true,
 	actions: {
 		logOut(){
-			this.$reset()
-			uni.removeStorageSync('USER')
+			setTimeout(()=>{
+				this.$reset()
+				uni.removeStorageSync('USER')
+				uni.reLaunch({
+					url:'/pages/user/user'
+				})
+			},1500)
 		}
 	},
 	getters:{

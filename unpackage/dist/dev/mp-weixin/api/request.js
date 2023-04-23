@@ -1,37 +1,42 @@
 "use strict";
 const common_vendor = require("../common/vendor.js");
 const utils_showMsg = require("../utils/showMsg.js");
+const stores_user = require("../stores/user.js");
 const baseUrl = "http://127.0.0.1:7001";
+const userStore = stores_user.useUser();
 const request = (options) => {
-  common_vendor.index.showLoading({
-    title: "加载中"
+  common_vendor.index.addInterceptor("request", {
+    invoke: (args) => {
+      common_vendor.index.showLoading({
+        title: "加载中"
+      });
+      switch (options.method) {
+        case "GET":
+          args.header = {
+            "content-type": "application/json"
+          };
+          break;
+        case "POST":
+          args.header = {
+            "content-type": "application/x-www-form-urlencoded"
+          };
+          break;
+      }
+      const token = userStore.userInfo.token;
+      if (token) {
+        args.header["token"] = "Bearer" + token;
+      }
+    },
+    complete: () => {
+      common_vendor.index.hideLoading();
+    }
   });
-  let header = {};
-  switch (options.method) {
-    case "GET":
-      header = {
-        "content-type": "application/json"
-      };
-      break;
-    case "POST":
-      header = {
-        "content-type": "application/x-www-form-urlencoded"
-      };
-      break;
-  }
-  const userJson = common_vendor.index.getStorageSync("USER");
-  if (userJson) {
-    const { token } = JSON.parse(userJson);
-    header["token"] = "Bearer" + token;
-  }
   return new Promise((resolve, reject) => {
     common_vendor.index.request({
       url: baseUrl + options.url,
       method: options.method,
       data: options.data,
-      header,
       success: (res) => {
-        common_vendor.index.hideLoading();
         switch (res.statusCode) {
           case 200:
             resolve(res.data);
@@ -41,7 +46,8 @@ const request = (options) => {
             reject(res.data);
             break;
           case 401:
-            utils_showMsg.showMsg({ title: "Token 过期", icon: "error" });
+            utils_showMsg.showMsg({ title: "Token 过期或未登录", icon: "error", duration: 3e3 });
+            userStore.logOut();
             reject(res.data);
             break;
           default:
@@ -51,7 +57,6 @@ const request = (options) => {
         }
       },
       fail: (err) => {
-        common_vendor.index.hideLoading();
         reject(err);
       },
       complete: () => {

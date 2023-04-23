@@ -4,7 +4,7 @@
     "pages/category/category",
     "pages/book/book",
     "pages/user/user",
-    "pages/user/user-info",
+    "pages/user/user-Info",
     "pages/userUpdate/userName",
     "pages/userUpdate/email",
     "pages/userUpdate/phone"

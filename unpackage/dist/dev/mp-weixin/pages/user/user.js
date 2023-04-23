@@ -87,11 +87,12 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     common_vendor.onMounted(() => {
     });
     common_vendor.onReady(() => {
-      loginFrom.value.setRules(state.rules);
+      if (!userStore.token) {
+        loginFrom.value.setRules(state.rules);
+      }
     });
     common_vendor.watch(() => state.isRegist, (newVal) => {
       common_vendor.nextTick$1(() => {
-        console.log(1);
         loginFrom.value.resetFields();
         loginFrom.value.setRules(state.rules);
       });
@@ -137,9 +138,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
     const handleLogOut = () => {
       userStore.logOut();
-      common_vendor.index.reLaunch({
-        url: "/pages/user/user"
-      });
     };
     const handleWxLogin = async () => {
       common_vendor.index.getUserProfile({
@@ -182,19 +180,10 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         });
       });
     };
-    const handleClickAvatar = () => {
-      if (userInfo.value.username.length) {
-        common_vendor.index.navigateTo({
-          url: "/pages/user/user-info"
-        });
-      } else {
+    const handleUserOption = (url) => {
+      if (!userInfo.value.username) {
         state.isRegist = false;
         state.show = true;
-      }
-    };
-    const handleUserOption = (url) => {
-      if (!userStore.userInfo.token) {
-        state.isRegist = false;
       } else {
         common_vendor.index.navigateTo({
           url
@@ -209,7 +198,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           size: "large"
         }),
         b: common_vendor.t(common_vendor.unref(userInfo).username ? common_vendor.unref(userInfo).username : "登录后查看更多精彩"),
-        c: common_vendor.o(handleClickAvatar),
+        c: common_vendor.o(($event) => handleUserOption("/pages/user/user-Info")),
         d: common_vendor.o(($event) => handleUserOption("/pages/user/user-Info")),
         e: common_vendor.p({
           title: "个人中心",

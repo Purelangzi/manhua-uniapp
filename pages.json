@@ -17,7 +17,6 @@
 				"navigationBarTitleText": "书架",
 				"enablePullDownRefresh": false
 			}
-
 		}, {
 			"path": "pages/user/user",
 			"style": {
@@ -26,7 +25,7 @@
 			}
 
 		}, {
-			"path": "pages/user/user-info",
+			"path": "pages/user/user-Info",
 			"style": {
 				"navigationBarTitleText": "个人中心",
 				"enablePullDownRefresh": false,

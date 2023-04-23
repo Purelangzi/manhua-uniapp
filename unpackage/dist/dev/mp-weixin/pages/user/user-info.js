@@ -15,7 +15,7 @@ if (!Math) {
   (_easycom_u_avatar + _easycom_u_cell_item + _easycom_u_cell_group)();
 }
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
-  __name: "user-info",
+  __name: "user-Info",
   setup(__props) {
     const userStore = stores_user.useUser();
     const { userInfo } = common_vendor.storeToRefs(userStore);
@@ -28,8 +28,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     });
     const handleOnAvatar = async () => {
       const filePath = await chooseImage(1);
-      const res = await uploadImage(filePath);
-      console.log(res);
+      const { url } = await uploadImage(filePath);
+      userStore.userInfo.avatar = url;
     };
     const chooseImage = async (count) => {
       return new Promise((resolve, reject) => {
@@ -40,14 +40,20 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           sourceType: ["album"],
           //从相册选择
           success: (res) => {
-            if (res.tempFiles[0].size / 1024 > 1024 * 2) {
-              common_vendor.index.showToast({
-                title: "图片不能大于2M,请重新上传"
-              });
+            const file = res.tempFiles[0];
+            const path = file.path;
+            const wxTypeArr = [".jpg", "jpeg", ".png"];
+            const type = path.substring(path.length - 4);
+            console.log(type);
+            if (!wxTypeArr.includes(type)) {
+              utils_showMsg.showMsg({ title: "上传图片只能是 png、jpg、jpeg 格式!!", duration: 3e3 });
+              return;
+            }
+            if (file.size / 1024 > 1024 * 2) {
               utils_showMsg.showMsg({ title: "图片不能大于2M,请重新上传", duration: 3e3 });
               return;
             }
-            resolve(res.tempFilePaths[0]);
+            resolve(path);
           }
         });
       }).catch((e) => {
@@ -65,12 +71,14 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           },
           success: (uploadFileRes) => {
             const res = JSON.parse(uploadFileRes.data);
-            if (uploadFileRes.statusCode == 200) {
-              utils_showMsg.showMsg({ title: res.data.msg });
+            if (uploadFileRes.statusCode === 200) {
+              utils_showMsg.showMsg({ title: res.msg });
               resolve(res.data);
+            } else if (uploadFileRes.statusCode === 401) {
+              utils_showMsg.showMsg({ title: res.msg || "token失效,请重新登录", duration: 2e3 });
+              userStore.logOut();
             } else {
-              console.log(res);
-              utils_showMsg.showMsg({ title: res.msg || "error" });
+              utils_showMsg.showMsg({ title: res.msg || "图片上传失败" });
             }
           }
         });
@@ -94,9 +102,13 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         }),
         e: common_vendor.p({
           title: "手机号",
-          value: common_vendor.unref(userInfo).phone
+          value: common_vendor.unref(userInfo).phone ? common_vendor.unref(userInfo).phone : "未设置"
         }),
         f: common_vendor.p({
+          title: "密码",
+          value: common_vendor.unref(userInfo).password ? common_vendor.unref(userInfo).password : "未设置"
+        }),
+        g: common_vendor.p({
           title: "邮箱",
           value: common_vendor.unref(userInfo).email ? common_vendor.unref(userInfo).email : "未设置"
         })
@@ -104,5 +116,5 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
   }
 });
-const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__file", "F:/HBuilderProjects/manhua/pages/user/user-info.vue"]]);
+const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__file", "F:/HBuilderProjects/manhua/pages/user/user-Info.vue"]]);
 wx.createPage(MiniProgramPage);

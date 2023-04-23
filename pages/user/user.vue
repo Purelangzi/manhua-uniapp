@@ -1,6 +1,6 @@
 <template>
 	<view class="user">
-		<view class="user-header" @click="handleClickAvatar">
+		<view class="user-header" @click="handleUserOption('/pages/user/user-Info')">
 			<u-avatar :src="userInfo.avatar?userInfo.avatar:'/static/image/default-avatar.png'" shape="circle"
 				size="large"></u-avatar>
 			<view class="user-name">{{userInfo.username?userInfo.username:'登录后查看更多精彩'}}</view>
@@ -115,11 +115,13 @@
 
 	})
 	onReady(() =>{
-		loginFrom.value.setRules(state.rules);
+		if(!userStore.token){
+			loginFrom.value.setRules(state.rules);
+		}
+		
 	})
 	watch(()=>state.isRegist,(newVal)=>{
 		nextTick(()=>{
-			console.log(1);
 			loginFrom.value.resetFields()
 			loginFrom.value.setRules(state.rules)
 		})
@@ -132,7 +134,6 @@
 		if(newVal === true)
 		nextTick(()=>{
 			loginFrom.value.resetFields()
-			
 			loginFrom.value.setRules(state.rules)
 		})
 	})
@@ -173,9 +174,7 @@
 	}
 	const handleLogOut = () => {
 		userStore.logOut()
-		uni.reLaunch({
-			url: '/pages/user/user'
-		})
+		
 	}
 	const handleWxLogin = async () => {
 		uni.getUserProfile({
@@ -219,22 +218,12 @@
 			})
 		})
 	}
-	const handleClickAvatar = () => {
-		if (userInfo.value.username.length) {
-			uni.navigateTo({
-				url: '/pages/user/user-info'
-			})
-		} else {
+
+	const handleUserOption = (url : string) => {
+		if (!userInfo.value.username) {
 			state.isRegist = false
 			state.show = true
-
-			
-		}
-	}
-	const handleUserOption = (url : string) => {
-		if (!userStore.userInfo.token) {
-			state.isRegist = false
-		} else {
+		}else{
 			uni.navigateTo({
 				url
 			})

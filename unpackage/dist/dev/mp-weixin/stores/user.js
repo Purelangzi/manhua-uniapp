@@ -8,8 +8,13 @@ const useUser = common_vendor.defineStore("USER", {
   unistorage: true,
   actions: {
     logOut() {
-      this.$reset();
-      common_vendor.index.removeStorageSync("USER");
+      setTimeout(() => {
+        this.$reset();
+        common_vendor.index.removeStorageSync("USER");
+        common_vendor.index.reLaunch({
+          url: "/pages/user/user"
+        });
+      }, 1500);
     }
   },
   getters: {}
