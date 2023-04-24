@@ -3317,6 +3317,9 @@ function inject(key, defaultValue, treatDefaultAsFactory = false) {
     warn(`inject() can only be used inside setup() or functional components.`);
   }
 }
+function watchEffect(effect, options) {
+  return doWatch(effect, null, options);
+}
 const INITIAL_WATCHER_VALUE = {};
 function watch(source, cb, options) {
   if (!isFunction(cb)) {
@@ -7643,6 +7646,7 @@ const onLoad = /* @__PURE__ */ createHook(ON_LOAD);
 const onReady = /* @__PURE__ */ createHook(ON_READY);
 exports.Pinia = Pinia;
 exports._export_sfc = _export_sfc;
+exports.computed = computed;
 exports.createPinia = createPinia;
 exports.createSSRApp = createSSRApp;
 exports.defineComponent = defineComponent;
@@ -7663,8 +7667,8 @@ exports.ref = ref;
 exports.resolveComponent = resolveComponent;
 exports.s = s;
 exports.sr = sr;
-exports.storeToRefs = storeToRefs;
 exports.t = t;
 exports.toRefs = toRefs;
 exports.unref = unref;
 exports.watch = watch;
+exports.watchEffect = watchEffect;

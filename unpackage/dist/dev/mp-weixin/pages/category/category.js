@@ -5,6 +5,13 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   setup(__props) {
     common_vendor.onLoad(() => {
     });
+    common_vendor.onShow(() => {
+      if (!common_vendor.index.getStorageSync("USER")) {
+        common_vendor.index.switchTab({
+          url: "/pages/user/user"
+        });
+      }
+    });
     common_vendor.onMounted(() => {
     });
     return (_ctx, _cache) => {

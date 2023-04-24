@@ -29,34 +29,21 @@
 			"style": {
 				"navigationBarTitleText": "个人中心",
 				"enablePullDownRefresh": false,
-				"navigationBarBackgroundColor": "#ffa73c"
+				"navigationBarBackgroundColor": "#ff7830"
 			}
-		}, {
-			"path": "pages/userUpdate/userName",
-			"style": {
-				"navigationBarTitleText": "修改昵称",
-				"enablePullDownRefresh": false,
-				"navigationBarBackgroundColor": "#ffa73c"
-			}
-		}, {
-			"path": "pages/userUpdate/email",
-			"style": {
-				"navigationBarTitleText": "修改邮箱",
-				"enablePullDownRefresh": false,
-				"navigationBarBackgroundColor": "#ffa73c"
-			}
-		}, {
-			"path": "pages/userUpdate/phone",
-			"style": {
-				"navigationBarTitleText": "修改手机号",
-				"enablePullDownRefresh": false,
-				"navigationBarBackgroundColor": "#ffa73c"
-			}
-		}
-	],
+		},{
+            "path" : "pages/error/error",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "404",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"tabBar": {
-		"color": "#7A7E83",
-		"selectedColor": "#1296db",
+		"color": "#999",
+		"selectedColor": "#999",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [{

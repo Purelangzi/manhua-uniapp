@@ -2,11 +2,15 @@
 const common_vendor = require("../common/vendor.js");
 const utils_showMsg = require("../utils/showMsg.js");
 const stores_user = require("../stores/user.js");
+const utils_wxLogin = require("../utils/wxLogin.js");
+let isRefreshing = false;
+let requests = [];
 const baseUrl = "http://127.0.0.1:7001";
 const userStore = stores_user.useUser();
 const request = (options) => {
   common_vendor.index.addInterceptor("request", {
     invoke: (args) => {
+      console.log(args);
       common_vendor.index.showLoading({
         title: "加载中"
       });
@@ -22,9 +26,9 @@ const request = (options) => {
           };
           break;
       }
-      const token = userStore.userInfo.token;
+      const token = userStore.token;
       if (token) {
-        args.header["token"] = "Bearer" + token;
+        args.header["token"] = "Bearer " + token;
       }
     },
     complete: () => {
@@ -36,7 +40,7 @@ const request = (options) => {
       url: baseUrl + options.url,
       method: options.method,
       data: options.data,
-      success: (res) => {
+      success: async (res) => {
         switch (res.statusCode) {
           case 200:
             resolve(res.data);
@@ -46,9 +50,19 @@ const request = (options) => {
             reject(res.data);
             break;
           case 401:
-            utils_showMsg.showMsg({ title: "Token 过期或未登录", icon: "error", duration: 3e3 });
-            userStore.logOut();
-            reject(res.data);
+            console.log("401wx");
+            if (!isRefreshing) {
+              console.log("微信刷新token");
+              isRefreshing = true;
+              utils_wxLogin.wxLogin();
+              requests.map((cb) => cb());
+              requests = [];
+            }
+            resolve(new Promise((reslove) => {
+              requests.push(() => {
+                reslove(request(options));
+              });
+            }));
             break;
           default:
             utils_showMsg.showMsg({ title: res.data.msg, icon: "error" });
@@ -58,10 +72,10 @@ const request = (options) => {
       },
       fail: (err) => {
         reject(err);
-      },
-      complete: () => {
       }
     });
+  }).catch((e) => {
+    console.log(e);
   });
 };
 const request$1 = {

@@ -5,9 +5,7 @@
     "pages/book/book",
     "pages/user/user",
     "pages/user/user-Info",
-    "pages/userUpdate/userName",
-    "pages/userUpdate/email",
-    "pages/userUpdate/phone"
+    "pages/error/error"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -16,8 +14,8 @@
     "backgroundColor": "#F8F8F8"
   },
   "tabBar": {
-    "color": "#7A7E83",
-    "selectedColor": "#1296db",
+    "color": "#999",
+    "selectedColor": "#999",
     "borderStyle": "black",
     "backgroundColor": "#ffffff",
     "list": [

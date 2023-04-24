@@ -2,6 +2,7 @@
 const common_vendor = require("../../common/vendor.js");
 const api_index = require("../../api/index.js");
 const stores_user = require("../../stores/user.js");
+const utils_wxLogin = require("../../utils/wxLogin.js");
 const utils_showMsg = require("../../utils/showMsg.js");
 require("../../api/request.js");
 if (!Array) {
@@ -68,7 +69,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       },
       show: true,
       isRegist: false,
-      customStyleLogin: { backgroundColor: "#ff6b07", color: "#fff", marginTop: "85rpx" }
+      customStyleLogin: { backgroundColor: "#ff7830", color: "#fff", marginTop: "85rpx" }
     });
     const customStyleExit = { backgroundColor: "#ffa73c", color: "#fff" };
     const customStyleWx = { backgroundColor: "#01a95e", color: "#fff" };
@@ -91,6 +92,16 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         loginFrom.value.setRules(state.rules);
       }
     });
+    common_vendor.watch(() => userStore.userInfo.username, () => {
+      if (userStore.token) {
+        userInfo.value.username = userStore.userInfo.username;
+      }
+    });
+    common_vendor.watch(() => userStore.userInfo.avatar, () => {
+      if (userStore.token) {
+        userInfo.value.avatar = userStore.userInfo.avatar;
+      }
+    });
     common_vendor.watch(() => state.isRegist, (newVal) => {
       common_vendor.nextTick$1(() => {
         loginFrom.value.resetFields();
@@ -100,12 +111,12 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         state.customStyleLogin.marginTop = "50rpx";
       }
     });
-    common_vendor.watch(() => state.show, (newVal) => {
-      if (newVal === true)
-        common_vendor.nextTick$1(() => {
-          loginFrom.value.resetFields();
-          loginFrom.value.setRules(state.rules);
-        });
+    common_vendor.watchEffect(() => {
+      if (state.show === true) {
+        common_vendor.index.hideTabBar();
+      } else {
+        common_vendor.index.showTabBar();
+      }
     });
     const handleLogin = async () => {
       const { account, password } = common_vendor.toRefs(state.userForm);
@@ -139,46 +150,11 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const handleLogOut = () => {
       userStore.logOut();
     };
-    const handleWxLogin = async () => {
-      common_vendor.index.getUserProfile({
-        desc: "获取用户个人信息",
-        success: async (infoRes) => {
-          const { avatarUrl, nickName } = infoRes.userInfo;
-          const codeWx = await getWxCode();
-          const params = {
-            avatar: avatarUrl,
-            username: nickName,
-            code: codeWx
-          };
-          try {
-            const { data, msg } = await api_index.userWxLogin(params);
-            console.log("微信一键登录存储token和用户信息");
-            userStore.$patch((state2) => {
-              state2.userInfo = data.userInfo;
-              state2.token = data.token;
-            });
-            userInfo.value.avatar = data.userInfo.avatar;
-            userInfo.value.username = data.userInfo.username;
-            state.show = false;
-            utils_showMsg.showMsg({ title: msg || "" });
-          } catch (e) {
-          }
-        }
-      });
-    };
-    const getWxCode = async () => {
-      return new Promise((resolve, reject) => {
-        common_vendor.index.login({
-          provider: "weixin",
-          success: (res) => {
-            resolve(res.code);
-          },
-          fail: (err) => {
-            utils_showMsg.showMsg({ title: "登录失败,错误码：" + err.code });
-            reject(err);
-          }
-        });
-      });
+    const handleWxLogin = () => {
+      utils_wxLogin.wxLogin();
+      userInfo.value.avatar = userStore.userInfo.avatar;
+      userInfo.value.username = userStore.userInfo.username;
+      state.show = false;
     };
     const handleUserOption = (url) => {
       if (!userInfo.value.username) {
@@ -293,6 +269,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         H: common_vendor.o(($event) => state.show = $event),
         I: common_vendor.p({
           mode: "bottom",
+          ["border-radius"]: "60",
+          ["mask-close-able"]: false,
           modelValue: state.show
         })
       });

@@ -6,10 +6,17 @@
 
 <script lang="ts" setup>
 	import { onMounted, reactive, ref } from 'vue'
-	import { onLoad } from '@dcloudio/uni-app'
+	import { onLoad,onShow } from '@dcloudio/uni-app'
 	
 	onLoad(()=>{
 		
+	})
+	onShow(()=>{
+		if(!uni.getStorageSync('USER')){
+			uni.switchTab({
+				url:'/pages/user/user'
+			})
+		}
 	})
 	onMounted(()=>{
 

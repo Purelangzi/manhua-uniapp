@@ -6,7 +6,7 @@
 					<u-avatar :src="userInfo.avatar" mode="square" @click="handleOnAvatar"></u-avatar>
 				</template>
 			</u-cell-item>
-			<u-cell-item title="昵称" :value="userInfo.username"></u-cell-item>
+			<u-cell-item title="昵称" :value="userInfo.username?userInfo.username:'未设置'"></u-cell-item>
 			<u-cell-item title="手机号" :value="userInfo.phone?userInfo.phone:'未设置'"></u-cell-item>
 			<u-cell-item title="密码" :value="userInfo.password?userInfo.password:'未设置'"></u-cell-item>
 			<u-cell-item title="邮箱" :value="userInfo.email?userInfo.email:'未设置'"></u-cell-item>
@@ -20,13 +20,15 @@
 </template>
 
 <script lang="ts" setup>
-	import { onMounted, reactive, ref } from 'vue'
+	import { onMounted, reactive, ref ,computed} from 'vue'
 	import { onLoad, onShow } from '@dcloudio/uni-app'
+	import {editAccount} from '@/api/index'
 	import { useUser } from '@/stores/user'
 	import { storeToRefs } from 'pinia'
 	import showMsg from '@/utils/showMsg'
+	import wxLogin from '@/utils/wxLogin'
+	
 	const userStore = useUser()
-	const { userInfo } = storeToRefs(userStore)
 	const state = reactive({
 
 	})
@@ -38,11 +40,24 @@
 	onMounted(() => {
 
 	})
+	const userInfo = computed(()=>{
+		return userStore.userInfo
+	})
 	// 点击头像上传图片
 	const handleOnAvatar = async () => {
 		const filePath = await chooseImage(1) as string
 		const {url} = await uploadImage(filePath)
-		userStore.userInfo.avatar = url
+		console.log(url);
+		userStore.$patch((state:any)=>{
+			state.userInfo.avatar = url
+		})
+		try{
+			const {msg} = await editAccount({id: userStore.userInfo.id, avatar:url})
+			showMsg({title:msg,icon:'success'})
+		}catch(e){
+			console.log(e);
+		}
+		
 	}
 	// 选择照片
 	const chooseImage = async (count : number) => {
@@ -67,7 +82,6 @@
 					const path = file.path
 					const wxTypeArr = ['.jpg','jpeg','.png']
 					const type = path.substring(path.length - 4)
-					console.log(type);
 					if(!wxTypeArr.includes(type)) {
 						showMsg({ title: '上传图片只能是 png、jpg、jpeg 格式!!', duration: 3000 })
 						return
@@ -109,11 +123,18 @@
 						showMsg({ title: res.msg })
 						resolve(res.data)
 					} else if(uploadFileRes.statusCode === 401) {
+						// #ifndef MP-WEIXIN
 						showMsg({ title: res.msg || 'token失效,请重新登录',duration:2000})
 						userStore.logOut()
-						/* setTimeout(()=>{
-							
-						},1500) */
+						// #endif
+						
+						// #ifdef MP-WEIXIN
+						
+							console.log('微信刷新token');
+							 wxLogin()
+							return
+						// #endif
+						
 						
 					}else{
 						showMsg({ title: res.msg || '图片上传失败'})

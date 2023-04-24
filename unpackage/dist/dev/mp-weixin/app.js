@@ -35,13 +35,17 @@ if (!Math) {
   "./pages/book/book.js";
   "./pages/user/user.js";
   "./pages/user/user-Info.js";
-  "./pages/userUpdate/userName.js";
-  "./pages/userUpdate/email.js";
-  "./pages/userUpdate/phone.js";
+  "./pages/error/error.js";
 }
 const _sfc_main = {
   onLaunch: function() {
     console.log("App Launch");
+    common_vendor.index.onPageNotFound(() => {
+      common_vendor.index.redirectTo({
+        url: "pages/error/error"
+        // 404 页面的路径
+      });
+    });
   },
   onShow: function() {
     console.log("App Show");

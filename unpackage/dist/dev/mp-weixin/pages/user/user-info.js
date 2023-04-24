@@ -1,7 +1,10 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
+const api_index = require("../../api/index.js");
 const stores_user = require("../../stores/user.js");
 const utils_showMsg = require("../../utils/showMsg.js");
+const utils_wxLogin = require("../../utils/wxLogin.js");
+require("../../api/request.js");
 if (!Array) {
   const _easycom_u_avatar2 = common_vendor.resolveComponent("u-avatar");
   const _easycom_u_cell_item2 = common_vendor.resolveComponent("u-cell-item");
@@ -18,7 +21,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "user-Info",
   setup(__props) {
     const userStore = stores_user.useUser();
-    const { userInfo } = common_vendor.storeToRefs(userStore);
     common_vendor.reactive({});
     common_vendor.onLoad(() => {
     });
@@ -26,10 +28,22 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     });
     common_vendor.onMounted(() => {
     });
+    const userInfo = common_vendor.computed(() => {
+      return userStore.userInfo;
+    });
     const handleOnAvatar = async () => {
       const filePath = await chooseImage(1);
       const { url } = await uploadImage(filePath);
-      userStore.userInfo.avatar = url;
+      console.log(url);
+      userStore.$patch((state2) => {
+        state2.userInfo.avatar = url;
+      });
+      try {
+        const { msg } = await api_index.editAccount({ id: userStore.userInfo.id, avatar: url });
+        utils_showMsg.showMsg({ title: msg, icon: "success" });
+      } catch (e) {
+        console.log(e);
+      }
     };
     const chooseImage = async (count) => {
       return new Promise((resolve, reject) => {
@@ -44,7 +58,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             const path = file.path;
             const wxTypeArr = [".jpg", "jpeg", ".png"];
             const type = path.substring(path.length - 4);
-            console.log(type);
             if (!wxTypeArr.includes(type)) {
               utils_showMsg.showMsg({ title: "上传图片只能是 png、jpg、jpeg 格式!!", duration: 3e3 });
               return;
@@ -75,8 +88,9 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
               utils_showMsg.showMsg({ title: res.msg });
               resolve(res.data);
             } else if (uploadFileRes.statusCode === 401) {
-              utils_showMsg.showMsg({ title: res.msg || "token失效,请重新登录", duration: 2e3 });
-              userStore.logOut();
+              console.log("微信刷新token");
+              utils_wxLogin.wxLogin();
+              return;
             } else {
               utils_showMsg.showMsg({ title: res.msg || "图片上传失败" });
             }
@@ -98,7 +112,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         }),
         d: common_vendor.p({
           title: "昵称",
-          value: common_vendor.unref(userInfo).username
+          value: common_vendor.unref(userInfo).username ? common_vendor.unref(userInfo).username : "未设置"
         }),
         e: common_vendor.p({
           title: "手机号",

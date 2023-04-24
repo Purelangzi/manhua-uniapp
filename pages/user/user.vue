@@ -18,7 +18,7 @@
 			</u-cell-group>
 		</view>
 		<view class="user-login-popup">
-			<u-popup v-model="state.show" mode="bottom">
+			<u-popup v-model="state.show" mode="bottom" border-radius="60" :mask-close-able="false">
 				<view class="popup-title">登录后更精彩</view>
 				<view class="login-form">
 					<u-form :model="userForm" ref="loginFrom">
@@ -48,9 +48,10 @@
 
 <script lang="ts" setup>
 	import { userLogin, userRegister, userWxLogin } from '@/api/index'
-	import { nextTick, onMounted, reactive, ref, toRefs, watch } from 'vue'
+	import { nextTick, onMounted, reactive, ref, toRefs,computed, watch,watchEffect } from 'vue'
 	import { onLoad, onShow,onReady } from '@dcloudio/uni-app'
 	import { useUser } from '@/stores/user'
+	import wxLogin from '@/utils/wxLogin'
 	import showMsg from '@/utils/showMsg'
 	const userStore = useUser()
 	const loginFrom = ref()
@@ -89,7 +90,7 @@
 		},
 		show: true,
 		isRegist: false,
-		customStyleLogin:{ backgroundColor: '#ff6b07', color: '#fff',marginTop:'85rpx'}
+		customStyleLogin:{ backgroundColor: "#ff7830", color: '#fff',marginTop:'85rpx'}
 	})
 
 
@@ -120,6 +121,16 @@
 		}
 		
 	})
+	watch(()=>userStore.userInfo.username,()=>{
+		if(userStore.token){
+			userInfo.value.username = userStore.userInfo.username
+		}
+	})
+	watch(()=>userStore.userInfo.avatar,()=>{
+		if(userStore.token){
+			userInfo.value.avatar = userStore.userInfo.avatar
+		}
+	})
 	watch(()=>state.isRegist,(newVal)=>{
 		nextTick(()=>{
 			loginFrom.value.resetFields()
@@ -130,13 +141,18 @@
 			state.customStyleLogin.marginTop = '50rpx'
 		}
 	})
-	watch(()=>state.show,(newVal)=>{
-		if(newVal === true)
-		nextTick(()=>{
-			loginFrom.value.resetFields()
-			loginFrom.value.setRules(state.rules)
-		})
+
+	// 监听登录弹出框，隐藏小程序tabbar
+	// #ifdef MP-WEIXIN
+	watchEffect(()=>{
+		if(state.show === true){
+			uni.hideTabBar()
+		}else{
+			uni.showTabBar()
+		}
 	})
+	// #endif
+	
 	const handleLogin = async () => {
 		const { account, password } = toRefs(state.userForm)
 		const option = state.isRegist ? userRegister(state.userForm) : userLogin({ account: account.value, password: password.value })
@@ -159,9 +175,6 @@
 		} catch (e) {
 
 		}
-
-
-
 	}
 	const checkRegister = () => {
 		nextTick(()=>{
@@ -176,47 +189,11 @@
 		userStore.logOut()
 		
 	}
-	const handleWxLogin = async () => {
-		uni.getUserProfile({
-			desc: '获取用户个人信息',
-			success: async (infoRes) => {
-				const { avatarUrl, nickName } = infoRes.userInfo
-				const codeWx = await getWxCode()
-				const params = {
-					avatar: avatarUrl,
-					username: nickName,
-					code: codeWx as string
-				}
-				try {
-					const { data, msg } = await userWxLogin(params)
-					console.log('微信一键登录存储token和用户信息');
-					userStore.$patch((state : any) => {
-						state.userInfo = data.userInfo
-						state.token = data.token
-					})
-					userInfo.value.avatar = data.userInfo.avatar
-					userInfo.value.username = data.userInfo.username
-					state.show = false
-					showMsg({ title: msg || '' })
-				} catch (e) {
-				}
-			}
-		})
-	}
-	// 获取小程序用户登录临时凭证
-	const getWxCode = async () => {
-		return new Promise((resolve, reject) => {
-			uni.login({
-				provider: 'weixin',
-				success: (res) => {
-					resolve(res.code)
-				},
-				fail: (err) => {
-					showMsg({ title: '登录失败,错误码：' + err.code })
-					reject(err)
-				}
-			})
-		})
+	const handleWxLogin = () => {
+		wxLogin()
+		userInfo.value.avatar = userStore.userInfo.avatar
+		userInfo.value.username = userStore.userInfo.username
+		state.show = false
 	}
 
 	const handleUserOption = (url : string) => {
@@ -235,7 +212,7 @@
 	.user-header {
 		width: 100%;
 		height: 180rpx;
-		background-color: $uni-bg-color-yellow;
+		background-color: $uni-main-color;
 		border-radius: 0 0 40rpx 40rpx;
 		display: flex;
 		justify-content: center;
