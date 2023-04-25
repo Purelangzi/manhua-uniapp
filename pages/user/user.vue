@@ -49,7 +49,7 @@
 <script lang="ts" setup>
 	import { userLogin, userRegister, userWxLogin } from '@/api/index'
 	import { nextTick, onMounted, reactive, ref, toRefs,computed, watch,watchEffect } from 'vue'
-	import { onLoad, onShow,onReady } from '@dcloudio/uni-app'
+	import { onLoad, onShow,onReady,onHide } from '@dcloudio/uni-app'
 	import { useUser } from '@/stores/user'
 	import wxLogin from '@/utils/wxLogin'
 	import showMsg from '@/utils/showMsg'
@@ -88,11 +88,10 @@
 			],
 			username:[{required: true,message: '昵称不能为空', trigger: ['change','blur']}]
 		},
-		show: true,
+		show: false,
 		isRegist: false,
 		customStyleLogin:{ backgroundColor: "#ff7830", color: '#fff',marginTop:'85rpx'}
 	})
-
 
 	const customStyleExit = { backgroundColor: '#ffa73c', color: '#fff' }
 	
@@ -111,10 +110,17 @@
 	})
 	onShow(() => {
 		
+		
+	})
+	onHide(()=>{
+		if (userStore.token) {
+			state.show = false
+		}
 	})
 	onMounted(() => {
-
+		
 	})
+
 	onReady(() =>{
 		if(!userStore.token){
 			loginFrom.value.setRules(state.rules);

@@ -4,7 +4,7 @@ const whiteList = ['/pages/user/user']
 
 // 是否有权限
 const hasPermission = (url:string) =>{
-
+	console.log(url,'url');
 	const userInfo = uni.getStorageSync('USER')
 	let token = ''
 	if(userInfo){
@@ -14,17 +14,28 @@ const hasPermission = (url:string) =>{
 	
 	// 在白名单中或有token
 	if(whiteList.includes(url) || token){
+		console.log('true');
 		return true
 	}else{
 		// 不在白名单中且没有token
-
-		// H5刷新页面后为空数组 就到用户页
-		if(!pathArr.length){
-
+		console.log(pathArr,'pathArr');
+		// H5刷新页面后为空数组 就到用户页; 防止登录后用户手动清除token，不会自动跳到用户登录页
+		if(!pathArr.length  || pathArr.length>=1){
+			console.log('ddddddddddddd');
 			uni.switchTab({
-				url:'/pages/user/user'
+				url:'/pages/user/user',
+				success: () => {
+					
+					if (!pathArr.length) return;
+					const perpage = pathArr[pathArr.length - 1]
+					console.log(perpage.$vm);
+					// perpage.$vm
+				
+				}
 			})
 		}else{
+			
+			console.log(pathArr,'ddddd');
 			uni.showToast({
 				title:'登录才能查看哦',
 				duration:2000,
@@ -39,14 +50,39 @@ const hasPermission = (url:string) =>{
 uni.addInterceptor('navigateTo',{
 	// invoke根据返回值判断是否继续执行调整
 	invoke: (config) => {
+		console.log('navigateTo');
 		return hasPermission(config.url)
 	}
 })
 // h5能拦截，小程序拦截不到tabbar，得在每个tabbar页面的show判断
 uni.addInterceptor("switchTab", {
-
   invoke(config) {
+	  console.log('switchTab');
 	return hasPermission(config.url)
   }
 })
+uni.addInterceptor("redirectTo", {
+  invoke(config) {
+	  console.log('redirectTo');
+	// return hasPermission(config.url)
+  }
+})
+uni.addInterceptor("navigateBack", {
+  invoke(config) {
+	  console.log(config,'navigateBack');
+	// return hasPermission(config.url)
+  }
+})
 
+uni.addInterceptor("redirectTo", {
+  invoke(config) {
+	  console.log(config,'redirectTo');
+	// return hasPermission(config.url)
+  }
+})
+uni.addInterceptor("reLaunch", {
+  invoke(config) {
+	  console.log(config,'reLaunch');
+	// return hasPermission(config.url)
+  }
+})

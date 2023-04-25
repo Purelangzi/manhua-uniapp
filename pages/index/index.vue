@@ -2,7 +2,7 @@
 	<view class="content">
 
 		<view class="text-area">
-			<u-button type="primary" @click="ggg">获取</u-button>
+			
 		</view>
 	</view>
 </template>
@@ -11,24 +11,32 @@
 	import {getHomeData} from '@/api/index'
 	import { nextTick, onMounted, reactive, ref, toRefs, watch } from 'vue'
 	import { onLoad, onShow,onReady } from '@dcloudio/uni-app'
+	import access from '@/utils/addressBarAccess'
 
 	onLoad(async()=> {
-		const res = await getHomeData()
-		console.log(res);
+		/* // #ifndef MP-WEIXIN
+		const cur = getCurrentPages().pop().route
+		console.log(cur);
+		// #endif
+		if(access()){
+			return
+		}
+		console.log(1);
+		try{
+			const res = await getHomeData()
+		}catch(e){
+			console.log(e);
+		} */
 	})
 	onShow(()=>{
-		if(!uni.getStorageSync('USER')){
-			uni.switchTab({
-				url:'/pages/user/user'
-			})
-		}
-	})
 
-	const ggg = () =>{
-		uni.navigateTo({
-			url:'/pages/error/error'
-		})
-	}
+		if(access()){
+			return
+		}
+		console.log('show');
+	})
+	
+
 	
 </script>
 
