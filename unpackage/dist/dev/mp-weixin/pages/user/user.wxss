@@ -39,38 +39,3 @@
 .user-options.data-v-0f7520f0 {
   margin-top: 30rpx;
 }
-.user-options .logOut.data-v-0f7520f0 {
-  margin-top: 40rpx;
-  padding: 0 15%;
-}
-.user-login-popup.data-v-0f7520f0 {
-  position: relative;
-}
-.user-login-popup.data-v-0f7520f0 .u-drawer-content {
-  padding: 0 65rpx;
-}
-.user-login-popup.data-v-0f7520f0 .u-drawer__scroll-view {
-  height: auto;
-}
-.user-login-popup .popup-title.data-v-0f7520f0 {
-  margin: 20rpx 0;
-  text-align: center;
-  font-weight: bold;
-}
-.user-login-popup .login-form.data-v-0f7520f0 {
-  margin-bottom: 30rpx;
-}
-.user-login-popup .checkout-register.data-v-0f7520f0 {
-  position: absolute;
-  right: 0;
-  top: 48%;
-  bottom: 26%;
-  color: #999;
-}
-.user-login-popup .user-wx.data-v-0f7520f0 {
-  margin-bottom: 20rpx;
-}
-.user-login-popup .user-wx .other-login.data-v-0f7520f0 {
-  font-weight: 600;
-  margin-bottom: 20rpx;
-}

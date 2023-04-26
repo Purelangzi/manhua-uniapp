@@ -10,9 +10,10 @@ export const useUser = defineStore('USER', {
 	unistorage:true,
 	actions: {
 		logOut(){
+			console.log('logOut');
 			this.$reset()
 			uni.removeStorageSync('USER')
-			uni.reLaunch({
+			uni.switchTab({
 				url:'/pages/user/user'
 			})
 		}

@@ -9,25 +9,34 @@ if (!Array) {
   const _easycom_u_avatar2 = common_vendor.resolveComponent("u-avatar");
   const _easycom_u_cell_item2 = common_vendor.resolveComponent("u-cell-item");
   const _easycom_u_cell_group2 = common_vendor.resolveComponent("u-cell-group");
-  (_easycom_u_avatar2 + _easycom_u_cell_item2 + _easycom_u_cell_group2)();
+  const _easycom_u_button2 = common_vendor.resolveComponent("u-button");
+  (_easycom_u_avatar2 + _easycom_u_cell_item2 + _easycom_u_cell_group2 + _easycom_u_button2)();
 }
 const _easycom_u_avatar = () => "../../uni_modules/vk-uview-ui/components/u-avatar/u-avatar.js";
 const _easycom_u_cell_item = () => "../../uni_modules/vk-uview-ui/components/u-cell-item/u-cell-item.js";
 const _easycom_u_cell_group = () => "../../uni_modules/vk-uview-ui/components/u-cell-group/u-cell-group.js";
+const _easycom_u_button = () => "../../uni_modules/vk-uview-ui/components/u-button/u-button.js";
 if (!Math) {
-  (_easycom_u_avatar + _easycom_u_cell_item + _easycom_u_cell_group)();
+  (_easycom_u_avatar + _easycom_u_cell_item + _easycom_u_cell_group + _easycom_u_button)();
 }
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "user-Info",
   setup(__props) {
     const userStore = stores_user.useUser();
     common_vendor.reactive({});
+    const customStyleExit = { backgroundColor: "#ffa73c", color: "#fff" };
     common_vendor.onLoad(() => {
     });
     common_vendor.onShow(() => {
     });
     common_vendor.onMounted(() => {
     });
+    const rrr = () => {
+      common_vendor.index.navigateBack();
+    };
+    const handleLogOut = () => {
+      userStore.logOut();
+    };
     const userInfo = common_vendor.computed(() => {
       return userStore.userInfo;
     });
@@ -101,7 +110,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       });
     };
     return (_ctx, _cache) => {
-      return {
+      return common_vendor.e({
         a: common_vendor.o(handleOnAvatar),
         b: common_vendor.p({
           src: common_vendor.unref(userInfo).avatar,
@@ -125,8 +134,17 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         g: common_vendor.p({
           title: "邮箱",
           value: common_vendor.unref(userInfo).email ? common_vendor.unref(userInfo).email : "未设置"
+        }),
+        h: common_vendor.unref(userInfo).username
+      }, common_vendor.unref(userInfo).username ? {
+        i: common_vendor.o(handleLogOut),
+        j: common_vendor.p({
+          ["custom-style"]: customStyleExit,
+          ripple: true
         })
-      };
+      } : {}, {
+        k: common_vendor.o(rrr)
+      });
     };
   }
 });

@@ -1,10 +1,10 @@
 // 登录白名单 '/pages/index/index'默认是'/',由于后端接口除了用户页，其它都需要登录
 // const whiteList = ['/','/pages/category/category','/pages/book/book', '/pages/user/user']
-const whiteList = ['/pages/user/user']
+const whiteList = ['/pages/user/user-login']
 
 // 是否有权限
 const hasPermission = (url:string) =>{
-	console.log(url,'url');
+	console.log(url);
 	const userInfo = uni.getStorageSync('USER')
 	let token = ''
 	if(userInfo){
@@ -14,24 +14,25 @@ const hasPermission = (url:string) =>{
 	
 	// 在白名单中或有token
 	if(whiteList.includes(url) || token){
-		console.log('true');
+		console.log('在白名单中或有token');
 		return true
 	}else{
 		// 不在白名单中且没有token
 		console.log(pathArr,'pathArr');
 		// H5刷新页面后为空数组 就到用户页; 防止登录后用户手动清除token，不会自动跳到用户登录页
 		if(!pathArr.length  || pathArr.length>=1){
-			console.log('ddddddddddddd');
+			console.log('防止登录后用户手动清除token，不会自动跳到用户登录页');
+			
 			uni.switchTab({
-				url:'/pages/user/user',
-				success: () => {
+				url:'/pages/user/user-login',
+				/* success: () => {
+					if(pathArr.length){
+						const pages = getCurrentPages()
+						const perpage = pages[pages.length - 1]
+						
+					}
 					
-					if (!pathArr.length) return;
-					const perpage = pathArr[pathArr.length - 1]
-					console.log(perpage.$vm);
-					// perpage.$vm
-				
-				}
+				} */
 			})
 		}else{
 			
@@ -83,6 +84,6 @@ uni.addInterceptor("redirectTo", {
 uni.addInterceptor("reLaunch", {
   invoke(config) {
 	  console.log(config,'reLaunch');
-	// return hasPermission(config.url)
+	return hasPermission(config.url)
   }
 })

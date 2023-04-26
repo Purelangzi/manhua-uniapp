@@ -88,7 +88,7 @@ const request = (options : ReqParams) : Promise<any> => {
 
 						break;
 					default:
-						showMsg({ title: (res.data as any).msg, icon: 'error' })
+						showMsg({ title: (res.data as any).msg,duration:2000 })
 						reject(res.data)
 						break;
 				}

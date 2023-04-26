@@ -11,8 +11,10 @@
 			<u-cell-item title="密码" :value="userInfo.password?userInfo.password:'未设置'"></u-cell-item>
 			<u-cell-item title="邮箱" :value="userInfo.email?userInfo.email:'未设置'"></u-cell-item>
 		</u-cell-group>
-
-
+		<view class="logOut" v-if="userInfo.username">
+			<u-button :custom-style="customStyleExit" :ripple="true" @click="handleLogOut">退出登录</u-button>
+		</view>
+		<button @click="rrr">dddd</button>
 	</view>
 
 
@@ -32,6 +34,8 @@
 	const state = reactive({
 
 	})
+	
+	const customStyleExit = { backgroundColor: '#ffa73c', color: '#fff' }
 	onLoad(() => {
 		
 	})
@@ -40,6 +44,14 @@
 	onMounted(() => {
 
 	})
+	const rrr = () =>{
+		
+		uni.navigateBack()
+	}
+	const handleLogOut = () => {
+		userStore.logOut()
+		
+	}
 	const userInfo = computed(()=>{
 		return userStore.userInfo
 	})
@@ -148,5 +160,11 @@
 </script>
 
 <style lang="scss">
-	.user-center {}
+	.user-center {
+		.logOut {
+			margin-top: 40rpx;
+			padding: 0 15%;
+		
+		}
+	}
 </style>

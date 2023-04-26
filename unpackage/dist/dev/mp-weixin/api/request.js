@@ -65,7 +65,7 @@ const request = (options) => {
             }));
             break;
           default:
-            utils_showMsg.showMsg({ title: res.data.msg, icon: "error" });
+            utils_showMsg.showMsg({ title: res.data.msg, duration: 2e3 });
             reject(res.data);
             break;
         }

@@ -23,3 +23,7 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
+.user-center .logOut {
+  margin-top: 40rpx;
+  padding: 0 15%;
+}

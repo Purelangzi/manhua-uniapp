@@ -1,6 +1,4 @@
 {
   "navigationBarTitleText": "首页",
-  "usingComponents": {
-    "u-button": "../../uni_modules/vk-uview-ui/components/u-button/u-button"
-  }
+  "usingComponents": {}
 }

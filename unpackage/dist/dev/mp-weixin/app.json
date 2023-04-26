@@ -4,6 +4,7 @@
     "pages/category/category",
     "pages/book/book",
     "pages/user/user",
+    "pages/user/user-login",
     "pages/user/user-Info",
     "pages/error/error"
   ],

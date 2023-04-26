@@ -5,6 +5,7 @@
   "usingComponents": {
     "u-avatar": "../../uni_modules/vk-uview-ui/components/u-avatar/u-avatar",
     "u-cell-item": "../../uni_modules/vk-uview-ui/components/u-cell-item/u-cell-item",
-    "u-cell-group": "../../uni_modules/vk-uview-ui/components/u-cell-group/u-cell-group"
+    "u-cell-group": "../../uni_modules/vk-uview-ui/components/u-cell-group/u-cell-group",
+    "u-button": "../../uni_modules/vk-uview-ui/components/u-button/u-button"
   }
 }

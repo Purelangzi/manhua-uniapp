@@ -23,18 +23,34 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-.u-mask.data-v-b3b508a8 {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0;
-  transition: transform 0.3s;
+.login-header {
+  margin-top: 80rpx;
 }
-.u-mask-show.data-v-b3b508a8 {
-  opacity: 1;
+.login-header .login-header-logo {
+  margin: 0 auto;
+  width: 210rpx;
+  height: 136rpx;
+  background: url("https://static.mkzcdn.com/mobile/img/login/pic_login_logo@2x.png") no-repeat center center;
+  background-size: cover;
 }
-.u-mask-zoom.data-v-b3b508a8 {
-  transform: scale(1.2, 1.2);
+.login-form {
+  margin: 80rpx 10% 0;
+}
+.register {
+  margin-top: 40rpx;
+  text-align: center;
+}
+.other-login {
+  margin-top: 150rpx;
+}
+.other-login .other-title {
+  text-align: center;
+  margin-bottom: 40rpx;
+  font-size: 12px;
+  color: #999;
+}
+.other-login .other-icon {
+  display: flex;
+  justify-content: space-around;
+  margin: 0 10%;
 }

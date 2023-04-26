@@ -34,6 +34,7 @@ if (!Math) {
   "./pages/category/category.js";
   "./pages/book/book.js";
   "./pages/user/user.js";
+  "./pages/user/user-login.js";
   "./pages/user/user-Info.js";
   "./pages/error/error.js";
 }

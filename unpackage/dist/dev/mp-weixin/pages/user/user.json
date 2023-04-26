@@ -4,12 +4,6 @@
   "usingComponents": {
     "u-avatar": "../../uni_modules/vk-uview-ui/components/u-avatar/u-avatar",
     "u-cell-item": "../../uni_modules/vk-uview-ui/components/u-cell-item/u-cell-item",
-    "u-button": "../../uni_modules/vk-uview-ui/components/u-button/u-button",
-    "u-cell-group": "../../uni_modules/vk-uview-ui/components/u-cell-group/u-cell-group",
-    "u-input": "../../uni_modules/vk-uview-ui/components/u-input/u-input",
-    "u-form-item": "../../uni_modules/vk-uview-ui/components/u-form-item/u-form-item",
-    "u-form": "../../uni_modules/vk-uview-ui/components/u-form/u-form",
-    "u-icon": "../../uni_modules/vk-uview-ui/components/u-icon/u-icon",
-    "u-popup": "../../uni_modules/vk-uview-ui/components/u-popup/u-popup"
+    "u-cell-group": "../../uni_modules/vk-uview-ui/components/u-cell-group/u-cell-group"
   }
 }

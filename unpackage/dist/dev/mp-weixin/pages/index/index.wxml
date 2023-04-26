@@ -1,1 +1,1 @@
-<view class="content"><view class="text-area"><u-button wx:if="{{b}}" u-s="{{['d']}}" bindclick="{{a}}" u-i="33f429ec-0" bind:__l="__l" u-p="{{b}}">获取</u-button></view></view>
+<view class="content"><view class="text-area"></view></view>
