@@ -12,7 +12,7 @@
 				<u-cell-item title="浏览记录" icon="clock"></u-cell-item>
 				<u-cell-item title="关注/收藏" icon="heart"></u-cell-item>
 				<u-cell-item title="设置" icon="setting"></u-cell-item>
-				
+
 			</u-cell-group>
 		</view>
 
@@ -21,8 +21,8 @@
 
 <script lang="ts" setup>
 	import { userLogin, userRegister, userWxLogin } from '@/api/index'
-	import { onActivated,onDeactivated, nextTick, onMounted, reactive, ref, toRefs,computed, watch,watchEffect } from 'vue'
-	import { onLoad, onShow,onReady,onHide } from '@dcloudio/uni-app'
+	import { onActivated, nextTick, onMounted, reactive, ref, toRefs, computed, watch, watchEffect } from 'vue'
+	import { onLoad, onShow, onReady, onHide } from '@dcloudio/uni-app'
 	import { useUser } from '@/stores/user'
 	import wxLogin from '@/utils/wxLogin'
 	import showMsg from '@/utils/showMsg'
@@ -34,70 +34,72 @@
 			username: '',
 		}
 	})
-
-	
-	const customStyleWx = { backgroundColor: '#01a95e', color: '#fff' }
-
+	// 解决 h5非登录情况下，地址栏输入非白名单页面，
+	// 第二次输入onShow和onActivated同时存在，第三次输入只存在onActivated,从而成功进入非白名单页面
+	let showNum = 0
+	let actNum = 0
 	const { userInfo, userForm } = toRefs(state)
-	onActivated(()=>{
-		/* console.log('onActivated');
-		if (uni.getStorageSync('USER')) {
-			if(state.show) state.show = false
-		}else{
-			userStore.logOut()
-			
-		} */
-	})
+
 
 	onLoad(() => {
-		console.log('user-onLoad');
-		load()
+
 
 	})
 	onShow(() => {
-		console.log('user-onShow');
 		load()
-		
 	})
-
+	onActivated(() => {
+		activated()
+	})
 	onMounted(() => {
-		
-	})
-	
 
-	
-	watch(()=>userStore.userInfo.username,()=>{
-		if(userStore.token){
+	})
+
+
+
+	watch(() => userStore.userInfo.username, () => {
+		if (userStore.token) {
 			userInfo.value.username = userStore.userInfo.username
 		}
 	})
-	watch(()=>userStore.userInfo.avatar,()=>{
-		if(userStore.token){
+	watch(() => userStore.userInfo.avatar, () => {
+		if (userStore.token) {
 			userInfo.value.avatar = userStore.userInfo.avatar
 		}
 	})
-	const load = () =>{
+	const load = () => {
+		if(showNum === 0){
+			showNum++
+		}
+		console.log('load-load');
 		if (uni.getStorageSync('USER')) {
 			userInfo.value.username = userStore.userInfo.username
 			userInfo.value.avatar = userStore.userInfo.avatar
-		} else {
-			uni.redirectTo({
-				url:'/pages/user/user-login'
+		}
+		else {
+			uni.reLaunch({
+				url: '/pages/user/user-login'
 			})
 		}
 	}
+	const activated = () =>{
+		actNum++
+		if (showNum === 1 && actNum >= 2) {
+			load()
+		}
+	}
 
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	const handleUserOption = (url : string) => {
 		if (!userInfo.value.username) {
 			state.isRegist = false
 			state.show = true
-		}else{
+		} else {
 			uni.navigateTo({
 				url
 			})
@@ -125,8 +127,6 @@
 	.user-options {
 		margin-top: 30rpx;
 
-		
+
 	}
-
-
 </style>

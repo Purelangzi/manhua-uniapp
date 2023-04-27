@@ -24,16 +24,16 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         username: ""
       }
     });
+    let showNum = 0;
+    let actNum = 0;
     const { userInfo, userForm } = common_vendor.toRefs(state);
-    common_vendor.onActivated(() => {
-    });
     common_vendor.onLoad(() => {
-      console.log("user-onLoad");
-      load();
     });
     common_vendor.onShow(() => {
-      console.log("user-onShow");
       load();
+    });
+    common_vendor.onActivated(() => {
+      activated();
     });
     common_vendor.onMounted(() => {
     });
@@ -48,13 +48,23 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       }
     });
     const load = () => {
+      if (showNum === 0) {
+        showNum++;
+      }
+      console.log("load-load");
       if (common_vendor.index.getStorageSync("USER")) {
         userInfo.value.username = userStore.userInfo.username;
         userInfo.value.avatar = userStore.userInfo.avatar;
       } else {
-        common_vendor.index.redirectTo({
+        common_vendor.index.reLaunch({
           url: "/pages/user/user-login"
         });
+      }
+    };
+    const activated = () => {
+      actNum++;
+      if (showNum === 1 && actNum >= 2) {
+        load();
       }
     };
     const handleUserOption = (url) => {

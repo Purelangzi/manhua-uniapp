@@ -25,12 +25,19 @@ const wxLogin = () => {
           state.token = data.token;
         });
         utils_showMsg.showMsg({ title: msg || "" });
+        common_vendor.index.switchTab({
+          url: "/pages/user/user"
+        });
       } catch (e) {
       }
+    },
+    fail: (e) => {
+      console.log(e);
     }
   });
 };
 const getWxCode = () => {
+  console.log(3);
   return new Promise((resolve, reject) => {
     common_vendor.index.login({
       provider: "weixin",

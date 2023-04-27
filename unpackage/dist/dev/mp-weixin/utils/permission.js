@@ -1,34 +1,33 @@
 "use strict";
 const common_vendor = require("../common/vendor.js");
+const utils_showMsg = require("./showMsg.js");
 const whiteList = ["/pages/user/user-login"];
 const hasPermission = (url) => {
-  console.log(url);
+  console.log(url, "url");
   const userInfo = common_vendor.index.getStorageSync("USER");
   let token = "";
   if (userInfo) {
     token = JSON.parse(userInfo).token;
   }
   const pathArr = getCurrentPages();
-  if (whiteList.includes(url) || token) {
-    console.log("在白名单中或有token");
-    return true;
+  if (token) {
+    console.log("有token");
+    if (url !== "pages/user/user-login") {
+      return true;
+    } else {
+      return false;
+    }
   } else {
+    if (whiteList.includes(url)) {
+      return true;
+    }
     console.log(pathArr, "pathArr");
     if (!pathArr.length || pathArr.length >= 1) {
-      console.log("防止登录后用户手动清除token，不会自动跳到用户登录页");
-      common_vendor.index.switchTab({
+      utils_showMsg.showMsg({ title: "请登录" });
+      common_vendor.index.redirectTo({
         url: "/pages/user/user-login"
-        /* success: () => {
-        	if(pathArr.length){
-        		const pages = getCurrentPages()
-        		const perpage = pages[pages.length - 1]
-        		
-        	}
-        	
-        } */
       });
     } else {
-      console.log(pathArr, "ddddd");
       common_vendor.index.showToast({
         title: "登录才能查看哦",
         duration: 2e3,
@@ -59,11 +58,13 @@ common_vendor.index.addInterceptor("redirectTo", {
 common_vendor.index.addInterceptor("navigateBack", {
   invoke(config) {
     console.log(config, "navigateBack");
+    return hasPermission(config.url);
   }
 });
 common_vendor.index.addInterceptor("redirectTo", {
   invoke(config) {
     console.log(config, "redirectTo");
+    return true;
   }
 });
 common_vendor.index.addInterceptor("reLaunch", {

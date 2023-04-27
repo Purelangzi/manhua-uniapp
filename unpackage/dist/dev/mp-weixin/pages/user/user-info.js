@@ -36,6 +36,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
     const handleLogOut = () => {
       userStore.logOut();
+      utils_showMsg.showMsg({ title: "退出成功" });
     };
     const userInfo = common_vendor.computed(() => {
       return userStore.userInfo;

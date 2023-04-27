@@ -15,12 +15,8 @@
 			// #endif
 			
 			// #ifndef MP-WEIXIN
-			// h5 刷新页面，判断是否登录，没登录返回登录
-			if (!uni.getStorageSync('USER')) {
-				uni.redirectTo({
-					url: 'pages/user/user-login'
-				})
-			}
+
+
 			// #endif
 
 		},

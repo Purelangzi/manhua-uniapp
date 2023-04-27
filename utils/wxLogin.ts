@@ -23,13 +23,20 @@ const wxLogin = () => {
 					state.token = data.token
 				})
 				showMsg({ title: msg || '' })
+				uni.switchTab({
+					url:'/pages/user/user'
+				})
 			} catch (e) {
 			}
+		},
+		fail: (e) => {
+			console.log(e);
 		}
 	})
 }
 // 获取小程序用户登录临时凭证
 const getWxCode = () => {
+	console.log(3);
 	return new Promise((resolve, reject) => {
 		uni.login({
 			provider: 'weixin',

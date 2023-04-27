@@ -1,10 +1,13 @@
-// 登录白名单 '/pages/index/index'默认是'/',由于后端接口除了用户页，其它都需要登录
+// 登录白名单 '/pages/index/index'默认是'/',由于后端接口除了登录页，其它都需要登录，已登录不能跳到登录页
+
+import showMsg from "./showMsg";
+
 // const whiteList = ['/','/pages/category/category','/pages/book/book', '/pages/user/user']
 const whiteList = ['/pages/user/user-login']
 
 // 是否有权限
 const hasPermission = (url:string) =>{
-	console.log(url);
+	console.log(url,'url');
 	const userInfo = uni.getStorageSync('USER')
 	let token = ''
 	if(userInfo){
@@ -12,31 +15,31 @@ const hasPermission = (url:string) =>{
 	}
 	const pathArr = getCurrentPages()
 	
-	// 在白名单中或有token
-	if(whiteList.includes(url) || token){
-		console.log('在白名单中或有token');
-		return true
+	// 有token
+	if(token){
+		console.log('有token');
+		// 已登录页不能跳到登录页
+		if(url!=='pages/user/user-login'){
+			return true
+		}else{
+			return false
+		}
+		
 	}else{
+		// 在白名单中
+		if(whiteList.includes(url)){
+			return true
+		}
 		// 不在白名单中且没有token
 		console.log(pathArr,'pathArr');
-		// H5刷新页面后为空数组 就到用户页; 防止登录后用户手动清除token，不会自动跳到用户登录页
+		// H5刷新页面后pathArr为空数组 就到登录页; 已登录后用户手动清除token，此时pathArr不为空，点击非白名单页面会自动跳到登录页
 		if(!pathArr.length  || pathArr.length>=1){
-			console.log('防止登录后用户手动清除token，不会自动跳到用户登录页');
-			
-			uni.switchTab({
+			showMsg({title:'请登录'})
+			uni.redirectTo({
 				url:'/pages/user/user-login',
-				/* success: () => {
-					if(pathArr.length){
-						const pages = getCurrentPages()
-						const perpage = pages[pages.length - 1]
-						
-					}
-					
-				} */
 			})
 		}else{
 			
-			console.log(pathArr,'ddddd');
 			uni.showToast({
 				title:'登录才能查看哦',
 				duration:2000,
@@ -71,14 +74,15 @@ uni.addInterceptor("redirectTo", {
 uni.addInterceptor("navigateBack", {
   invoke(config) {
 	  console.log(config,'navigateBack');
-	// return hasPermission(config.url)
+	  return hasPermission(config.url)
   }
 })
 
 uni.addInterceptor("redirectTo", {
   invoke(config) {
 	  console.log(config,'redirectTo');
-	// return hasPermission(config.url)
+	  return true
+	  // return hasPermission(config.url)
   }
 })
 uni.addInterceptor("reLaunch", {

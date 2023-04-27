@@ -5,23 +5,28 @@
 </template>
 
 <script lang="ts" setup>
-	import { onMounted, reactive, ref } from 'vue'
+	import { onMounted, reactive, ref,onActivated } from 'vue'
 	import { onLoad,onShow } from '@dcloudio/uni-app'
+	import addressBarAccess from '@/utils/addressBarAccess'
 	
-	onLoad(()=>{
+	onShow(async()=>{
+		console.log('category-onShow');
+		let flag = addressBarAccess.load()
+		// 没有token就return
+		if(flag) return
+		/* try{
+			const res = await getHomeData()
+			console.log(res);
+		}catch(e){
+			console.log(e);
+		} */
+	
 		
 	})
-	onShow(()=>{
-		if(!uni.getStorageSync('USER')){
-			uni.switchTab({
-				url:'/pages/user/user'
-			})
-		}
+	onActivated(()=>{
+		console.log('category-onActivated');
+		addressBarAccess.activated()
 	})
-	onMounted(()=>{
-
-	})
-	
 
 </script>
 

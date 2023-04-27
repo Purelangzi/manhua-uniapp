@@ -50,6 +50,7 @@
 	}
 	const handleLogOut = () => {
 		userStore.logOut()
+		showMsg({title:'退出成功'})
 		
 	}
 	const userInfo = computed(()=>{

@@ -1,13 +1,28 @@
 "use strict";
 const common_vendor = require("../common/vendor.js");
-const access = () => {
+let showNum = 0;
+let actNum = 0;
+const load = () => {
   if (!common_vendor.index.getStorageSync("USER")) {
-    console.log("access");
-    common_vendor.index.switchTab({
+    if (showNum === 0) {
+      showNum++;
+    }
+    console.log("地址栏ac");
+    common_vendor.index.redirectTo({
       url: "/pages/user/user-login"
     });
     return true;
   }
   return false;
 };
-exports.access = access;
+const activated = () => {
+  actNum++;
+  if (showNum === 1 && actNum >= 2) {
+    load();
+  }
+};
+const addressBarAccess = {
+  load,
+  activated
+};
+exports.addressBarAccess = addressBarAccess;

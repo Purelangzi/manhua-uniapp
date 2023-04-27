@@ -55,16 +55,21 @@
 	const letIconStyle = {fontSize:'35rpx',color:'#bcbcbc'}
 
 
-	const { userInfo, userForm } = toRefs(state)
+	const { userForm } = toRefs(state)
 
 	// onLoad(() => {
 
 
 	// })
-	// onShow(() => {
-	// 	console.log('onShow');
+	onShow(() => {
+		if(uni.getStorageSync('USER')){
+			console.log('33');
+			uni.switchTab({
+				url:'/pages/user/user'
+			})
+		}
 
-	// })
+	})
 
 	// onMounted(() => {
 
@@ -133,8 +138,6 @@
 
 	const handleWxLogin = () => {
 		wxLogin()
-		userInfo.value.avatar = userStore.userInfo.avatar
-		userInfo.value.username = userStore.userInfo.username
 
 	}
 	

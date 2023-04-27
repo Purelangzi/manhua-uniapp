@@ -2,41 +2,43 @@
 	<view class="content">
 
 		<view class="text-area">
-			
+
 		</view>
+		
 	</view>
 </template>
 
 <script setup lang="ts">
 	import {getHomeData} from '@/api/index'
-	import { nextTick, onMounted, reactive, ref, toRefs, watch } from 'vue'
+	import { onActivated,nextTick, onMounted, reactive, ref, toRefs, watch } from 'vue'
 	import { onLoad, onShow,onReady } from '@dcloudio/uni-app'
-	import access from '@/utils/addressBarAccess'
+	import addressBarAccess from '@/utils/addressBarAccess'
 
-	onLoad(async()=> {
-		/* // #ifndef MP-WEIXIN
-		const cur = getCurrentPages().pop().route
-		console.log(cur);
-		// #endif
-		if(access()){
-			return
-		}
-		console.log(1);
+
+	
+
+	onLoad(()=> {
+
+
+	})
+	onShow(()=>{
+		console.log('index-onShow');
+		let flag = addressBarAccess.load()
+		// 没有token就return
+		if(flag) return
+		getData()
+	})
+	onActivated(()=>{
+		addressBarAccess.activated()
+	})
+	const getData = async()=>{
 		try{
 			const res = await getHomeData()
 		}catch(e){
 			console.log(e);
-		} */
-	})
-	onShow(()=>{
-
-		if(access()){
-			return
 		}
-		console.log('show');
-	})
-	
-
+		 
+	}
 	
 </script>
 

@@ -36,7 +36,15 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       customStyleLogin: { backgroundColor: "#ffc09f", color: "#fff", marginTop: "40rpx" }
     });
     const letIconStyle = { fontSize: "35rpx", color: "#bcbcbc" };
-    const { userInfo, userForm } = common_vendor.toRefs(state);
+    const { userForm } = common_vendor.toRefs(state);
+    common_vendor.onShow(() => {
+      if (common_vendor.index.getStorageSync("USER")) {
+        console.log("33");
+        common_vendor.index.switchTab({
+          url: "/pages/user/user"
+        });
+      }
+    });
     const regStatus = common_vendor.computed(() => state.isRegist);
     common_vendor.watch(() => state.userForm, () => {
       changeLoginBtn();
@@ -71,8 +79,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
     const handleWxLogin = () => {
       utils_wxLogin.wxLogin();
-      userInfo.value.avatar = userStore.userInfo.avatar;
-      userInfo.value.username = userStore.userInfo.username;
     };
     const changeLoginBtn = () => {
       const flag = state.userForm.account.length && state.userForm.password.length;

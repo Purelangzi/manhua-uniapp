@@ -29,6 +29,7 @@ require("./uni_modules/vk-uview-ui/libs/function/debounce.js");
 require("./uni_modules/vk-uview-ui/libs/function/throttle.js");
 require("./uni_modules/vk-uview-ui/libs/config/config.js");
 require("./uni_modules/vk-uview-ui/libs/config/zIndex.js");
+require("./utils/showMsg.js");
 if (!Math) {
   "./pages/index/index.js";
   "./pages/category/category.js";

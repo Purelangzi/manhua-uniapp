@@ -40,7 +40,7 @@ const request = (options) => {
       url: baseUrl + options.url,
       method: options.method,
       data: options.data,
-      success: async (res) => {
+      success: (res) => {
         switch (res.statusCode) {
           case 200:
             resolve(res.data);
@@ -50,19 +50,25 @@ const request = (options) => {
             reject(res.data);
             break;
           case 401:
-            console.log("401wx");
-            if (!isRefreshing) {
-              console.log("微信刷新token");
-              isRefreshing = true;
-              utils_wxLogin.wxLogin();
-              requests.map((cb) => cb());
-              requests = [];
+            if (!userStore.userInfo.session_key) {
+              utils_showMsg.showMsg({ title: "登录过期（token过期）", icon: "error", duration: 3e3 });
+              userStore.logOut();
+              reject(res.data);
+            } else {
+              console.log("401wx");
+              if (!isRefreshing) {
+                console.log("微信刷新token");
+                isRefreshing = true;
+                utils_wxLogin.wxLogin();
+                requests.map((cb) => cb());
+                requests = [];
+              }
+              resolve(new Promise((reslove) => {
+                requests.push(() => {
+                  reslove(request(options));
+                });
+              }));
             }
-            resolve(new Promise((reslove) => {
-              requests.push(() => {
-                reslove(request(options));
-              });
-            }));
             break;
           default:
             utils_showMsg.showMsg({ title: res.data.msg, duration: 2e3 });
