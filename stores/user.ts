@@ -5,7 +5,8 @@ import {Uesrstate} from './model/userModel'
 export const useUser = defineStore('USER', {
 	state: ():Uesrstate => ({ 
 		userInfo:{},
-		token:''
+		token:'',
+		tokenTime:''
 	}),
 	unistorage:true,
 	actions: {

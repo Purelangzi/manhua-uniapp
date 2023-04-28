@@ -31,21 +31,10 @@ const hasPermission = (url:string) =>{
 			return true
 		}
 		// 不在白名单中且没有token
-		console.log(pathArr,'pathArr');
-		// H5刷新页面后pathArr为空数组 就到登录页; 已登录后用户手动清除token，此时pathArr不为空，点击非白名单页面会自动跳到登录页
-		if(!pathArr.length  || pathArr.length>=1){
-			showMsg({title:'请登录'})
-			uni.redirectTo({
-				url:'/pages/user/user-login',
-			})
-		}else{
-			
-			uni.showToast({
-				title:'登录才能查看哦',
-				duration:2000,
-				icon:'none'
-			})
-		}
+		showMsg({title:'请登录'})
+		uni.redirectTo({
+			url:'/pages/user/user-login',
+		})
 		return false
 	}
 	
@@ -68,7 +57,7 @@ uni.addInterceptor("switchTab", {
 uni.addInterceptor("redirectTo", {
   invoke(config) {
 	  console.log('redirectTo');
-	// return hasPermission(config.url)
+	return hasPermission(config.url)
   }
 })
 uni.addInterceptor("navigateBack", {
@@ -78,13 +67,6 @@ uni.addInterceptor("navigateBack", {
   }
 })
 
-uni.addInterceptor("redirectTo", {
-  invoke(config) {
-	  console.log(config,'redirectTo');
-	  return true
-	  // return hasPermission(config.url)
-  }
-})
 uni.addInterceptor("reLaunch", {
   invoke(config) {
 	  console.log(config,'reLaunch');

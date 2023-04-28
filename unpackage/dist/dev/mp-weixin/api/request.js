@@ -14,6 +14,22 @@ const request = (options) => {
       common_vendor.index.showLoading({
         title: "加载中"
       });
+      if (userStore.token && userStore.userInfo.session_key) {
+        const nowTime = parseInt(new Date().getTime());
+        const expireTime = parseInt((nowTime - userStore.tokenTime) / 1e3);
+        console.log(expireTime, "expireTime");
+        if (expireTime > 20) {
+          if (!isRefreshing) {
+            console.log("微信刷新token");
+            isRefreshing = true;
+            utils_wxLogin.refreshWxLogin();
+            console.log(requests);
+            requests.forEach((cb) => cb());
+            isRefreshing = false;
+            requests = [];
+          }
+        }
+      }
       switch (options.method) {
         case "GET":
           args.header = {
@@ -55,19 +71,22 @@ const request = (options) => {
               userStore.logOut();
               reject(res.data);
             } else {
+              resolve(new Promise((reslove) => {
+                requests.push(() => {
+                  console.log("p");
+                  reslove(request(options));
+                });
+              }));
               console.log("401wx");
               if (!isRefreshing) {
                 console.log("微信刷新token");
                 isRefreshing = true;
-                utils_wxLogin.wxLogin();
+                utils_wxLogin.refreshWxLogin();
+                console.log(requests);
                 requests.map((cb) => cb());
+                isRefreshing = false;
                 requests = [];
               }
-              resolve(new Promise((reslove) => {
-                requests.push(() => {
-                  reslove(request(options));
-                });
-              }));
             }
             break;
           default:

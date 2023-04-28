@@ -1,7 +1,7 @@
 import showMsg from '@/utils/showMsg'
 import { useUser } from '@/stores/user'
 
-import wxLogin from '@/utils/wxLogin'
+import {refreshWxLogin} from '@/utils/wxLogin'
 type Data = string | object | ArrayBuffer
 interface ReqParams {
 	url : string,
@@ -21,6 +21,31 @@ const request = (options : ReqParams) : Promise<any> => {
 			uni.showLoading({
 				title: '加载中'
 			})
+			// #ifdef MP-WEIXIN
+			//当前时间(毫秒)
+			if(userStore.token && userStore.userInfo.session_key){
+				const nowTime = parseInt(new Date().getTime() as any);
+				// 登录后与当前时间的时间差（分）秒
+				const expireTime = parseInt((nowTime - userStore.tokenTime)/1000 as any)
+				// 过期前一小时就刷新token 20秒
+				console.log(expireTime,'expireTime');
+				if(expireTime>20){
+					if (!isRefreshing) { // 一次进入一个刷新token
+						console.log('微信刷新token');
+						isRefreshing = true 
+						refreshWxLogin()
+						console.log(requests);
+						// token 刷新后将数组的方法重新执行
+						requests.forEach((cb) => cb())
+						isRefreshing = false
+						requests = []  // 清空请求队列
+					}
+				}
+			}
+			
+			// #endif
+			
+			
 			switch (options.method) {
 				case 'GET':
 					args.header = {
@@ -71,24 +96,28 @@ const request = (options : ReqParams) : Promise<any> => {
 							userStore.logOut()
 							reject(res.data)
 						}else{
-							console.log('401wx')
-							if (!isRefreshing) {
-								console.log('微信刷新token');
-								isRefreshing = true //第一个请求后，后面请求都不进入执行请求
-								wxLogin()
-								// token 刷新后将数组的方法重新执行
-								requests.map((cb) => cb())
-								requests = [] // 重新请求完清空
-							}
-							
-							
 							// 让这个Promise一直处于Pending状态（即不调用resolve）
 							resolve(new Promise(reslove => {
 								// 用函数形式将 resolve 存入，等待刷新后再执行
 								requests.push(() => {
+									console.log('p');
 									reslove(request(options))
 								})
 							}))
+							console.log('401wx')
+							if (!isRefreshing) { // 一次进入一个刷新token
+								console.log('微信刷新token');
+								isRefreshing = true 
+								refreshWxLogin()
+								console.log(requests);
+								// token 刷新后将数组的方法重新执行
+								requests.map((cb) => cb())
+								isRefreshing = false
+								requests = []  // 清空请求队列
+							}
+							
+							
+							
 						}
 						// #endif
 

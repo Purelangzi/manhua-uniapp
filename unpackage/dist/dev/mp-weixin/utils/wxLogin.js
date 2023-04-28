@@ -18,11 +18,12 @@ const wxLogin = () => {
         code: codeWx
       };
       try {
-        const { data, msg } = await api_index.userWxLogin(params);
+        const { data, msg, time } = await api_index.userWxLogin(params);
         console.log("微信一键登录存储token和用户信息");
         userStore.$patch((state) => {
           state.userInfo = data.userInfo;
           state.token = data.token;
+          state.tokenTime = time;
         });
         utils_showMsg.showMsg({ title: msg || "" });
         common_vendor.index.switchTab({
@@ -32,12 +33,15 @@ const wxLogin = () => {
       }
     },
     fail: (e) => {
-      console.log(e);
+      if (e.errMsg.indexOf("deny") !== -1) {
+        utils_showMsg.showMsg({ title: "您拒绝了授权，不能正常使用小程序", duration: 3e3 });
+      } else if (e.errMsg.indexOf("getUserAvatarInfo") !== -1) {
+        utils_showMsg.showMsg({ title: "请检查网络", duration: 3e3 });
+      }
     }
   });
 };
 const getWxCode = () => {
-  console.log(3);
   return new Promise((resolve, reject) => {
     common_vendor.index.login({
       provider: "weixin",
@@ -51,4 +55,33 @@ const getWxCode = () => {
     });
   });
 };
+const refreshWxLogin = () => {
+  common_vendor.index.login({
+    provider: "weixin",
+    success: async (res) => {
+      const params = {
+        avatar: userStore.userInfo.avatar,
+        username: userStore.userInfo.username,
+        code: res.code
+      };
+      const { data, time } = await api_index.userWxLogin(params);
+      userStore.token = data.token;
+      userStore.tokenTime = time;
+      console.log("微信登录过期,无感刷新token");
+    }
+  });
+};
+const wxIsLogin = () => {
+  console.log("isLogin........");
+  if (!common_vendor.index.getStorageSync("USER")) {
+    utils_showMsg.showMsg({ title: "请登录" });
+    common_vendor.index.reLaunch({
+      url: "/pages/user/user-login"
+    });
+    return true;
+  }
+  return false;
+};
+exports.refreshWxLogin = refreshWxLogin;
+exports.wxIsLogin = wxIsLogin;
 exports.wxLogin = wxLogin;

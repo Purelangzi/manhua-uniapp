@@ -2,11 +2,12 @@ import { userWxLogin } from '@/api/index'
 import { useUser } from '@/stores/user'
 import showMsg from '@/utils/showMsg'
 const userStore = useUser()
-const wxLogin = () => {
+export const wxLogin = () => {
 	console.log(1);
 	uni.getUserProfile({
 		desc: '获取用户个人信息',
 		success: async (infoRes) => {
+			
 			console.log(2);
 			const { avatarUrl, nickName } = infoRes.userInfo
 			const codeWx = await getWxCode()
@@ -16,11 +17,12 @@ const wxLogin = () => {
 				code: codeWx as string
 			}
 			try {
-				const { data, msg } = await userWxLogin(params)
+				const { data, msg,time } = await userWxLogin(params)
 				console.log('微信一键登录存储token和用户信息');
 				userStore.$patch((state : any) => {
 					state.userInfo = data.userInfo
 					state.token = data.token
+					state.tokenTime = time
 				})
 				showMsg({ title: msg || '' })
 				uni.switchTab({
@@ -30,13 +32,18 @@ const wxLogin = () => {
 			}
 		},
 		fail: (e) => {
-			console.log(e);
+			if(e.errMsg.indexOf('deny')!==-1){
+				showMsg({title:'您拒绝了授权，不能正常使用小程序',duration:3000})
+			}else if(e.errMsg.indexOf('getUserAvatarInfo')!==-1){
+				showMsg({title:'请检查网络',duration:3000})
+			}
+			
 		}
 	})
 }
 // 获取小程序用户登录临时凭证
 const getWxCode = () => {
-	console.log(3);
+
 	return new Promise((resolve, reject) => {
 		uni.login({
 			provider: 'weixin',
@@ -50,4 +57,33 @@ const getWxCode = () => {
 		})
 	})
 }
-export default wxLogin
+// 微信登录过期无感刷新token
+export const refreshWxLogin = () => {
+		uni.login({
+			provider: 'weixin',
+			success: async(res) => {
+				const params = {
+					avatar: userStore.userInfo.avatar,
+					username: userStore.userInfo.username,
+					code: res.code as string
+				}
+				const { data,time } = await userWxLogin(params)
+				userStore.token = data.token
+				userStore.tokenTime = time
+				console.log('微信登录过期,无感刷新token');
+			}
+		})
+
+}
+// 微信小程序点击tabbar判断是否登录
+export const wxIsLogin = () =>{
+	console.log('isLogin........');
+	if (!uni.getStorageSync('USER')) {
+		showMsg({title:'请登录'})
+		uni.reLaunch({
+			url: '/pages/user/user-login'
+		})
+		return true
+	}
+	return false
+}

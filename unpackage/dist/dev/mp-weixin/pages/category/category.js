@@ -1,18 +1,17 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
-const utils_addressBarAccess = require("../../utils/addressBarAccess.js");
+const utils_wxLogin = require("../../utils/wxLogin.js");
+require("../../api/index.js");
+require("../../api/request.js");
+require("../../utils/showMsg.js");
+require("../../stores/user.js");
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "category",
   setup(__props) {
     common_vendor.onShow(async () => {
       console.log("category-onShow");
-      let flag = utils_addressBarAccess.addressBarAccess.load();
-      if (flag)
+      if (utils_wxLogin.wxIsLogin())
         return;
-    });
-    common_vendor.onActivated(() => {
-      console.log("category-onActivated");
-      utils_addressBarAccess.addressBarAccess.activated();
     });
     return (_ctx, _cache) => {
       return {};

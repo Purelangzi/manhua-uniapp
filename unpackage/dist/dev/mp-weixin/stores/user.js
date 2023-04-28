@@ -3,7 +3,8 @@ const common_vendor = require("../common/vendor.js");
 const useUser = common_vendor.defineStore("USER", {
   state: () => ({
     userInfo: {},
-    token: ""
+    token: "",
+    tokenTime: ""
   }),
   unistorage: true,
   actions: {

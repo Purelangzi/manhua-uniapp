@@ -1,6 +1,10 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 const stores_user = require("../../stores/user.js");
+const utils_wxLogin = require("../../utils/wxLogin.js");
+require("../../api/index.js");
+require("../../api/request.js");
+require("../../utils/showMsg.js");
 if (!Array) {
   const _easycom_u_avatar2 = common_vendor.resolveComponent("u-avatar");
   const _easycom_u_cell_item2 = common_vendor.resolveComponent("u-cell-item");
@@ -17,23 +21,23 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "user",
   setup(__props) {
     const userStore = stores_user.useUser();
-    common_vendor.ref();
     const state = common_vendor.reactive({
       userInfo: {
         avatar: "",
         username: ""
       }
     });
-    let showNum = 0;
-    let actNum = 0;
     const { userInfo, userForm } = common_vendor.toRefs(state);
     common_vendor.onLoad(() => {
+      if (utils_wxLogin.wxIsLogin())
+        return;
+      userInfo.value.username = userStore.userInfo.username;
+      userInfo.value.avatar = userStore.userInfo.avatar;
     });
     common_vendor.onShow(() => {
-      load();
+      console.log("onShow");
     });
     common_vendor.onActivated(() => {
-      activated();
     });
     common_vendor.onMounted(() => {
     });
@@ -47,35 +51,10 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         userInfo.value.avatar = userStore.userInfo.avatar;
       }
     });
-    const load = () => {
-      if (showNum === 0) {
-        showNum++;
-      }
-      console.log("load-load");
-      if (common_vendor.index.getStorageSync("USER")) {
-        userInfo.value.username = userStore.userInfo.username;
-        userInfo.value.avatar = userStore.userInfo.avatar;
-      } else {
-        common_vendor.index.reLaunch({
-          url: "/pages/user/user-login"
-        });
-      }
-    };
-    const activated = () => {
-      actNum++;
-      if (showNum === 1 && actNum >= 2) {
-        load();
-      }
-    };
     const handleUserOption = (url) => {
-      if (!userInfo.value.username) {
-        state.isRegist = false;
-        state.show = true;
-      } else {
-        common_vendor.index.navigateTo({
-          url
-        });
-      }
+      common_vendor.index.navigateTo({
+        url
+      });
     };
     return (_ctx, _cache) => {
       return {

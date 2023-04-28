@@ -28,7 +28,7 @@
 	import { useUser } from '@/stores/user'
 	import { storeToRefs } from 'pinia'
 	import showMsg from '@/utils/showMsg'
-	import wxLogin from '@/utils/wxLogin'
+	import {wxLogin} from '@/utils/wxLogin'
 	
 	const userStore = useUser()
 	const state = reactive({

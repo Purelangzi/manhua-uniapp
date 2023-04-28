@@ -10,9 +10,9 @@
 
 <script setup lang="ts">
 	import {getHomeData} from '@/api/index'
-	import { onActivated,nextTick, onMounted, reactive, ref, toRefs, watch } from 'vue'
+	import { nextTick, onMounted, reactive, ref, toRefs, watch } from 'vue'
 	import { onLoad, onShow,onReady } from '@dcloudio/uni-app'
-	import addressBarAccess from '@/utils/addressBarAccess'
+	import {wxIsLogin} from '@/utils/wxLogin'
 
 
 	
@@ -23,13 +23,11 @@
 	})
 	onShow(()=>{
 		console.log('index-onShow');
-		let flag = addressBarAccess.load()
-		// 没有token就return
-		if(flag) return
-		getData()
-	})
-	onActivated(()=>{
-		addressBarAccess.activated()
+		// #ifdef MP-WEIXIN
+		if(wxIsLogin()) return
+		// #endif
+		
+		// getData()
 	})
 	const getData = async()=>{
 		try{

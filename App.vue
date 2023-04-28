@@ -1,6 +1,5 @@
 <script>
 	export default {
-
 		onLaunch: function() {
 			console.log('App Launch')
 			// #ifdef MP-WEIXIN
@@ -13,11 +12,20 @@
 				})
 			})
 			// #endif
-			
-			// #ifndef MP-WEIXIN
-
-
+			// #ifdef H5
+			// h5模式下 浏览器 地址栏 输入地址切换路由 拦截
+			const whiteList = ['/pages/user/user-login']
+			const user= uni.getStorageSync("USER")
+			console.log(window.location.pathname,'window.location.pathname');
+			if(!user && !whiteList.includes(window.location.pathname)){
+				console.log('3333');
+			    uni.reLaunch({
+			        url:'/pages/user/user-login'
+			    })
+			} 
 			// #endif
+			
+			
 
 		},
 		onShow: function() {

@@ -9,7 +9,7 @@ const hasPermission = (url) => {
   if (userInfo) {
     token = JSON.parse(userInfo).token;
   }
-  const pathArr = getCurrentPages();
+  getCurrentPages();
   if (token) {
     console.log("有token");
     if (url !== "pages/user/user-login") {
@@ -21,19 +21,10 @@ const hasPermission = (url) => {
     if (whiteList.includes(url)) {
       return true;
     }
-    console.log(pathArr, "pathArr");
-    if (!pathArr.length || pathArr.length >= 1) {
-      utils_showMsg.showMsg({ title: "请登录" });
-      common_vendor.index.redirectTo({
-        url: "/pages/user/user-login"
-      });
-    } else {
-      common_vendor.index.showToast({
-        title: "登录才能查看哦",
-        duration: 2e3,
-        icon: "none"
-      });
-    }
+    utils_showMsg.showMsg({ title: "请登录" });
+    common_vendor.index.redirectTo({
+      url: "/pages/user/user-login"
+    });
     return false;
   }
 };
@@ -53,18 +44,13 @@ common_vendor.index.addInterceptor("switchTab", {
 common_vendor.index.addInterceptor("redirectTo", {
   invoke(config) {
     console.log("redirectTo");
+    return hasPermission(config.url);
   }
 });
 common_vendor.index.addInterceptor("navigateBack", {
   invoke(config) {
     console.log(config, "navigateBack");
     return hasPermission(config.url);
-  }
-});
-common_vendor.index.addInterceptor("redirectTo", {
-  invoke(config) {
-    console.log(config, "redirectTo");
-    return true;
   }
 });
 common_vendor.index.addInterceptor("reLaunch", {

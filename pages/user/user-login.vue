@@ -38,7 +38,7 @@
 	import { onActivated, onDeactivated, nextTick, onMounted, reactive, ref, toRefs, computed, watch, watchEffect } from 'vue'
 	import { onLoad, onShow, onReady, onHide } from '@dcloudio/uni-app'
 	import { useUser } from '@/stores/user'
-	import wxLogin from '@/utils/wxLogin'
+	import {wxLogin} from '@/utils/wxLogin'
 	import showMsg from '@/utils/showMsg'
 	const userStore = useUser()
 	const loginFrom = ref()
@@ -108,12 +108,13 @@
 		const { account, password } = toRefs(state.userForm)
 		const option = regStatus.value ? userRegister(state.userForm) : userLogin({ account: account.value, password: password.value })
 		try {
-			const { data, msg } = await option
+			const { data, msg,time } = await option
 			if (!regStatus.value) {
 				userStore.$patch((state : any) => {
 					console.log('pinia存储token和用户信息');
 					state.userInfo = data.userInfo
 					state.token = data.token
+					state.tokenTime = time
 				})
 				uni.switchTab({
 					url:'/pages/user/user'
