@@ -1,8 +1,8 @@
 <template>
 	<view class="user">
 		<view class="user-header" @click="handleUserOption('/pages/user/user-Info')">
-			<u-avatar :src="userInfo.avatar?userInfo.avatar:'/static/image/default-avatar.png'" shape="circle"
-				size="large"></u-avatar>
+			<!-- <u-avatar :src="userInfo.avatar?userInfo.avatar:'/static/image/default-avatar.png'" shape="circle" size="large"></u-avatar> -->
+			<u-avatar :src="userInfo.avatar" shape="circle" size="large"></u-avatar>
 			<view class="user-name">{{userInfo.username?userInfo.username:'登录后查看更多精彩'}}</view>
 		</view>
 		<view class="user-options">

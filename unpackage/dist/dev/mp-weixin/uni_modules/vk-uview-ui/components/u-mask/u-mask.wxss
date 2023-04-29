@@ -23,15 +23,18 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-.user-center .logOut {
-  margin-top: 80rpx;
-  padding: 0 15%;
+.u-mask.data-v-b3b508a8 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  transition: transform 0.3s;
 }
-.user-center .update-popup .update-title {
-  font-weight: bold;
-  text-align: center;
+.u-mask-show.data-v-b3b508a8 {
+  opacity: 1;
 }
-.user-center .update-popup .update-btn {
-  display: flex;
-  justify-content: space-around;
+.u-mask-zoom.data-v-b3b508a8 {
+  transform: scale(1.2, 1.2);
 }

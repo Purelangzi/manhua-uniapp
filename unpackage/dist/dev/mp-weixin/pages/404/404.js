@@ -9,7 +9,7 @@ if (!Math) {
   _easycom_u_button();
 }
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
-  __name: "error",
+  __name: "404",
   setup(__props) {
     const customStyleError = { backgroundColor: "#ff7830", color: "#fff" };
     common_vendor.onLoad(() => {
@@ -17,7 +17,9 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     common_vendor.onMounted(() => {
     });
     const handleBack = () => {
-      common_vendor.index.navigateBack();
+      common_vendor.index.switchTab({
+        url: "/pages/index/index"
+      });
     };
     return (_ctx, _cache) => {
       return {
@@ -31,5 +33,5 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
   }
 });
-const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__file", "F:/HBuilderProjects/manhua/pages/error/error.vue"]]);
+const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__file", "F:/HBuilderProjects/manhua/pages/404/404.vue"]]);
 wx.createPage(MiniProgramPage);

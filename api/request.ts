@@ -13,39 +13,13 @@ let isRefreshing = false // 是否正在刷新的标记
 let requests = []//重试队列
 const baseUrl = 'http://127.0.0.1:7001'
 const userStore = useUser()
-const request = (options : ReqParams) : Promise<any> => {
+const request = async(options : ReqParams) : Promise<any> => {
 	// 拦截器
 	uni.addInterceptor('request', {
 		invoke: (args) => {
-			console.log(args)
 			uni.showLoading({
 				title: '加载中'
 			})
-			// #ifdef MP-WEIXIN
-			//当前时间(毫秒)
-			if(userStore.token && userStore.userInfo.session_key){
-				const nowTime = parseInt(new Date().getTime() as any);
-				// 登录后与当前时间的时间差（分）秒
-				const expireTime = parseInt((nowTime - userStore.tokenTime)/1000 as any)
-				// 过期前一小时就刷新token 20秒
-				console.log(expireTime,'expireTime');
-				if(expireTime>20){
-					if (!isRefreshing) { // 一次进入一个刷新token
-						console.log('微信刷新token');
-						isRefreshing = true 
-						refreshWxLogin()
-						console.log(requests);
-						// token 刷新后将数组的方法重新执行
-						requests.forEach((cb) => cb())
-						isRefreshing = false
-						requests = []  // 清空请求队列
-					}
-				}
-			}
-			
-			// #endif
-			
-			
 			switch (options.method) {
 				case 'GET':
 					args.header = {
@@ -96,31 +70,38 @@ const request = (options : ReqParams) : Promise<any> => {
 							userStore.logOut()
 							reject(res.data)
 						}else{
-							// 让这个Promise一直处于Pending状态（即不调用resolve）
-							resolve(new Promise(reslove => {
-								// 用函数形式将 resolve 存入，等待刷新后再执行
-								requests.push(() => {
-									console.log('p');
-									reslove(request(options))
-								})
-							}))
-							console.log('401wx')
 							if (!isRefreshing) { // 一次进入一个刷新token
 								console.log('微信刷新token');
 								isRefreshing = true 
-								refreshWxLogin()
-								console.log(requests);
-								// token 刷新后将数组的方法重新执行
-								requests.map((cb) => cb())
-								isRefreshing = false
-								requests = []  // 清空请求队列
+								refreshWxLogin().then(()=>{
+									// 重新执行当前请求
+									resolve(request(options))
+									// token 刷新后将数组的方法重新执行
+									if(!requests.length){
+										console.log('ddddd');
+										requests.map((cb) => cb())
+										requests = []  // 清空请求队列
+									}
+								}).finally(()=>{
+									isRefreshing = false
+								})
+								
+							}else{
+								// 有后续请求就将存入
+								// 将resolve放进队列，用一个函数形式来保存，等token刷新后直接执行
+								return requests.push(() => {
+									resolve(request(options))
+								})
+								// 下面方法包多了一层Promise也可以
+								// resolve(new Promise((res)=>{
+								// 	requests.push(() => {
+								// 		res(request(options))
+								// 	})
+								// }))
+								
 							}
-							
-							
-							
 						}
 						// #endif
-
 						break;
 					default:
 						showMsg({ title: (res.data as any).msg,duration:2000 })
@@ -129,7 +110,6 @@ const request = (options : ReqParams) : Promise<any> => {
 				}
 			},
 			fail: (err) => {
-				
 				reject(err)
 			}
 		})

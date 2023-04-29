@@ -6,7 +6,7 @@
     "pages/user/user",
     "pages/user/user-login",
     "pages/user/user-Info",
-    "pages/error/error"
+    "pages/404/404"
   ],
   "window": {
     "navigationBarTextStyle": "black",

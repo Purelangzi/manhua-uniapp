@@ -59,7 +59,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     return (_ctx, _cache) => {
       return {
         a: common_vendor.p({
-          src: common_vendor.unref(userInfo).avatar ? common_vendor.unref(userInfo).avatar : "/static/image/default-avatar.png",
+          src: common_vendor.unref(userInfo).avatar,
           shape: "circle",
           size: "large"
         }),

@@ -1,1 +1,0 @@
-<view class="error-container"><view class="error-bg"></view><view class="error-btn"><u-button wx:if="{{b}}" u-s="{{['d']}}" bindclick="{{a}}" u-i="249426f6-0" bind:__l="__l" u-p="{{b}}">返回</u-button></view></view>

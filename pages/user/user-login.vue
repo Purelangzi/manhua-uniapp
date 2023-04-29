@@ -20,7 +20,7 @@
 	</view>
 	<view class="register" @click="switchRegister">{{regStatus?'<&nbsp;返回登录':'手机号快速注册&nbsp;>'}}</view>
 	
-
+	<!-- #ifdef MP-WEIXIN -->
 	<view class="other-login">
 		<view class="other-title">其它登录方式</view>
 		<view class="other-icon">
@@ -28,8 +28,9 @@
 			<u-icon name="qq-fill" label-pos="bottom" label="QQ" label-size="14" size="64" color="#1a8ef1" @click="handleWxLogin"></u-icon>
 			<u-icon name="weibo" label-pos="bottom" label="微博" label-size="14" size="64" color="#ff5427" @click="handleWxLogin"></u-icon>
 		</view>
-		
 	</view>
+	<!-- #endif -->
+	
 
 </template>
 
@@ -108,13 +109,11 @@
 		const { account, password } = toRefs(state.userForm)
 		const option = regStatus.value ? userRegister(state.userForm) : userLogin({ account: account.value, password: password.value })
 		try {
-			const { data, msg,time } = await option
+			const { data, msg } = await option
 			if (!regStatus.value) {
 				userStore.$patch((state : any) => {
-					console.log('pinia存储token和用户信息');
 					state.userInfo = data.userInfo
 					state.token = data.token
-					state.tokenTime = time
 				})
 				uni.switchTab({
 					url:'/pages/user/user'
@@ -129,9 +128,6 @@
 		}
 	}
 	const switchRegister = () => {
-		/* nextTick(() => {
-			loginFrom.value.resetFields()
-		}) */
 		loginFrom.value.resetFields()
 		state.isRegist = !state.isRegist
 		state.customStyleLogin.backgroundColor = '#ffc09f'
@@ -139,7 +135,6 @@
 
 	const handleWxLogin = () => {
 		wxLogin()
-
 	}
 	
 	const changeLoginBtn = () =>{

@@ -37,7 +37,7 @@
 				"navigationBarBackgroundColor": "#ff7830"
 			}
 		},{
-            "path" : "pages/error/error",
+            "path" : "pages/404/404",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "404",

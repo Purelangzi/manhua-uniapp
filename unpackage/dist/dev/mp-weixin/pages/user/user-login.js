@@ -53,13 +53,11 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       const { account, password } = common_vendor.toRefs(state.userForm);
       const option = regStatus.value ? api_index.userRegister(state.userForm) : api_index.userLogin({ account: account.value, password: password.value });
       try {
-        const { data, msg, time } = await option;
+        const { data, msg } = await option;
         if (!regStatus.value) {
           userStore.$patch((state2) => {
-            console.log("pinia存储token和用户信息");
             state2.userInfo = data.userInfo;
             state2.token = data.token;
-            state2.tokenTime = time;
           });
           common_vendor.index.switchTab({
             url: "/pages/user/user"

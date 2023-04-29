@@ -37,15 +37,21 @@ if (!Math) {
   "./pages/user/user.js";
   "./pages/user/user-login.js";
   "./pages/user/user-Info.js";
-  "./pages/error/error.js";
+  "./pages/404/404.js";
 }
 const _sfc_main = {
+  onPageNotFound: function() {
+    console.log("onPageNotFound");
+    common_vendor.index.redirectTo({
+      url: "/pages/404/404"
+      // 404 页面的路径
+    });
+  },
   onLaunch: function() {
     console.log("App Launch");
     common_vendor.index.onPageNotFound(() => {
       common_vendor.index.redirectTo({
-        url: "pages/error/error"
-        // 404 页面的路径
+        url: "/pages/404/404"
       });
     });
   },

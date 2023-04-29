@@ -18,12 +18,11 @@ const wxLogin = () => {
         code: codeWx
       };
       try {
-        const { data, msg, time } = await api_index.userWxLogin(params);
+        const { data, msg } = await api_index.userWxLogin(params);
         console.log("微信一键登录存储token和用户信息");
         userStore.$patch((state) => {
           state.userInfo = data.userInfo;
           state.token = data.token;
-          state.tokenTime = time;
         });
         utils_showMsg.showMsg({ title: msg || "" });
         common_vendor.index.switchTab({
@@ -56,19 +55,22 @@ const getWxCode = () => {
   });
 };
 const refreshWxLogin = () => {
-  common_vendor.index.login({
-    provider: "weixin",
-    success: async (res) => {
-      const params = {
-        avatar: userStore.userInfo.avatar,
-        username: userStore.userInfo.username,
-        code: res.code
-      };
-      const { data, time } = await api_index.userWxLogin(params);
-      userStore.token = data.token;
-      userStore.tokenTime = time;
-      console.log("微信登录过期,无感刷新token");
-    }
+  console.log("refreshWxLogin");
+  return new Promise((reslove) => {
+    common_vendor.index.login({
+      provider: "weixin",
+      success: async (res) => {
+        const params = {
+          avatar: userStore.userInfo.avatar,
+          username: userStore.userInfo.username,
+          code: res.code
+        };
+        const { data } = await api_index.userWxLogin(params);
+        userStore.token = data.token;
+        console.log("微信登录过期,无感刷新token");
+        reslove(true);
+      }
+    });
   });
 };
 const wxIsLogin = () => {

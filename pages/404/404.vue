@@ -23,7 +23,9 @@
 
 	})
 	const handleBack = ()=>{
-		uni.navigateBack()
+		uni.switchTab({
+			url:'/pages/index/index'
+		})
 	}
 
 </script>

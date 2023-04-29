@@ -17,12 +17,11 @@ export const wxLogin = () => {
 				code: codeWx as string
 			}
 			try {
-				const { data, msg,time } = await userWxLogin(params)
+				const { data, msg } = await userWxLogin(params)
 				console.log('微信一键登录存储token和用户信息');
 				userStore.$patch((state : any) => {
 					state.userInfo = data.userInfo
 					state.token = data.token
-					state.tokenTime = time
 				})
 				showMsg({ title: msg || '' })
 				uni.switchTab({
@@ -59,6 +58,8 @@ const getWxCode = () => {
 }
 // 微信登录过期无感刷新token
 export const refreshWxLogin = () => {
+	console.log('refreshWxLogin');
+	return new Promise((reslove)=>{
 		uni.login({
 			provider: 'weixin',
 			success: async(res) => {
@@ -67,13 +68,14 @@ export const refreshWxLogin = () => {
 					username: userStore.userInfo.username,
 					code: res.code as string
 				}
-				const { data,time } = await userWxLogin(params)
+				const { data } = await userWxLogin(params)
 				userStore.token = data.token
-				userStore.tokenTime = time
 				console.log('微信登录过期,无感刷新token');
+				reslove(true)
 			}
 		})
-
+	})
+		
 }
 // 微信小程序点击tabbar判断是否登录
 export const wxIsLogin = () =>{

@@ -10,5 +10,5 @@ export const userWxLogin = (data:WxLoginType) => request.post('/user/wxLogin',da
 export const editAccount = (data:object) => request.post('/api/system/editAccount',data)
 
 export const getHomeData = ()=> request.get('/api/home/getHomeData')
-
+export const getT = ()=>request.get('/api/product/getCtcategory')
 

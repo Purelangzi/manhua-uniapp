@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-	import {getHomeData} from '@/api/index'
+	import {getHomeData,getT} from '@/api/index'
 	import { nextTick, onMounted, reactive, ref, toRefs, watch } from 'vue'
 	import { onLoad, onShow,onReady } from '@dcloudio/uni-app'
 	import {wxIsLogin} from '@/utils/wxLogin'
@@ -27,11 +27,14 @@
 		if(wxIsLogin()) return
 		// #endif
 		
+		getData()
 		// getData()
+		
 	})
 	const getData = async()=>{
 		try{
 			const res = await getHomeData()
+			const res1 = await getT()
 		}catch(e){
 			console.log(e);
 		}
