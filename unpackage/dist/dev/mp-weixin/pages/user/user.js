@@ -3,6 +3,7 @@ const common_vendor = require("../../common/vendor.js");
 const stores_user = require("../../stores/user.js");
 const utils_wxLogin = require("../../utils/wxLogin.js");
 require("../../api/index.js");
+require("../../api/module/common.js");
 require("../../api/request.js");
 require("../../utils/showMsg.js");
 if (!Array) {
@@ -27,7 +28,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         username: ""
       }
     });
-    const { userInfo, userForm } = common_vendor.toRefs(state);
+    const { userInfo } = common_vendor.toRefs(state);
     common_vendor.onLoad(() => {
       if (utils_wxLogin.wxIsLogin())
         return;

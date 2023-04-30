@@ -30,7 +30,7 @@
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .error-container{
 	.error-bg{
 		margin: 50rpx;

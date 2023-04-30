@@ -6,11 +6,10 @@
 					<u-avatar :src="userInfo.avatar" mode="square" @click="handleOnAvatar"></u-avatar>
 				</template>
 			</u-cell-item>
-			<u-cell-item v-for="col in state.column" :key="col.value"
-			:title="col.title" 
-			:value="userInfo[col.value] || '未设置'" 
-			@click="openUpdatePopup(col.title,userInfo[col.value],col.type as string)">
-
+			<u-cell-item v-for="col in state.column" :key="col.key"
+				:title="col.title" 
+				:value="userInfo[col.key] || '未设置'" 
+				@click="openUpdatePopup(col.title,col.key,col.type as string)">
 			</u-cell-item>
 			
 			<!-- <u-cell-item title="昵称" :value="userInfo.username?userInfo.username:'未设置'" @click="openUpdatePopup('昵称',userInfo.username)"></u-cell-item>
@@ -19,16 +18,16 @@
 			<u-cell-item title="邮箱" :value="userInfo.email?userInfo.email:'未设置'" @click="openUpdatePopup('邮箱',userInfo.email)" ></u-cell-item> -->
 		</u-cell-group>
 		<view class="logOut" v-if="userInfo.username" border-radius="20">
-			<u-button :custom-style="customStyleExit" :ripple="true" @click="handleLogOut">退出登录</u-button>
+			<u-button :ripple="true" @click="handleLogOut">退出登录</u-button>
 		</view>
-		<u-popup v-model="state.show" mode="bottom" class="update-popup" height="40%" :closeable="true" @close="closePopup">
+		<u-popup v-model="state.show" mode="bottom" class="update-popup" :closeable="true" @close="closePopup">
 			<view class="update-title">{{state.title}}</view>
 			<view class="update-form">
-				<u-input v-model="updateParams" :type="iType" :border="border" :placeholder="place" />
+				<u-input class="update-input" v-model="updateVal" :type="iType" :placeholder="place" />
 			</view>
 			<view class="update-btn">
-				<u-button shape="circle" @click="cancelUpdate">取消</u-button>
-				<u-button shape="circle" type="error">确认</u-button>
+				<u-button shape="circle" @click="state.show = false">取消</u-button>
+				<u-button shape="circle" type="error" @click="handleUpdateUser()">确认</u-button>
 			</view>
 		</u-popup>
 	</view>
@@ -40,32 +39,33 @@
 <script lang="ts" setup>
 	import { onMounted, reactive, ref ,toRefs,computed} from 'vue'
 	import { onLoad, onShow } from '@dcloudio/uni-app'
-	import {editAccount} from '@/api/index'
 	import { useUser } from '@/stores/user'
-	import { storeToRefs } from 'pinia'
+	import api from '@/api/index'
+
 	import showMsg from '@/utils/showMsg'
 	import {wxLogin} from '@/utils/wxLogin'
+	
+	
 	const UPLOAD_URL = 'http://127.0.0.1:7001/api/ali/uploadFile';
 	const userStore = useUser()
 	const state = reactive({
 		inputModel:{
-			updateParams:'',
+			updateKey:'',
+			updateVal:'',
 			iType:'text',
-			border:true,
 			place:'请输入'
 		},
 		show:false,
 		title:'修改',
 		column:[
-			{title:'昵称',value:'username'},
-			{title:'手机号',value:'phone'},
-			{title:'密码',value:'password',type:'password'},
-			{title:'邮箱',value:'email'},
+			{title:'昵称',key:'username'},
+			{title:'手机号',key:'phone'},
+			{title:'密码',key:'password',type:'password'},
+			{title:'邮箱',key:'email'},
 		]
 	})
-	const {updateParams,iType,border,place} =  toRefs(state.inputModel)
-	
-	const customStyleExit = { backgroundColor: '#ffa73c', color: '#fff' }
+	const {updateKey,updateVal,iType,place} =  toRefs(state.inputModel)
+
 	onLoad(() => {
 		
 	})
@@ -83,37 +83,52 @@
 	const userInfo = computed(()=>{
 		return userStore.userInfo
 	})
-	const openUpdatePopup = (title:string,params:string,type?:string) =>{
+	const openUpdatePopup = (title:string,key:string,type?:string) =>{
 		state.title += title
 		place.value += title
-		updateParams.value = params
+		updateKey.value = key
+		updateVal.value = userInfo.value[key]
 		if(type){
 			iType.value = type
 		}
 		state.show = true
 	}
-	const cancelUpdate = () =>{
-		state.show = false
+
+	const handleUpdateUser = async() =>{
+		if(!updateVal.value){
+			showMsg({title:'输入不能为空'})
+			return
+		}
+		try{
+			const {msg} =  await api.editAccount({id:userInfo.value.id,[updateKey.value]:updateVal.value})
+			userStore.userInfo[updateKey.value] = updateVal.value
+			showMsg({title:msg})
+			state.show = false
+		}catch(e){
+			console.log(e);
+		}
 	}
 	const closePopup = () =>{
-		console.log('closePopup');
-		// state.title =
+		state.title = '修改'
+		place.value = '请输入',
+		updateKey.value = ''
+		updateVal.value = ''
+		iType.value = 'text'
+		
 	}
 	// 点击头像上传图片
 	const handleOnAvatar = async () => {
 		try{
 			const filePath = await chooseImage(1) as string
 			const {url} = await uploadImage(filePath)
-			console.log(url);
 			userStore.$patch((state:any)=>{
 				state.userInfo.avatar = url
 			})
-			const {msg} = await editAccount({id: userStore.userInfo.id, avatar:url})
+			const {msg} = await api.editAccount({id: userStore.userInfo.id, avatar:url})
 			showMsg({title:msg,icon:'success'})
 		}catch(e){
 			console.log(e);
 		}
-		
 	}
 	// 选择照片
 	const chooseImage = async (count : number) => {
@@ -176,7 +191,7 @@
 		});
 	}
 	// 检查图片
-	const validateImage = (file) =>{
+	const validateImage = (file:{path:string,size:number}) =>{
 	  // #ifndef MP-WEIXIN
 	  const typeArr = ['image/png', 'image/jpg', 'image/jpeg'];
 	  if (!typeArr.includes(file.type)) {
@@ -206,22 +221,57 @@
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.user-center {
 		.logOut {
 			margin-top: 80rpx;
 			padding: 0 15%;
+			::v-deep .u-btn {
+				background-color: $uni-main-color;
+				color: #fff;
+			}
 		
 		}
 		.update-popup{
-			// position: relative;
-			.update-title{
-				font-weight: bold;
-				text-align: center;
+			::v-deep .u-drawer-content {
+				padding: 25rpx 25rpx;
 			}
+
+			.update-title{
+				font-weight: 700;
+				text-align: center;
+				margin-bottom: 20rpx;
+			}
+			.update-form{
+				.update-input{
+					::v-deep .uni-input-input {
+						padding-bottom: 8rpx;
+						border-bottom: 4rpx solid #eee;
+					}
+					/* #ifdef MP-WEIXIN */
+					::v-deep .u-input__input {
+						padding-bottom: 8rpx;
+						border-bottom: 4rpx solid #eee;
+					}
+					/* #endif */
+				}
+			}
+			
 			.update-btn{
+				margin-top: 20%;
 				display: flex;
-				justify-content: space-around;
+				::v-deep .u-btn{
+					padding: 0 135rpx;
+				}
+				/* #ifndef MP-WEIXIN */
+				::v-deep :nth-child(2).u-btn {
+					margin-left: 25rpx;
+				}
+				/* #endif */
+				/* #ifdef MP-WEIXIN */
+				justify-content: space-between;
+				/* #endif */
+				
 			}
 		}
 	}

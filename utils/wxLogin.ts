@@ -1,4 +1,4 @@
-import { userWxLogin } from '@/api/index'
+import api from '@/api/index'
 import { useUser } from '@/stores/user'
 import showMsg from '@/utils/showMsg'
 const userStore = useUser()
@@ -17,7 +17,7 @@ export const wxLogin = () => {
 				code: codeWx as string
 			}
 			try {
-				const { data, msg } = await userWxLogin(params)
+				const { data, msg } = await api.userWxLogin(params)
 				console.log('微信一键登录存储token和用户信息');
 				userStore.$patch((state : any) => {
 					state.userInfo = data.userInfo

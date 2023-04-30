@@ -32,7 +32,7 @@
 		}
 	})
 	
-	const { userInfo, userForm } = toRefs(state)
+	const { userInfo } = toRefs(state)
 
 
 	onLoad(() => {

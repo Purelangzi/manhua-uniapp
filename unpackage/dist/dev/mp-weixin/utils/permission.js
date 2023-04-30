@@ -12,17 +12,9 @@ list.forEach((item) => {
   });
 });
 const hasPermission = (url) => {
-  console.log(url, "url");
   const userInfo = common_vendor.index.getStorageSync("USER");
-  const pathArr = getCurrentPages();
-  console.log(pathArr, "pathArr");
   if (userInfo) {
-    console.log("有token");
-    if (url !== "pages/user/user-login") {
-      return true;
-    } else {
-      return false;
-    }
+    return true;
   } else {
     if (whiteList.includes(url)) {
       return true;

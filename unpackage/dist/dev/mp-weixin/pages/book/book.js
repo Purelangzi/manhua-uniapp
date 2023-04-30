@@ -2,6 +2,7 @@
 const common_vendor = require("../../common/vendor.js");
 const utils_wxLogin = require("../../utils/wxLogin.js");
 require("../../api/index.js");
+require("../../api/module/common.js");
 require("../../api/request.js");
 require("../../utils/showMsg.js");
 require("../../stores/user.js");

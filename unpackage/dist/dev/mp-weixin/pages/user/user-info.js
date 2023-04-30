@@ -1,9 +1,10 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
-const api_index = require("../../api/index.js");
 const stores_user = require("../../stores/user.js");
+const api_index = require("../../api/index.js");
 const utils_showMsg = require("../../utils/showMsg.js");
 const utils_wxLogin = require("../../utils/wxLogin.js");
+require("../../api/module/common.js");
 require("../../api/request.js");
 if (!Array) {
   const _easycom_u_avatar2 = common_vendor.resolveComponent("u-avatar");
@@ -30,22 +31,21 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const userStore = stores_user.useUser();
     const state = common_vendor.reactive({
       inputModel: {
-        updateParams: "",
+        updateKey: "",
+        updateVal: "",
         iType: "text",
-        border: true,
         place: "请输入"
       },
       show: false,
       title: "修改",
       column: [
-        { title: "昵称", value: "username" },
-        { title: "手机号", value: "phone" },
-        { title: "密码", value: "password", type: "password" },
-        { title: "邮箱", value: "email" }
+        { title: "昵称", key: "username" },
+        { title: "手机号", key: "phone" },
+        { title: "密码", key: "password", type: "password" },
+        { title: "邮箱", key: "email" }
       ]
     });
-    const { updateParams, iType, border, place } = common_vendor.toRefs(state.inputModel);
-    const customStyleExit = { backgroundColor: "#ffa73c", color: "#fff" };
+    const { updateKey, updateVal, iType, place } = common_vendor.toRefs(state.inputModel);
     common_vendor.onLoad(() => {
     });
     common_vendor.onShow(() => {
@@ -59,30 +59,44 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const userInfo = common_vendor.computed(() => {
       return userStore.userInfo;
     });
-    const openUpdatePopup = (title, params, type) => {
+    const openUpdatePopup = (title, key, type) => {
       state.title += title;
       place.value += title;
-      updateParams.value = params;
+      updateKey.value = key;
+      updateVal.value = userInfo.value[key];
       if (type) {
         iType.value = type;
       }
       state.show = true;
     };
-    const cancelUpdate = () => {
-      state.show = false;
+    const handleUpdateUser = async () => {
+      if (!updateVal.value) {
+        utils_showMsg.showMsg({ title: "输入不能为空" });
+        return;
+      }
+      try {
+        const { msg } = await api_index.api.editAccount({ id: userInfo.value.id, [updateKey.value]: updateVal.value });
+        userStore.userInfo[updateKey.value] = updateVal.value;
+        utils_showMsg.showMsg({ title: msg });
+        state.show = false;
+      } catch (e) {
+        console.log(e);
+      }
     };
     const closePopup = () => {
-      console.log("closePopup");
+      state.title = "修改";
+      place.value = "请输入", updateKey.value = "";
+      updateVal.value = "";
+      iType.value = "text";
     };
     const handleOnAvatar = async () => {
       try {
         const filePath = await chooseImage(1);
         const { url } = await uploadImage(filePath);
-        console.log(url);
         userStore.$patch((state2) => {
           state2.userInfo.avatar = url;
         });
-        const { msg } = await api_index.editAccount({ id: userStore.userInfo.id, avatar: url });
+        const { msg } = await api_index.api.editAccount({ id: userStore.userInfo.id, avatar: url });
         utils_showMsg.showMsg({ title: msg, icon: "success" });
       } catch (e) {
         console.log(e);
@@ -161,12 +175,12 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         }),
         d: common_vendor.f(state.column, (col, k0, i0) => {
           return {
-            a: col.value,
-            b: common_vendor.o(($event) => openUpdatePopup(col.title, common_vendor.unref(userInfo)[col.value], col.type), col.value),
-            c: "1f969627-3-" + i0 + ",1f969627-0",
+            a: col.key,
+            b: common_vendor.o(($event) => openUpdatePopup(col.title, col.key, col.type), col.key),
+            c: "5e1741c8-3-" + i0 + ",5e1741c8-0",
             d: common_vendor.p({
               title: col.title,
-              value: common_vendor.unref(userInfo)[col.value] || "未设置"
+              value: common_vendor.unref(userInfo)[col.key] || "未设置"
             })
           };
         }),
@@ -174,31 +188,29 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       }, common_vendor.unref(userInfo).username ? {
         f: common_vendor.o(handleLogOut),
         g: common_vendor.p({
-          ["custom-style"]: customStyleExit,
           ripple: true
         })
       } : {}, {
         h: common_vendor.t(state.title),
-        i: common_vendor.o(($event) => common_vendor.isRef(updateParams) ? updateParams.value = $event : null),
+        i: common_vendor.o(($event) => common_vendor.isRef(updateVal) ? updateVal.value = $event : null),
         j: common_vendor.p({
           type: common_vendor.unref(iType),
-          border: common_vendor.unref(border),
           placeholder: common_vendor.unref(place),
-          modelValue: common_vendor.unref(updateParams)
+          modelValue: common_vendor.unref(updateVal)
         }),
-        k: common_vendor.o(cancelUpdate),
+        k: common_vendor.o(($event) => state.show = false),
         l: common_vendor.p({
           shape: "circle"
         }),
-        m: common_vendor.p({
+        m: common_vendor.o(($event) => handleUpdateUser()),
+        n: common_vendor.p({
           shape: "circle",
           type: "error"
         }),
-        n: common_vendor.o(closePopup),
-        o: common_vendor.o(($event) => state.show = $event),
-        p: common_vendor.p({
+        o: common_vendor.o(closePopup),
+        p: common_vendor.o(($event) => state.show = $event),
+        q: common_vendor.p({
           mode: "bottom",
-          height: "40%",
           closeable: true,
           modelValue: state.show
         })
@@ -206,5 +218,5 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
   }
 });
-const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__file", "F:/HBuilderProjects/manhua/pages/user/user-Info.vue"]]);
+const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__scopeId", "data-v-5e1741c8"], ["__file", "F:/HBuilderProjects/manhua/pages/user/user-Info.vue"]]);
 wx.createPage(MiniProgramPage);

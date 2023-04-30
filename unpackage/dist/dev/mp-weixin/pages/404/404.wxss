@@ -23,11 +23,11 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-.error-container .error-bg {
+.error-container .error-bg.data-v-f50617b2 {
   margin: 50rpx;
   height: 421rpx;
   background: url(https://static.mkzcdn.com/mobile/img/pic_pageload_error.png) no-repeat center center/contain;
 }
-.error-container .error-btn {
+.error-container .error-btn.data-v-f50617b2 {
   margin: 10rpx 10%;
 }

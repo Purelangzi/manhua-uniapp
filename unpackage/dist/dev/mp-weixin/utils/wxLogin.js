@@ -18,7 +18,7 @@ const wxLogin = () => {
         code: codeWx
       };
       try {
-        const { data, msg } = await api_index.userWxLogin(params);
+        const { data, msg } = await api_index.api.userWxLogin(params);
         console.log("微信一键登录存储token和用户信息");
         userStore.$patch((state) => {
           state.userInfo = data.userInfo;
@@ -65,7 +65,7 @@ const refreshWxLogin = () => {
           username: userStore.userInfo.username,
           code: res.code
         };
-        const { data } = await api_index.userWxLogin(params);
+        const { data } = await userWxLogin(params);
         userStore.token = data.token;
         console.log("微信登录过期,无感刷新token");
         reslove(true);
