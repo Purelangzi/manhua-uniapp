@@ -6,7 +6,9 @@
     "pages/user/user",
     "pages/user/user-login",
     "pages/user/user-Info",
-    "pages/404/404"
+    "pages/404/404",
+    "pages/search/search",
+    "pages/detail/detail"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -22,26 +24,26 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "iconPath": "static/icon/home.png",
-        "selectedIconPath": "static/icon/home-select.png",
+        "iconPath": "static/image/home.png",
+        "selectedIconPath": "static/image/home-select.png",
         "text": "首页"
       },
       {
         "pagePath": "pages/category/category",
-        "iconPath": "static/icon/category.png",
-        "selectedIconPath": "static/icon/category-select.png",
+        "iconPath": "static/image/category.png",
+        "selectedIconPath": "static/image/category-select.png",
         "text": "分类"
       },
       {
         "pagePath": "pages/book/book",
-        "iconPath": "static/icon/book.png",
-        "selectedIconPath": "static/icon/book-select.png",
+        "iconPath": "static/image/book.png",
+        "selectedIconPath": "static/image/book-select.png",
         "text": "书架"
       },
       {
         "pagePath": "pages/user/user",
-        "iconPath": "static/icon/user.png",
-        "selectedIconPath": "static/icon/user-select.png",
+        "iconPath": "static/image/user.png",
+        "selectedIconPath": "static/image/user-select.png",
         "text": "用户"
       }
     ]

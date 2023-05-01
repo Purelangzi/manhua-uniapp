@@ -38,6 +38,8 @@ if (!Math) {
   "./pages/user/user-login.js";
   "./pages/user/user-Info.js";
   "./pages/404/404.js";
+  "./pages/search/search.js";
+  "./pages/detail/detail.js";
 }
 const _sfc_main = {
   onPageNotFound: function() {

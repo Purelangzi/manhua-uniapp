@@ -2,7 +2,6 @@
   "navigationBarTitleText": "登录注册",
   "enablePullDownRefresh": false,
   "usingComponents": {
-    "u-image": "../../uni_modules/vk-uview-ui/components/u-image/u-image",
     "u-input": "../../uni_modules/vk-uview-ui/components/u-input/u-input",
     "u-form-item": "../../uni_modules/vk-uview-ui/components/u-form-item/u-form-item",
     "u-form": "../../uni_modules/vk-uview-ui/components/u-form/u-form",

@@ -23,34 +23,6 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-.login .login-header.data-v-2bad5de3 {
-  margin-top: 80rpx;
-}
-.login .login-header .login-header-logo.data-v-2bad5de3 {
-  margin: 0 auto;
-  width: 210rpx;
-  height: 136rpx;
-  background: url("https://static.mkzcdn.com/mobile/img/login/pic_login_logo@2x.png") no-repeat center center;
-  background-size: cover;
-}
-.login .login-form.data-v-2bad5de3 {
-  margin: 80rpx 10% 0;
-}
-.login .register.data-v-2bad5de3 {
-  margin-top: 40rpx;
-  text-align: center;
-}
-.login .other-login.data-v-2bad5de3 {
-  margin-top: 150rpx;
-}
-.login .other-login .other-title.data-v-2bad5de3 {
-  text-align: center;
-  margin-bottom: 40rpx;
-  font-size: 12px;
-  color: #999;
-}
-.login .other-login .other-icon.data-v-2bad5de3 {
-  display: flex;
-  justify-content: space-around;
-  margin: 0 10%;
+.u-sticky.data-v-0087e446 {
+  z-index: 9999999999;
 }

@@ -1,0 +1,1 @@
+<view class=" data-v-0087e446"><view class="{{['u-sticky-wrap', 'data-v-0087e446', f]}}" style="{{'height:' + g + ';' + ('background-color:' + h)}}"><view class="u-sticky data-v-0087e446" style="{{'position:' + a + ';' + ('top:' + b) + ';' + ('left:' + c) + ';' + ('width:' + d) + ';' + ('z-index:' + e)}}"><slot></slot></view></view></view>

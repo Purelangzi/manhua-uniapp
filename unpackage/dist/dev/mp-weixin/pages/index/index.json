@@ -1,4 +1,8 @@
 {
   "navigationBarTitleText": "首页",
-  "usingComponents": {}
+  "usingComponents": {
+    "u-icon": "../../uni_modules/vk-uview-ui/components/u-icon/u-icon",
+    "u-swiper": "../../uni_modules/vk-uview-ui/components/u-swiper/u-swiper",
+    "u-image": "../../uni_modules/vk-uview-ui/components/u-image/u-image"
+  }
 }

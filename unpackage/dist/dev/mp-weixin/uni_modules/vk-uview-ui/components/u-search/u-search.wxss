@@ -23,34 +23,61 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-.login .login-header.data-v-2bad5de3 {
-  margin-top: 80rpx;
-}
-.login .login-header .login-header-logo.data-v-2bad5de3 {
-  margin: 0 auto;
-  width: 210rpx;
-  height: 136rpx;
-  background: url("https://static.mkzcdn.com/mobile/img/login/pic_login_logo@2x.png") no-repeat center center;
-  background-size: cover;
-}
-.login .login-form.data-v-2bad5de3 {
-  margin: 80rpx 10% 0;
-}
-.login .register.data-v-2bad5de3 {
-  margin-top: 40rpx;
-  text-align: center;
-}
-.login .other-login.data-v-2bad5de3 {
-  margin-top: 150rpx;
-}
-.login .other-login .other-title.data-v-2bad5de3 {
-  text-align: center;
-  margin-bottom: 40rpx;
-  font-size: 12px;
-  color: #999;
-}
-.login .other-login .other-icon.data-v-2bad5de3 {
+.u-search.data-v-3cb29fc1 {
+
   display: flex;
-  justify-content: space-around;
-  margin: 0 10%;
+  flex-direction: row;
+
+  align-items: center;
+  flex: 1;
+}
+.u-content.data-v-3cb29fc1 {
+
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+  padding: 0 18rpx;
+  flex: 1;
+}
+.u-clear-icon.data-v-3cb29fc1 {
+
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+}
+.u-input.data-v-3cb29fc1 {
+  flex: 1;
+  font-size: 28rpx;
+  line-height: 1;
+  margin: 0 10rpx;
+  color: #909399;
+}
+.u-close-wrap.data-v-3cb29fc1 {
+  width: 40rpx;
+  height: 100%;
+
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+.u-placeholder-class.data-v-3cb29fc1 {
+  color: #909399;
+}
+.u-action.data-v-3cb29fc1 {
+  font-size: 28rpx;
+  color: #303133;
+  width: 0;
+  overflow: hidden;
+  transition: all 0.3s;
+  white-space: nowrap;
+  text-align: center;
+}
+.u-action-active.data-v-3cb29fc1 {
+  width: 80rpx;
+  margin-left: 10rpx;
 }
