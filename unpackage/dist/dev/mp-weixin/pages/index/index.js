@@ -6,6 +6,7 @@ require("../../api/module/common.js");
 require("../../api/request.js");
 require("../../utils/showMsg.js");
 require("../../stores/user.js");
+require("../../api/module/cartoon.js");
 if (!Array) {
   const _easycom_u_icon2 = common_vendor.resolveComponent("u-icon");
   const _easycom_u_swiper2 = common_vendor.resolveComponent("u-swiper");

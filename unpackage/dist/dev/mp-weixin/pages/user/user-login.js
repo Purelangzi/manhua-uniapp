@@ -6,6 +6,7 @@ const utils_wxLogin = require("../../utils/wxLogin.js");
 const utils_showMsg = require("../../utils/showMsg.js");
 require("../../api/module/common.js");
 require("../../api/request.js");
+require("../../api/module/cartoon.js");
 if (!Array) {
   const _easycom_u_input2 = common_vendor.resolveComponent("u-input");
   const _easycom_u_form_item2 = common_vendor.resolveComponent("u-form-item");

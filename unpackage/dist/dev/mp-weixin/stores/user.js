@@ -17,4 +17,17 @@ const useUser = common_vendor.defineStore("USER", {
   },
   getters: {}
 });
+const useSearch = common_vendor.defineStore("HISTORY", {
+  state: () => ({
+    searchHistory: []
+  }),
+  unistorage: true,
+  actions: {
+    clearHistory() {
+      this.$reset();
+      common_vendor.index.removeStorageSync("HISTORY");
+    }
+  }
+});
+exports.useSearch = useSearch;
 exports.useUser = useUser;

@@ -1,0 +1,1 @@
+<view class="search-header data-v-a1110e0f"><u-search wx:if="{{e}}" class="data-v-a1110e0f" bindsearch="{{a}}" bindcustom="{{b}}" bindclear="{{c}}" u-i="a1110e0f-0" bind:__l="__l" bindupdateModelValue="{{d}}" u-p="{{e}}"></u-search></view>

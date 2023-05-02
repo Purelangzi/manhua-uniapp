@@ -6,6 +6,7 @@ require("../../api/module/common.js");
 require("../../api/request.js");
 require("../../utils/showMsg.js");
 require("../../stores/user.js");
+require("../../api/module/cartoon.js");
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "book",
   setup(__props) {

@@ -155,12 +155,20 @@
 		border: 1px solid #e0e0e0;
 	}
 }
+
+::v-deep .swiper-content {
+	.u-swiper-wrap{
+		border-bottom-right-radius:18% !important;
+	}
+}
 .main{
 	padding: 0 30rpx;
 	.main-nav{
 		display: flex;
 		justify-content: space-around;
-		padding: 25rpx 0;
+		padding: 15rpx 0;
+		// border-top-left-radius: 30rpx;
+		// border-top-right-radius: 0rpx;
 		.nav-item{
 			width: 200rpx;
 			height: 90rpx;
@@ -175,7 +183,6 @@
 			.title-left{
 				display: flex;
 				align-items: center;
-				
 				.title-icon{
 					display: inline-block;
 					width: 35rpx;

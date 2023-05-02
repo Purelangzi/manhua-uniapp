@@ -1,5 +1,5 @@
 import request from "../request"
-import {WxLoginType,EeditCount,UserLogin,UserReg} from './data-type'
+import {WxLoginType,EeditCount,UserLogin,UserReg} from '../types/common-type'
 
 export default {
 	userLogin: (data : UserLogin) => request.post('/user/login', data),

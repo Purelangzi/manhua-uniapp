@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia';
 
-import {Uesrstate} from './model/userModel'
+import {UesrState,SearchState} from './model/userModel'
 
 export const useUser = defineStore('USER', {
-	state: ():Uesrstate => ({ 
+	state: ():UesrState => ({ 
 		userInfo:{},
-		token:''
+		token:'',
 	}),
 	unistorage:true,
 	actions: {
@@ -15,10 +15,22 @@ export const useUser = defineStore('USER', {
 			uni.reLaunch({
 				url:'/pages/user/user-login'
 			})
-		}
+		},
+		
 	},
 	getters:{
 		
 	}
-	
 });
+export const useSearch = defineStore('HISTORY',{
+	state:():SearchState =>({
+		searchHistory:[]
+	}),
+	unistorage:true,
+	actions:{
+		clearHistory(){
+			this.$reset()
+			uni.removeStorageSync('HISTORY')
+		}
+	}
+})

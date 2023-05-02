@@ -1,0 +1,1 @@
+<view class="search-list"><search-input bindsendQueryList="{{a}}" u-i="1613dc17-0" bind:__l="__l"/><view class="cartoon-list"><view class="cartoon-item"></view></view></view>
