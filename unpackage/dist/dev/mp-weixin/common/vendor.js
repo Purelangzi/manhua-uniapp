@@ -7673,6 +7673,7 @@ const createHook = (lifecycle) => (hook, target = getCurrentInstance()) => {
 };
 const onShow = /* @__PURE__ */ createHook(ON_SHOW);
 const onLoad = /* @__PURE__ */ createHook(ON_LOAD);
+const onReachBottom = /* @__PURE__ */ createHook(ON_REACH_BOTTOM);
 exports.Pinia = Pinia;
 exports._export_sfc = _export_sfc;
 exports.computed = computed;
@@ -7690,6 +7691,7 @@ exports.o = o;
 exports.onActivated = onActivated;
 exports.onLoad = onLoad;
 exports.onMounted = onMounted;
+exports.onReachBottom = onReachBottom;
 exports.onShow = onShow;
 exports.p = p;
 exports.reactive = reactive;

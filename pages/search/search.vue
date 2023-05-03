@@ -2,19 +2,19 @@
 	<view class="search">
 		<!-- <SearchInput /> -->
 		<view class="search-header">
-			<u-search placeholder="输入作品名" v-model="state.searchKeyWord" @search="searchCartoon" @custom="searchCartoon" @clear="clearSearch"
-				:action-style="{color:'#ff7830'}">
+			<u-search placeholder="输入作品名" v-model="state.searchKeyWord" @search="searchCartoon" @custom="searchCartoon"
+				@clear="clearSearch" :action-style="{color:'#ff7830'}">
 			</u-search>
 		</view>
 		<view class="search-content" v-show="!state.isSearch">
-			<view class="search-hot" >
+			<view class="search-hot">
 				<!-- #ifdef MP-WEIXIN -->
 				<view class="hot-title title">- 热门搜索 -</view>
 				<!-- #endif -->
 				<!-- #ifndef MP-WEIXIN -->
 				<view class="hot-title title">热门搜索</view>
 				<!-- #endif -->
-				
+
 				<view class="hot-content">
 					<view class="hot-item" v-for="cartoon in searchHotList" :key="cartoon.id"
 						@click="goCartoonDetail(cartoon.id)">
@@ -22,7 +22,7 @@
 					</view>
 				</view>
 			</view>
-			
+
 			<view class="record" v-show="recordList.length">
 				<view class="record-title title">
 					<!-- #ifdef MP-WEIXIN -->
@@ -33,19 +33,20 @@
 					<!-- #endif -->
 					<u-icon class="record-icon" @click="clearRecord" size="36" name="trash"></u-icon>
 				</view>
-				
+
 				<view class="record-content">
 					<view class="record-item" v-for="(item,key) in recordList" :key="item">
-						<view class="item-keyword"  @click="onRecord(item)">{{item}}</view>
-						<u-icon size="16" name="close" color="#666b6b" class="item-icon" @click="clearRecordItem(key)"></u-icon>
+						<view class="item-keyword" @click="onRecord(item)">{{item}}</view>
+						<u-icon size="16" name="close" color="#666b6b" class="item-icon"
+							@click="clearRecordItem(key)"></u-icon>
 					</view>
 				</view>
 			</view>
 		</view>
-		
-		
+
+
 		<view class="search-result" v-show="state.isSearch">
-			<view class="comic-item" v-for="item in state.querySearchList" :key="item.id">
+			<view class="comic-item" v-for="item in state.searchList" :key="item.id">
 				<view class="cover">
 					<u-image width="165rpx" height="225rpx" :src="item.cover_lateral"></u-image>
 				</view>
@@ -55,14 +56,17 @@
 					<view class="info-other vip">{{item.charge === 0?'免费':'会员'}}</view>
 					<view v-show="item.charge!==0" class="info-other price">价格：{{'¥' + item.price }}</view>
 					<view v-show="item.read!==0" class="info-other read">阅读量：{{ + item.read }}</view>
-					
+
 				</view>
 			</view>
-			
+			<!-- 加载更多 -->
+			<u-loadmore v-show="state.searchList.length" :status="status" font-size="22"
+				color="#b4b4b4" margin-top="20" :load-text="state.loadText" @loadmore="onLoadMore" />
 		</view>
-		<view class="search-result-null" v-show="state.isSearch && !state.querySearchList.length">
+
+		<view class="search-result-null" v-show="state.isSearch && !state.searchList.length">
 			<view class="not-found">
-				(T-T) 主人， 没有搜索到相关内容
+				(T-T) 苟修金sama， 没有搜索到相关内容
 			</view>
 		</view>
 	</view>
@@ -73,19 +77,28 @@
 	import api from '@/api/index'
 	// import SearchInput from './component/search-input.vue'
 	import { computed, reactive, ref, toRefs } from 'vue'
-	import { onLoad, onShow } from '@dcloudio/uni-app'
-	import {useSearch} from '@/stores/user'
+	import { onLoad, onShow, onReachBottom } from '@dcloudio/uni-app'
+	import { useSearch } from '@/stores/user'
 	const searchStore = useSearch()
+	const status = ref('loadmore')
 	const state = reactive({
 		searchKeyWord: '',
 		searchHotParams: {
 			page: 0,
 			pageSize: 9
 		},
-		isSearch:false,
+		isSearch: false,
 		searchHotList: [],
-		// recordList:[],
-		querySearchList:[]
+		searchAllList: [],
+		searchList: [],
+		start: 0, //  搜索漫画的列表的开始切割的位置
+		end: 10,// 搜索漫画的列表的末尾切割的位置,
+		loadText: {
+			loadmore: '点击加载更多',
+			loading: '加载中',
+			nomore: '没有更多了'
+		}
+
 	})
 	const { searchHotList } = toRefs(state)
 	onLoad(() => {
@@ -94,62 +107,99 @@
 	onShow(() => {
 
 		getHotData()
-		
+
 	})
-	const recordList = computed(()=>{
+	onReachBottom(() => {
+		// 不超过十条或没有数据了
+		if (!state.searchAllList.length || state.end >= state.searchAllList.length) {
+			return
+		}
+		status.value = 'loading'
+		// 每次显示十条数据
+		state.start += 10
+		state.end += 10
+		// 最后不够十条把剩余的加上
+		if (state.end > state.searchAllList.length) {
+			state.end = state.start + state.searchAllList.length - state.start
+			state.searchList = [...state.searchList, ...state.searchAllList.slice(state.start, state.end)]
+			status.value = 'nomore'
+			return
+		}
+
+		setTimeout(() => {
+			state.searchList = [...state.searchList, ...state.searchAllList.slice(state.start, state.end)]
+		}, 1000)
+
+	})
+	const recordList = computed(() => {
 		return searchStore.searchHistory
 	})
-	
+
 	const getHotData = async () => {
 		state.searchHotParams.page = Math.floor(Math.random() * (20 - 1)) + 1
 		try {
 			const { data } = await api.getCartoonList(state.searchHotParams)
-			
 			searchHotList.value = data.data
 		} catch (e) {
 			console.log(e);
 		}
 	}
-	
+
 	const searchCartoon = (val : string) => {
-		if(!val) return
+		if (!val) return
 		queryCartoon(state.searchKeyWord)
-		searchStore.searchHistory.push(val)
 	}
-	const queryCartoon = async(val:string) =>{
-		try{
-			const {data} = await api.queryCartoon(val)
+	const queryCartoon = async (val : string) => {
+		try {
+			const { data } = await api.queryCartoon(val)
 			state.isSearch = true
-			state.querySearchList = data
-		}catch(e){
+			if (data.length < 10) {
+				state.searchList = data
+			} else {
+				// 切割数据
+				state.searchAllList = data
+				state.searchList = state.searchAllList.slice(0, 10)
+			}
+
+		} catch (e) {
 			console.log(e);
 		}
+		searchStore.searchHistory.push(val)
 	}
-	const clearSearch = ()=>{
+	const clearSearch = () => {
 		state.isSearch = false
-		state.querySearchList = []
+		state.searchList = []
+		status.value = 'loadmore'
 	}
-	const clearRecord = () =>{
+	const clearRecord = () => {
 		searchStore.clearHistory()
 	}
-	const clearRecordItem = (key:number) =>{
-		searchStore.searchHistory.splice(key,1)
+	const clearRecordItem = (key : number) => {
+		searchStore.searchHistory.splice(key, 1)
 	}
 	const goCartoonDetail = (id : number) => {
 		uni.navigateTo({
 			url: `/pages/detail/detail?id=${id}`,
 		})
 	}
-	const onRecord = (val:string) =>{
+	const onRecord = (val : string) => {
 		state.searchKeyWord = val
 		queryCartoon(val)
+	}
+	const onLoadMore = ()=>{
+		status.value = 'loading'
+		setTimeout(()=>{
+			status.value = 'nomore'
+		},500)
+		
 	}
 </script>
 
 <style lang="scss" scoped>
 	.search {
 		padding: 0 25rpx;
-		.title{
+
+		.title {
 			margin-bottom: 20rpx;
 			color: $uni-text-color-grey;
 			/* #ifdef MP-WEIXIN */
@@ -158,8 +208,9 @@
 			/* #ifndef MP-WEIXIN */
 			text-align: left;
 			/* #endif */
-			
+
 		}
+
 		.search-header {
 			margin: 10rpx 0 30rpx;
 		}
@@ -168,11 +219,12 @@
 			.hot-content {
 				display: flex;
 				flex-wrap: wrap;
+
 				.hot-item {
 					margin-right: 20rpx;
 					margin-bottom: 25rpx;
 					padding: 15rpx 20rpx;
-					
+
 					border-radius: 40%;
 					/* #ifdef MP-WEIXIN */
 					font-size: 26rpx;
@@ -185,61 +237,76 @@
 				}
 			}
 		}
-		.record{
-			.record-title{
+
+		.record {
+			.record-title {
 				margin-top: 20rpx;
-				.record-icon{
+
+				.record-icon {
 					float: right;
 					margin-top: 4rpx;
 					margin-right: 10rpx;
 				}
 			}
-			.record-content{
+
+			.record-content {
 				margin-right: 10rpx;
-				.record-item{
+
+				.record-item {
 					display: flex;
 					justify-content: space-between;
 					height: 80rpx;
 					line-height: 80rpx;
 					border-bottom: 1px solid #ebebeb;
-					.item-keyword{
+
+					.item-keyword {
 						width: 90%;
 					}
-					.item-icon{
+
+					.item-icon {
 						padding: 0 20rpx;
 					}
 				}
 			}
 		}
-		.search-result{
-			.comic-item{
+
+		.search-result {
+			.comic-item {
 				display: flex;
 				padding: 20rpx 0;
 				border-bottom: 1px solid #ebebeb;
-				.cover{
-					
-				}
-				.comic-info{
+
+				.cover {}
+
+				.comic-info {
 					margin-left: 25rpx;
 					width: 50%;
-					.info-title{
+
+					.info-title {
 						padding: 10rpx 0 10rpx 0;
 					}
-					.info-other{
+
+					.info-other {
 						margin: 10rpx 0;
 						font-size: $uni-font-size-sm;
 						color: $uni-text-color-grey;
 					}
-					.intro{
+
+					.intro {
 						overflow: hidden;
 						text-overflow: ellipsis;
 						white-space: nowrap;
 					}
 				}
 			}
+
+			 :deep(.u-load-more-wrap) {
+				height: 100rpx !important;
+			}
 		}
-		.search-result-null{
-			.not-found{
+
+		.search-result-null {
+			.not-found {
 				text-align: center;
 				height: 160rpx;
 				line-height: 160rpx;

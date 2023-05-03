@@ -23,6 +23,32 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-.search-header.data-v-a1110e0f {
-  margin: 10rpx 0 30rpx;
+.u-back-top.data-v-6976d1a0 {
+  width: 80rpx;
+  height: 80rpx;
+  position: fixed;
+  z-index: 9;
+
+  display: flex;
+  flex-direction: row;
+
+  flex-direction: column;
+  justify-content: center;
+  background-color: #E1E1E1;
+  color: #606266;
+  align-items: center;
+  transition: opacity 0.4s;
+}
+.u-back-top__content.data-v-6976d1a0 {
+
+  display: flex;
+  flex-direction: row;
+
+  flex-direction: column;
+  align-items: center;
+}
+.u-back-top__content__tips.data-v-6976d1a0 {
+  font-size: 24rpx;
+  transform: scale(0.8);
+  line-height: 1;
 }

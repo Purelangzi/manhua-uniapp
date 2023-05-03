@@ -92,6 +92,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.search .search-result.data-v-c10c040c .u-load-more-wrap {
+  height: 100rpx !important;
+}
 .search .search-result-null .not-found.data-v-c10c040c {
   text-align: center;
   height: 160rpx;

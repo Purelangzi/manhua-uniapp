@@ -226,14 +226,14 @@
 		.logOut {
 			margin-top: 80rpx;
 			padding: 0 15%;
-			::v-deep .u-btn {
+			 :deep(.u-btn) {
 				background-color: $uni-main-color;
 				color: #fff;
 			}
 		
 		}
 		.update-popup{
-			::v-deep .u-drawer-content {
+			:deep(.u-drawer-content) {
 				padding: 25rpx 25rpx;
 			}
 
@@ -244,12 +244,12 @@
 			}
 			.update-form{
 				.update-input{
-					::v-deep .uni-input-input {
+					:deep(.uni-input-input) {
 						padding-bottom: 8rpx;
 						border-bottom: 4rpx solid #eee;
 					}
 					/* #ifdef MP-WEIXIN */
-					::v-deep .u-input__input {
+					:deep(.u-input__input) {
 						padding-bottom: 8rpx;
 						border-bottom: 4rpx solid #eee;
 					}
@@ -260,7 +260,7 @@
 			.update-btn{
 				margin-top: 20%;
 				display: flex;
-				::v-deep .u-btn{
+				:deep(.u-btn){
 					padding: 0 135rpx;
 				}
 				/* #ifndef MP-WEIXIN */

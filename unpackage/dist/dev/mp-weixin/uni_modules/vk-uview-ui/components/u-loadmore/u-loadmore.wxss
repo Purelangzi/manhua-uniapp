@@ -23,37 +23,45 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-.detail-header.data-v-eca06f3c {
-  position: relative;
+u-line.data-v-e9906cfb {
+  flex: none;
 }
-.detail-header .header-info.data-v-eca06f3c {
-  position: absolute;
-  left: 40rpx;
-  right: 40rpx;
-  bottom: 110rpx;
-  z-index: 1;
-}
-.detail-header .header-info .info-title.data-v-eca06f3c {
-  font-size: 20px;
-  color: #fff;
-}
-.detail-header .cover-bg.data-v-eca06f3c {
-  position: absolute;
-  top: 0;
-}
-.detail-header .cover-bg2.data-v-eca06f3c {
-  position: absolute;
-  bottom: -1rpx;
-}
-.detail-btn.data-v-eca06f3c {
+.u-load-more-wrap.data-v-e9906cfb {
+
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
+
+  justify-content: center;
   align-items: center;
-  padding: 30rpx;
 }
-.detail-btn .btn-collect.data-v-eca06f3c {
-  margin-left: 100rpx;
+.u-load-more-inner.data-v-e9906cfb {
+
+  display: flex;
+  flex-direction: row;
+
+  justify-content: center;
+  align-items: center;
+  padding: 0 12rpx;
 }
-.data-v-eca06f3c .u-tabs {
-  margin: 0 100rpx;
+.u-more.data-v-e9906cfb {
+  position: relative;
+
+  display: flex;
+  flex-direction: row;
+
+  justify-content: center;
+}
+.u-dot-text.data-v-e9906cfb {
+  font-size: 28rpx;
+}
+.u-loadmore-icon-wrap.data-v-e9906cfb {
+  margin-right: 8rpx;
+}
+.u-loadmore-icon.data-v-e9906cfb {
+
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+  justify-content: center;
 }

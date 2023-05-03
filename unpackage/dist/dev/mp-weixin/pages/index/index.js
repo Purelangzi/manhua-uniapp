@@ -59,8 +59,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       });
     };
     const scroll = (e) => {
-      state.scrollTop = e.detail.scrollTop;
-      if (state.scrollTop >= 120) {
+      if (e.detail.scrollTop >= 120) {
         navScrollFlag.value = true;
       } else {
         navScrollFlag.value = false;

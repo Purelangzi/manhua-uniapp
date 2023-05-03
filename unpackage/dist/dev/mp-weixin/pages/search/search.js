@@ -11,18 +11,21 @@ if (!Array) {
   const _easycom_u_search2 = common_vendor.resolveComponent("u-search");
   const _easycom_u_icon2 = common_vendor.resolveComponent("u-icon");
   const _easycom_u_image2 = common_vendor.resolveComponent("u-image");
-  (_easycom_u_search2 + _easycom_u_icon2 + _easycom_u_image2)();
+  const _easycom_u_loadmore2 = common_vendor.resolveComponent("u-loadmore");
+  (_easycom_u_search2 + _easycom_u_icon2 + _easycom_u_image2 + _easycom_u_loadmore2)();
 }
 const _easycom_u_search = () => "../../uni_modules/vk-uview-ui/components/u-search/u-search.js";
 const _easycom_u_icon = () => "../../uni_modules/vk-uview-ui/components/u-icon/u-icon.js";
 const _easycom_u_image = () => "../../uni_modules/vk-uview-ui/components/u-image/u-image.js";
+const _easycom_u_loadmore = () => "../../uni_modules/vk-uview-ui/components/u-loadmore/u-loadmore.js";
 if (!Math) {
-  (_easycom_u_search + _easycom_u_icon + _easycom_u_image)();
+  (_easycom_u_search + _easycom_u_icon + _easycom_u_image + _easycom_u_loadmore)();
 }
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "search",
   setup(__props) {
     const searchStore = stores_user.useSearch();
+    const status = common_vendor.ref("loadmore");
     const state = common_vendor.reactive({
       searchKeyWord: "",
       searchHotParams: {
@@ -31,14 +34,40 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       },
       isSearch: false,
       searchHotList: [],
-      // recordList:[],
-      querySearchList: []
+      searchAllList: [],
+      searchList: [],
+      start: 0,
+      //  搜索漫画的列表的开始切割的位置
+      end: 10,
+      // 搜索漫画的列表的末尾切割的位置,
+      loadText: {
+        loadmore: "点击加载更多",
+        loading: "加载中",
+        nomore: "没有更多了"
+      }
     });
     const { searchHotList } = common_vendor.toRefs(state);
     common_vendor.onLoad(() => {
     });
     common_vendor.onShow(() => {
       getHotData();
+    });
+    common_vendor.onReachBottom(() => {
+      if (!state.searchAllList.length || state.end >= state.searchAllList.length) {
+        return;
+      }
+      status.value = "loading";
+      state.start += 10;
+      state.end += 10;
+      if (state.end > state.searchAllList.length) {
+        state.end = state.start + state.searchAllList.length - state.start;
+        state.searchList = [...state.searchList, ...state.searchAllList.slice(state.start, state.end)];
+        status.value = "nomore";
+        return;
+      }
+      setTimeout(() => {
+        state.searchList = [...state.searchList, ...state.searchAllList.slice(state.start, state.end)];
+      }, 1e3);
     });
     const recordList = common_vendor.computed(() => {
       return searchStore.searchHistory;
@@ -56,20 +85,26 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       if (!val)
         return;
       queryCartoon(state.searchKeyWord);
-      searchStore.searchHistory.push(val);
     };
     const queryCartoon = async (val) => {
       try {
         const { data } = await api_index.api.queryCartoon(val);
         state.isSearch = true;
-        state.querySearchList = data;
+        if (data.length < 10) {
+          state.searchList = data;
+        } else {
+          state.searchAllList = data;
+          state.searchList = state.searchAllList.slice(0, 10);
+        }
       } catch (e) {
         console.log(e);
       }
+      searchStore.searchHistory.push(val);
     };
     const clearSearch = () => {
       state.isSearch = false;
-      state.querySearchList = [];
+      state.searchList = [];
+      status.value = "loadmore";
     };
     const clearRecord = () => {
       searchStore.clearHistory();
@@ -85,6 +120,12 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const onRecord = (val) => {
       state.searchKeyWord = val;
       queryCartoon(val);
+    };
+    const onLoadMore = () => {
+      status.value = "loading";
+      setTimeout(() => {
+        status.value = "nomore";
+      }, 500);
     };
     return (_ctx, _cache) => {
       return {
@@ -127,7 +168,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         }),
         k: common_vendor.unref(recordList).length,
         l: !state.isSearch,
-        m: common_vendor.f(state.querySearchList, (item, k0, i0) => {
+        m: common_vendor.f(state.searchList, (item, k0, i0) => {
           return {
             a: "c10c040c-3-" + i0,
             b: common_vendor.p({
@@ -145,8 +186,17 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             j: item.id
           };
         }),
-        n: state.isSearch,
-        o: state.isSearch && !state.querySearchList.length
+        n: state.searchList.length,
+        o: common_vendor.o(onLoadMore),
+        p: common_vendor.p({
+          status: status.value,
+          ["font-size"]: "22",
+          color: "#b4b4b4",
+          ["margin-top"]: "20",
+          ["load-text"]: state.loadText
+        }),
+        q: state.isSearch,
+        r: state.isSearch && !state.searchList.length
       };
     };
   }
