@@ -1,1 +1,0 @@
-<view bindtap="{{e}}" class="{{['u-back-top', 'data-v-6976d1a0', f]}}" style="{{g + ';' + h}}"><view wx:if="{{a}}" class="u-back-top__content data-v-6976d1a0"><u-icon wx:if="{{c}}" class="data-v-6976d1a0" bindclick="{{b}}" u-i="6976d1a0-0" bind:__l="__l" u-p="{{c}}"></u-icon><view class="u-back-top__content__tips data-v-6976d1a0">{{d}}</view></view><slot wx:else/></view>

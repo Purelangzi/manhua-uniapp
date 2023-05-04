@@ -84,7 +84,7 @@
 }
 .search .search-result .comic-item .comic-info .info-other.data-v-c10c040c {
   margin: 10rpx 0;
-  font-size: 12px;
+  font-size: 24rpx;
   color: #999;
 }
 .search .search-result .comic-item .comic-info .intro.data-v-c10c040c {

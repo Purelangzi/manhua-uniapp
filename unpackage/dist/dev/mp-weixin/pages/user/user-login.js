@@ -146,7 +146,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           ripple: true
         })
       } : {}, {
-        q: common_vendor.t(common_vendor.unref(regStatus) ? "< 返回登录" : "手机号快速注册 >"),
+        q: common_vendor.t(common_vendor.unref(regStatus) ? "< 返回登录" : "手机号快速注册 >"),
         r: common_vendor.o(switchRegister),
         s: common_vendor.o(handleWxLogin),
         t: common_vendor.p({

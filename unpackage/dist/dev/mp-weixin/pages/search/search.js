@@ -117,6 +117,11 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         url: `/pages/detail/detail?id=${id}`
       });
     };
+    const onComicDetail = (id) => {
+      common_vendor.index.navigateTo({
+        url: `/pages/detail/detail?id=${id}`
+      });
+    };
     const onRecord = (val) => {
       state.searchKeyWord = val;
       queryCartoon(val);
@@ -176,14 +181,16 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
               height: "225rpx",
               src: item.cover_lateral
             }),
-            c: common_vendor.t(item.name),
-            d: common_vendor.t(item.cartoon_introduction),
-            e: common_vendor.t(item.charge === 0 ? "免费" : "会员"),
-            f: common_vendor.t("¥" + item.price),
-            g: item.charge !== 0,
-            h: common_vendor.t(+item.read),
-            i: item.read !== 0,
-            j: item.id
+            c: common_vendor.o(($event) => onComicDetail(item.id), item.id),
+            d: common_vendor.t(item.name),
+            e: common_vendor.t(item.cartoon_introduction),
+            f: common_vendor.t(item.charge === 0 ? "免费" : "会员"),
+            g: common_vendor.t("¥" + item.price),
+            h: item.charge !== 0,
+            i: common_vendor.t(+item.read),
+            j: item.read !== 0,
+            k: common_vendor.o(($event) => onComicDetail(item.id), item.id),
+            l: item.id
           };
         }),
         n: state.searchList.length,

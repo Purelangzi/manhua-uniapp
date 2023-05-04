@@ -46,11 +46,11 @@
 
 
 		<view class="search-result" v-show="state.isSearch">
-			<view class="comic-item" v-for="item in state.searchList" :key="item.id">
-				<view class="cover">
+			<view class="comic-item"  v-for="item in state.searchList" :key="item.id">
+				<view class="cover" @click="onComicDetail(item.id)">
 					<u-image width="165rpx" height="225rpx" :src="item.cover_lateral"></u-image>
 				</view>
-				<view class="comic-info">
+				<view class="comic-info" @click="onComicDetail(item.id)">
 					<view class="info-title">{{item.name}}</view>
 					<view class="info-other intro">{{item.cartoon_introduction}}</view>
 					<view class="info-other vip">{{item.charge === 0?'免费':'会员'}}</view>
@@ -58,7 +58,11 @@
 					<view v-show="item.read!==0" class="info-other read">阅读量：{{ + item.read }}</view>
 
 				</view>
+				<view class="comic-chapter-go">
+					ddd
+				</view>
 			</view>
+			
 			<!-- 加载更多 -->
 			<u-loadmore v-show="state.searchList.length" :status="status" font-size="22"
 				color="#b4b4b4" margin-top="20" :load-text="state.loadText" @loadmore="onLoadMore" />
@@ -141,7 +145,6 @@
 			const { data } = await api.getCartoonList(state.searchHotParams)
 			searchHotList.value = data.data
 		} catch (e) {
-			console.log(e);
 		}
 	}
 
@@ -178,6 +181,11 @@
 		searchStore.searchHistory.splice(key, 1)
 	}
 	const goCartoonDetail = (id : number) => {
+		uni.navigateTo({
+			url: `/pages/detail/detail?id=${id}`,
+		})
+	}
+	const onComicDetail = (id : number) => {
 		uni.navigateTo({
 			url: `/pages/detail/detail?id=${id}`,
 		})
@@ -288,7 +296,7 @@
 
 					.info-other {
 						margin: 10rpx 0;
-						font-size: $uni-font-size-sm;
+						font-size: 24rpx;
 						color: $uni-text-color-grey;
 					}
 

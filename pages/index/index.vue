@@ -35,7 +35,7 @@
 								{{detail.title}}
 							</view>
 						</view>
-						<view class="title-right">更多&nbsp;></view>
+						<view class="title-right">更多 ></view>
 					</view>
 					<view class="box-detail">
 						<view class="detail-item" v-for="item in detail.data" :key="item.id">
@@ -146,7 +146,7 @@
 		line-height: 60rpx;
 		background-color: rgba(255, 255, 255, 0.6);
 		border-radius: 35rpx;
-		font-size: $uni-font-size-sm;
+		font-size: 24rpx;
 	}
 	.search-right{
 		display: flex;
@@ -227,7 +227,7 @@
 					}
 					.detail-introduction{
 						margin-top: 10rpx;
-						font-size: $uni-font-size-sm;
+						font-size: 24rpx;
 						color: $uni-text-color-grey;
 						overflow: hidden;
 						text-overflow: ellipsis;

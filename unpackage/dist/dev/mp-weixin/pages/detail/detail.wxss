@@ -34,7 +34,7 @@
   z-index: 1;
 }
 .detail-header .header-info .info-title.data-v-eca06f3c {
-  font-size: 20px;
+  font-size: 40rpx;
   color: #fff;
 }
 .detail-header .cover-bg.data-v-eca06f3c {
@@ -56,4 +56,47 @@
 }
 .data-v-eca06f3c .u-tabs {
   margin: 0 100rpx;
+}
+.detail-content.data-v-eca06f3c {
+  margin-top: 20rpx;
+  height: 100vh;
+}
+.detail-content .detail-intro.data-v-eca06f3c {
+  padding: 30rpx;
+}
+.detail-content .comic-update-info.data-v-eca06f3c {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 20rpx 0;
+}
+.detail-content .comic-update-info .info.data-v-eca06f3c {
+  display: flex;
+  align-items: baseline;
+}
+.detail-content .comic-update-info .info .status.data-v-eca06f3c {
+  margin-right: 12rpx;
+  font-size: 32rpx;
+}
+.detail-content .comic-update-info .info .update-date.data-v-eca06f3c {
+  font-size: 24rpx;
+  color: #999;
+}
+.detail-content .catalog-list .chapter-item.data-v-eca06f3c {
+  display: flex;
+  padding: 25rpx 30rpx;
+  border-bottom: 1px solid #ebebeb;
+}
+.detail-content .catalog-list .chapter-item .item-cover.data-v-eca06f3c {
+  margin-right: 22rpx;
+}
+.detail-content .catalog-list .chapter-item .item-info.data-v-eca06f3c {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.detail-content .catalog-list .chapter-item .item-info .item-date.data-v-eca06f3c {
+  margin-top: 36rpx;
+  font-size: 24rpx;
+  color: #999;
 }

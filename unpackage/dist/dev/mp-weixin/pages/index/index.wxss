@@ -41,7 +41,7 @@
   line-height: 60rpx;
   background-color: rgba(255, 255, 255, 0.6);
   border-radius: 35rpx;
-  font-size: 12px;
+  font-size: 24rpx;
 }
 .serach-nav .search-right.data-v-1cf27b2a {
   display: flex;
@@ -117,7 +117,7 @@
 }
 .swiper-content .main .main-box .box-detail .detail-item .detail-introduction.data-v-1cf27b2a {
   margin-top: 10rpx;
-  font-size: 12px;
+  font-size: 24rpx;
   color: #999;
   overflow: hidden;
   text-overflow: ellipsis;

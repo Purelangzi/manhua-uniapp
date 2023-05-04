@@ -19,7 +19,7 @@
 				{{!regStatus?'登录':'注册'}}
 			</u-button>
 		</view>
-		<view class="register" @click="switchRegister">{{regStatus?'<&nbsp;返回登录':'手机号快速注册&nbsp;>'}}</view>
+		<view class="register" @click="switchRegister">{{regStatus?'< 返回登录':'手机号快速注册 >'}}</view>
 
 		<!-- #ifdef MP-WEIXIN -->
 		<view class="other-login">
