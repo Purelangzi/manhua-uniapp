@@ -11,3 +11,11 @@ export interface ChapterList {
 	isAll ?: boolean,
 	chapter_id ?: string | number,
 }
+export interface  AddChapterRead{
+	chapter_id ?: string | number,
+	comic_id ?: string | number,
+	is_vip ?: string | number,
+	price ?: boolean,
+	uid ?: string | number,
+	read ?: string | number,
+}

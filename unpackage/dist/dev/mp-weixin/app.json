@@ -8,7 +8,8 @@
     "pages/user/user-Info",
     "pages/404/404",
     "pages/search/search",
-    "pages/detail/detail"
+    "pages/detail/detail",
+    "pages/comic-page/comic-page"
   ],
   "window": {
     "navigationBarTextStyle": "black",

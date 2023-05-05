@@ -59,6 +59,16 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "漫画详情",
+                "enablePullDownRefresh": false,
+				"onReachBottomDistance": 400
+            }
+            
+        }
+        ,{
+            "path" : "pages/comic-page/comic-page",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "阅读",
                 "enablePullDownRefresh": false
             }
             

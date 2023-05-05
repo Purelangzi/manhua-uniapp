@@ -40,6 +40,7 @@ if (!Math) {
   "./pages/404/404.js";
   "./pages/search/search.js";
   "./pages/detail/detail.js";
+  "./pages/comic-page/comic-page.js";
 }
 const _sfc_main = {
   onPageNotFound: function() {

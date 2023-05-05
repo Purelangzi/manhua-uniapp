@@ -78,7 +78,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         const { data } = await api_index.api.getCartoonList(state.searchHotParams);
         searchHotList.value = data.data;
       } catch (e) {
-        console.log(e);
       }
     };
     const searchCartoon = (val) => {
@@ -160,10 +159,10 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         i: common_vendor.f(common_vendor.unref(recordList), (item, key, i0) => {
           return {
             a: common_vendor.t(item),
-            b: common_vendor.o(($event) => onRecord(item), item),
-            c: common_vendor.o(($event) => clearRecordItem(key), item),
+            b: common_vendor.o(($event) => onRecord(item), key),
+            c: common_vendor.o(($event) => clearRecordItem(key), key),
             d: "c10c040c-2-" + i0,
-            e: item
+            e: key
           };
         }),
         j: common_vendor.p({

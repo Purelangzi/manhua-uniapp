@@ -13,7 +13,7 @@
 		<view class="detail-btn">
 			<view class="btn-collect">阅读量（{{detailData.read}}）</view>
 			<view class="btn-read">
-				<u-button :custom-style="readBtnStyle" shape="circle">开始阅读</u-button>
+				<u-button :custom-style="readBtnStyle" @click="onComicPage" shape="circle">{{state.isRead?'继续阅读':'开始阅读'}}</u-button>
 			</view>
 		</view>
 		<u-tabs :list="state.list" active-color="#28292d"  bar-width="120"
@@ -21,7 +21,7 @@
 			v-model="state.current" 
 			@change="changeTabs" :bar-style="{backgroundColor:'#ff7830'}">	
 		</u-tabs>
-		<scroll-view :scroll-y="true" @scroll="scroll" :scroll-top="state.scrollTop" :lower-threshold="80"  class="detail-content" @scrolltolower="lower">
+		<!-- <scroll-view :scroll-y="true" @scroll="scroll" :scroll-top="state.scrollTop" :lower-threshold="80"  class="detail-content" @scrolltolower="lower"> -->
 			<view class="scroll-content">
 				
 				<view v-show="state.current==0" class="detail-intro">
@@ -51,20 +51,23 @@
 								<view class="item-date">{{formatDate(item.create_time)}}</view>
 							</view>
 						</view>
-						<!-- <u-loadmore :status="status" :load-text="state.loadText" @loadmore="onLoadMore" /> -->
+						<u-loadmore :status="status" :load-text="state.loadText" font-size="22"
+							color="#b4b4b4" margin-top="20" @loadmore="onLoadMore" />
 					</view>
 				</view>
 			</view>
-		</scroll-view>
+		<!-- </scroll-view> -->
 	</view>
 </template>
 
 <script lang="ts" setup>
-	import { onMounted, reactive, ref, toRefs,computed, watch } from 'vue'
-	import { onLoad,onShow,onReady } from '@dcloudio/uni-app'
+	import { onMounted, reactive, ref, toRefs } from 'vue'
+	import { onLoad,onShow,onReachBottom } from '@dcloudio/uni-app'
 	import api from '@/api/index'
 	import {formatDate} from '@/utils/date'
-	const readBtnStyle = {backgroundColor:'#ff7830',color:'#fff',padding:'22rpx 130rpx',fontSize:'36rpx'}
+	import { useUser } from '@/stores/user'
+	
+	const userStore = useUser()
 	const status = ref('loadmore')
 	const state = reactive({
 		scrollTop:0,
@@ -75,7 +78,7 @@
 		update_time:'',
 		queryCpList:{
 			page:1,
-			pageSize:12,
+			pageSize:20,
 			comic_id:null,
 		},
 		sort:'正序',
@@ -83,13 +86,16 @@
 			loadmore: '点击加载更多',
 			loading: '加载中',
 			nomore: '没有更多了'
-		}
+		},
+		chapter_id:'',
+		isRead:false
 	})
-
+	const readBtnStyle = {backgroundColor:'#ff7830',color:'#fff',padding:'22rpx 130rpx',fontSize:'36rpx'}
 	const {detailData}  = toRefs(state)
 	onLoad((option)=>{
-		getCartoonDetail(option.id)
+		init(option.id)
 		getChapterList(option.id)
+		
 		console.log('onLoad');
 	})
 	onShow(()=>{
@@ -97,19 +103,33 @@
 		console.log('onShow');
 		
 	})
+	onReachBottom(()=>{
+		if(state.current === 1){
+			state.queryCpList.page += 1
+			getChapterList()
+		}
+	})
 	onMounted(()=>{
 		
 	})
 
-	watch(()=>detailData.value.name,()=>{
-		uni.setNavigationBarTitle({
-		    title: detailData.value.name
-		});
-	})
-	const getCartoonDetail = async(id:string) =>{
+
+	const init = async (id:number)=>{
+		const params = {
+			uid:userStore.userInfo.id,
+			comic_id:id
+		}
 		try{
 			const {data} = await api.getCartoonDetail(id)
 			state.detailData = data
+			uni.setNavigationBarTitle({
+			    title: detailData.value.name
+			});
+			const res = await api.getHistoricalRecord(params)
+			if(res.data.length){
+				state.isRead = true
+				state.chapter_id = res.data[0].chapter_id
+			}
 		}catch(e){
 		}
 		
@@ -118,40 +138,39 @@
 		if(id){
 			state.queryCpList.comic_id = id
 		}
-		
-			
+			if(status.value === 'nomore') return
 		try{
 			const {data} = await api.getChapterList(state.queryCpList)
+			if(!data.data.length){
+				status.value = 'nomore'
+				return
+			}
+			state.chapter_id = data.data[0].chapter_id
 			state.chapterList = state.chapterList.length?[...state.chapterList,...data.data]:data.data
 		}catch(e){
 		}
+	}
+
+	const onComicPage = () =>{
+		const params =`chapter_id=${state.chapter_id}&name=${detailData.value.name}&comic_id=${detailData.value.id}`
+		uni.navigateTo({
+			url: `/pages/comic-page/comic-page?${params}`
+		})
 	}
 	const changeTabs = (index:number) =>{
 		state.current = index
 	}
 
-	const scroll = (e:any) =>{
-		// #ifndef MP-WEIXIN
-		state.scrollTop = e.detail.scrollTop
-		
-		// #endif
-		// state.scrollTop = e.detail.scrollTop
-	}
-	const lower = () =>{
-		
-		throttle(1000)
-	}
-	const throttle = (delay:number)=>{
-	    let valid = true;
-		if(valid){
-		   state.queryCpList.page += 1
-		   getChapterList()
-			valid = false
+	
+	const onLoadMore = () =>{
+		if(state.current === 1){
+			status.value = 'loading'
 			setTimeout(()=>{
-				valid = true;
-			}, delay)
+				status.value = 'nomore'
+			},500)
 		}
-	}	
+	}
+	
 
 </script>
 
@@ -192,7 +211,7 @@
 :deep(.u-tabs){
 	margin: 0 100rpx;
 }
-.detail-content{
+.scroll-content{
 	margin-top: 20rpx;
 	height: 100vh;
 	.detail-intro{

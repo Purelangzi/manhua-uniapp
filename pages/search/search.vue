@@ -35,7 +35,7 @@
 				</view>
 
 				<view class="record-content">
-					<view class="record-item" v-for="(item,key) in recordList" :key="item">
+					<view class="record-item" v-for="(item,key) in recordList" :key="key">
 						<view class="item-keyword" @click="onRecord(item)">{{item}}</view>
 						<u-icon size="16" name="close" color="#666b6b" class="item-icon"
 							@click="clearRecordItem(key)"></u-icon>
