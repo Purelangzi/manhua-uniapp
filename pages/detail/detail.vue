@@ -1,6 +1,7 @@
 <template>
 	<view class="detail">
 		<view class="detail-header">
+			
 			<view class="header-cover">
 				<u-image height="440rpx" :src="detailData.cover_lateral"></u-image>
 			</view>
@@ -33,13 +34,13 @@
 							<view class="status">{{detailData.status ?"连载":"完结"}}</view>
 							<view class="update-date">{{formatDate(detailData.update_time)}} 更新至 第{{state.chapterList.length}}话</view>
 						</view>
-						<view class="sort">
-							<u-icon name="list" :label="state.sort" label-size="26"></u-icon>
+						<view class="sort" @click="onSort">
+							<u-icon name="list" :label="state.sort?'正序':'倒序'" label-size="26"></u-icon>
 						</view>
 					</view>
 					
 					<view class="catalog-list">
-						<view class="chapter-item" v-for="item in state.chapterList" :key="item.title_alias">
+						<view class="chapter-item" @click="onCatalogPage"  v-for="item in state.chapterList" :data-chapterid="item.chapter_id"  :key="item.title_alias">
 							<view class="item-cover">
 								<u-image width="240rpx" height="135rpx" :src="item.cover"></u-image>
 							</view>
@@ -81,25 +82,28 @@
 			pageSize:20,
 			comic_id:null,
 		},
-		sort:'正序',
+		sort:true,
 		loadText: {
 			loadmore: '点击加载更多',
 			loading: '加载中',
 			nomore: '没有更多了'
 		},
 		chapter_id:'',
+		comic_id:0,
 		isRead:false
 	})
 	const readBtnStyle = {backgroundColor:'#ff7830',color:'#fff',padding:'22rpx 130rpx',fontSize:'36rpx'}
 	const {detailData}  = toRefs(state)
 	onLoad((option)=>{
-		init(option.id)
+		state.comic_id = option.id
+		getCartoonDetail(option.id)
+
 		getChapterList(option.id)
 		
 		console.log('onLoad');
 	})
 	onShow(()=>{
-		
+		getHistoricalRecord(state.comic_id)
 		console.log('onShow');
 		
 	})
@@ -114,25 +118,31 @@
 	})
 
 
-	const init = async (id:number)=>{
-		const params = {
-			uid:userStore.userInfo.id,
-			comic_id:id
-		}
+	const getCartoonDetail = async (id:number)=>{
 		try{
 			const {data} = await api.getCartoonDetail(id)
 			state.detailData = data
 			uni.setNavigationBarTitle({
 			    title: detailData.value.name
-			});
-			const res = await api.getHistoricalRecord(params)
-			if(res.data.length){
+			})
+		}catch(e){
+			console.log(e);
+		}
+	}
+	const getHistoricalRecord = async(comic_id:number) =>{
+		const params = {
+			uid:userStore.userInfo.id,
+			comic_id
+		}
+		try{
+			const {data} = await api.getHistoricalRecord(params)
+			if(data.length){
 				state.isRead = true
-				state.chapter_id = res.data[0].chapter_id
+				state.chapter_id = data[0].chapter_id
 			}
 		}catch(e){
+			console.log(e);
 		}
-		
 	}
 	const getChapterList = async(id?:number) =>{
 		if(id){
@@ -150,9 +160,16 @@
 		}catch(e){
 		}
 	}
+	const onCatalogPage =(e) =>{
+		let chapter_id = e.target.dataset.chapterid
+		onComicPage(chapter_id)
+		
+	}
+	const onComicPage = (chapter_id?:any) =>{
+		// 是否传的是事件对象传的是chapter_id
+		let chapterId = `chapter_id=${chapter_id?.target?state.chapter_id:chapter_id}`
 
-	const onComicPage = () =>{
-		const params =`chapter_id=${state.chapter_id}&name=${detailData.value.name}&comic_id=${detailData.value.id}`
+		const params =  `${chapterId}&name=${detailData.value.name}&comic_id=${detailData.value.id}`
 		uni.navigateTo({
 			url: `/pages/comic-page/comic-page?${params}`
 		})
@@ -160,7 +177,10 @@
 	const changeTabs = (index:number) =>{
 		state.current = index
 	}
-
+	const onSort = () =>{
+		state.sort = !state.sort
+		state.chapterList.reverse()
+	}
 	
 	const onLoadMore = () =>{
 		if(state.current === 1){
@@ -170,7 +190,9 @@
 			},500)
 		}
 	}
-	
+	const ttt = (e) =>{
+		console.log(e.target.dataset);
+	}
 
 </script>
 

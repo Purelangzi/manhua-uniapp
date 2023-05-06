@@ -116,7 +116,7 @@
   text-overflow: ellipsis;
 }
 .swiper-content .main .main-box .box-detail .detail-item .detail-introduction.data-v-1cf27b2a {
-  margin-top: 10rpx;
+  margin-top: 6rpx;
   font-size: 24rpx;
   color: #999;
   overflow: hidden;

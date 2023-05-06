@@ -281,10 +281,8 @@ if (!Math) {
 }
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return common_vendor.e({
-    a: $data.visibleSync
-  }, $data.visibleSync ? common_vendor.e({
-    b: common_vendor.o($options.maskClick),
-    c: common_vendor.p({
+    a: common_vendor.o($options.maskClick),
+    b: common_vendor.p({
       blur: $props.blur,
       duration: $props.duration,
       ["custom-style"]: $props.maskCustomStyle,
@@ -292,47 +290,48 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       ["z-index"]: $options.uZindex - 2,
       show: $data.showDrawer && $props.mask
     }),
-    d: $props.mode == "center"
+    c: $props.mode == "center"
   }, $props.mode == "center" ? common_vendor.e({
-    e: $props.closeable
+    d: $props.closeable
   }, $props.closeable ? {
-    f: common_vendor.o($options.close),
-    g: common_vendor.n("u-close--" + $props.closeIconPos),
-    h: common_vendor.p({
+    e: common_vendor.o($options.close),
+    f: common_vendor.n("u-close--" + $props.closeIconPos),
+    g: common_vendor.p({
       name: $props.closeIcon,
       color: $props.closeIconColor,
       size: $props.closeIconSize
     })
   } : {}, {
+    h: common_vendor.o(() => {
+    }),
     i: common_vendor.o(() => {
     }),
-    j: common_vendor.o(() => {
-    }),
-    k: common_vendor.s($options.centerStyle)
+    j: common_vendor.s($options.centerStyle)
   }) : {}, {
-    l: $props.mode != "center" && $props.closeable
+    k: $props.mode != "center" && $props.closeable
   }, $props.mode != "center" && $props.closeable ? {
-    m: common_vendor.p({
+    l: common_vendor.p({
       name: $props.closeIcon,
       color: $props.closeIconColor,
       size: $props.closeIconSize
     })
   } : {}, {
-    n: common_vendor.o((...args) => $options.close && $options.close(...args)),
-    o: common_vendor.n("u-close--" + $props.closeIconPos),
-    p: common_vendor.o(($event) => $options.modeCenterClose($props.mode)),
-    q: common_vendor.n($props.safeAreaInsetBottom ? "safe-area-inset-bottom" : ""),
-    r: common_vendor.n("u-drawer-" + $props.mode),
-    s: common_vendor.n($data.showDrawer ? "u-drawer-content-visible" : ""),
-    t: common_vendor.n($props.zoom && $props.mode == "center" ? "u-animation-zoom" : ""),
-    v: common_vendor.o(() => {
+    m: common_vendor.o((...args) => $options.close && $options.close(...args)),
+    n: common_vendor.n("u-close--" + $props.closeIconPos),
+    o: common_vendor.o(($event) => $options.modeCenterClose($props.mode)),
+    p: common_vendor.n($props.safeAreaInsetBottom ? "safe-area-inset-bottom" : ""),
+    q: common_vendor.n("u-drawer-" + $props.mode),
+    r: common_vendor.n($data.showDrawer ? "u-drawer-content-visible" : ""),
+    s: common_vendor.n($props.zoom && $props.mode == "center" ? "u-animation-zoom" : ""),
+    t: common_vendor.o(() => {
     }),
-    w: common_vendor.s($options.style),
+    v: common_vendor.s($options.style),
+    w: $data.visibleSync,
     x: common_vendor.s($props.customStyle),
     y: common_vendor.s({
       zIndex: $options.uZindex - 1
     })
-  }) : {});
+  });
 }
 const Component = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-c93a8fd2"], ["__file", "F:/HBuilderProjects/manhua/uni_modules/vk-uview-ui/components/u-popup/u-popup.vue"]]);
 wx.createComponent(Component);

@@ -1,62 +1,65 @@
 <template>
-	
-	<view class="serach-nav" :class="{'nav-scroll':navScrollFlag}">
-		<view class="search-input" :class="{'input-scroll':navScrollFlag}" @click="goSearchPage">
-			<u-icon name="search" label="斗破苍穹" :color="navScrollFlag?'':'#ff7830'"></u-icon>
-		</view>
-		<view class="search-right">
-			<view class="t-icon" :class="{'t-icon-rili-scroll':navScrollFlag,' t-icon-rili':!navScrollFlag}"></view>
-			<text>更新</text>
-			<view  class="t-icon" :class="{'t-icon-paixingbang-scroll':navScrollFlag,'t-icon-paixingbang':!navScrollFlag}"></view>
-			<text>排行榜</text>
-		</view>
-	</view>
-	<scroll-view :scroll-y="true"  @scroll="scroll" :scroll-top="state.scrollTop" class="scroll-view">
-		<view class="swiper-content">
-			<u-swiper name="img" :list="state.bannerList" @click="clickBanner" mode="dot" height="450"></u-swiper>
-			<view class="main">
-				<view class="main-nav">
-					<view class="nav-item">
-						<u-image src="https://static.mkzcdn.com/mobile/img/pic_index_gx.png" width="100%" height="100%"></u-image>
-					</view>
-					<view class="nav-item">
-						<u-image src="https://static.mkzcdn.com/mobile/img/pic_index_ph.png" width="100%" height="100%"></u-image>
-					</view>
-					<view class="nav-item">
-						<u-image src="https://static.mkzcdn.com/mobile/img/pic_index_xs.png" width="100%" height="100%"></u-image>
-					</view>
-				</view>
-				<view class="main-box" v-for="(detail,index) in state.detailList" :key="index">
-					<view class="box-title">
-						
-						<view class="title-left">
-							<span class="title-icon"></span>
-							<view class="title-content">
-								{{detail.title}}
-							</view>
-						</view>
-						<view class="title-right">更多 ></view>
-					</view>
-					<view class="box-detail">
-						<view class="detail-item" v-for="item in detail.data" :key="item.id">
-							<u-image :src="item.cover_lateral" height="275rpx" />
-							<view class="detail-name">{{item.name}}</view>
-							<view class="detail-introduction">{{item.cartoon_introduction}}</view>
-						</view>
-					</view>
-				</view>
-				<view class="footer">
-					<view class="footer-title">我是有底线的</view>
-					<view class="footer-image">
-						<u-image mode="aspectFit" src="https://static.mkzcdn.com/mobile/img/pic_home_footimg.png" width="70rpx" height="70rpx"></u-image>
-					</view>
-				</view>
-				
+	<view class="home-page">
+		<view class="serach-nav" :class="{'nav-scroll':navScrollFlag}">
+			<view class="search-input " :class="{'input-scroll':navScrollFlag}" @click="goSearchPage">
+				<u-icon name="search" label="斗破苍穹" :color="navScrollFlag?'':'#ff7830'"></u-icon>
+			</view>
+			<view class="search-right">
+				<view class="t-icon" :class="{'t-icon-rili-scroll':navScrollFlag,' t-icon-rili':!navScrollFlag}"></view>
+				<text>更新</text>
+				<view  class="t-icon" :class="{'t-icon-paixingbang-scroll':navScrollFlag,'t-icon-paixingbang':!navScrollFlag}"></view>
+				<text>排行榜</text>
 			</view>
 		</view>
-		
-		
-	</scroll-view>
+		<scroll-view :scroll-y="true"  @scroll="scroll" :scroll-top="state.scrollTop" class="scroll-view">
+			<view class="swiper-content">
+				<u-swiper name="img" class="u-skeleton-rect" :list="state.bannerList" @click="clickBanner" mode="dot" height="450"></u-swiper>
+				<view class="main">
+					<view class="main-nav">
+						<view class="nav-item">
+							<u-image class="u-skeleton-circle" src="https://static.mkzcdn.com/mobile/img/pic_index_gx.png" width="100%" height="100%"></u-image>
+						</view>
+						<view class="nav-item">
+							<u-image class="u-skeleton-circle" src="https://static.mkzcdn.com/mobile/img/pic_index_ph.png" width="100%" height="100%"></u-image>
+						</view>
+						<view class="nav-item">
+							<u-image class="u-skeleton-circle" src="https://static.mkzcdn.com/mobile/img/pic_index_xs.png" width="100%" height="100%"></u-image>
+						</view>
+					</view>
+					<view class="main-box" v-for="(detail,index) in state.detailList" :key="index">
+						<view class="box-title">
+							
+							<view class="title-left">
+								<span class="title-icon"></span>
+								<view class="title-content u-skeleton-rect">
+									{{detail.title}}
+								</view>
+							</view>
+							<view class="title-right">更多 ></view>
+						</view>
+						<view class="box-detail">
+							<view class="detail-item" @click="goCartoonDetail(item.id)" v-for="item in detail.data" :key="item.id">
+								<u-image :src="item.cover_lateral" height="275rpx" />
+								<view class="detail-name">{{item.name}}</view>
+								<view class="detail-introduction">{{item.cartoon_introduction}}</view>
+							</view>
+						</view>
+					</view>
+					<view class="footer">
+						<view class="footer-title">我是有底线的</view>
+						<view class="footer-image">
+							<u-image mode="aspectFit" src="https://static.mkzcdn.com/mobile/img/pic_home_footimg.png" width="70rpx" height="70rpx"></u-image>
+						</view>
+					</view>
+					
+				</view>
+			</view>
+			
+			
+		</scroll-view>
+	</view>
+	
+
 </template>
 
 <script setup lang="ts">
@@ -78,11 +81,15 @@
 	})
 	onShow(()=>{
 		console.log('index-onShow');
-
+		// #ifdef MP-WEIXIN
 		if(wxIsLogin()) return
+		// #endif
+		if(!state.bannerList.length){
+			getData()
+		}
 	})
 	onMounted(()=>{
-		getData()
+		
 	})
 
 	const getData = async()=>{
@@ -106,6 +113,11 @@
 			url:'/pages/search/search'
 		})
 	}
+	const goCartoonDetail = (id : number) => {
+		uni.navigateTo({
+			url: `/pages/detail/detail?id=${id}`,
+		})
+	}
 	// 微信小程序自带滚动条，不用赋值scrollTop，从而解决微信小程序滚动回弹Bug
 	const scroll = (e:any) =>{
 		// #ifndef MP-WEIXIN
@@ -124,6 +136,7 @@
 		}
 		// #endif
 	}
+	
 	
 </script>
 
@@ -226,7 +239,7 @@
 						
 					}
 					.detail-introduction{
-						margin-top: 10rpx;
+						margin-top: 6rpx;
 						font-size: 24rpx;
 						color: $uni-text-color-grey;
 						overflow: hidden;

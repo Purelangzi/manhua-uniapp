@@ -42,23 +42,26 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         pageSize: 20,
         comic_id: null
       },
-      sort: "正序",
+      sort: true,
       loadText: {
         loadmore: "点击加载更多",
         loading: "加载中",
         nomore: "没有更多了"
       },
       chapter_id: "",
+      comic_id: 0,
       isRead: false
     });
     const readBtnStyle = { backgroundColor: "#ff7830", color: "#fff", padding: "22rpx 130rpx", fontSize: "36rpx" };
     const { detailData } = common_vendor.toRefs(state);
     common_vendor.onLoad((option) => {
-      init(option.id);
+      state.comic_id = option.id;
+      getCartoonDetail(option.id);
       getChapterList(option.id);
       console.log("onLoad");
     });
     common_vendor.onShow(() => {
+      getHistoricalRecord(state.comic_id);
       console.log("onShow");
     });
     common_vendor.onReachBottom(() => {
@@ -69,23 +72,30 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     });
     common_vendor.onMounted(() => {
     });
-    const init = async (id) => {
-      const params = {
-        uid: userStore.userInfo.id,
-        comic_id: id
-      };
+    const getCartoonDetail = async (id) => {
       try {
         const { data } = await api_index.api.getCartoonDetail(id);
         state.detailData = data;
         common_vendor.index.setNavigationBarTitle({
           title: detailData.value.name
         });
-        const res = await api_index.api.getHistoricalRecord(params);
-        if (res.data.length) {
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    const getHistoricalRecord = async (comic_id) => {
+      const params = {
+        uid: userStore.userInfo.id,
+        comic_id
+      };
+      try {
+        const { data } = await api_index.api.getHistoricalRecord(params);
+        if (data.length) {
           state.isRead = true;
-          state.chapter_id = res.data[0].chapter_id;
+          state.chapter_id = data[0].chapter_id;
         }
       } catch (e) {
+        console.log(e);
       }
     };
     const getChapterList = async (id) => {
@@ -105,14 +115,23 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       } catch (e) {
       }
     };
-    const onComicPage = () => {
-      const params = `chapter_id=${state.chapter_id}&name=${detailData.value.name}&comic_id=${detailData.value.id}`;
+    const onCatalogPage = (e) => {
+      let chapter_id = e.target.dataset.chapterid;
+      onComicPage(chapter_id);
+    };
+    const onComicPage = (chapter_id) => {
+      let chapterId = `chapter_id=${(chapter_id == null ? void 0 : chapter_id.target) ? state.chapter_id : chapter_id}`;
+      const params = `${chapterId}&name=${detailData.value.name}&comic_id=${detailData.value.id}`;
       common_vendor.index.navigateTo({
         url: `/pages/comic-page/comic-page?${params}`
       });
     };
     const changeTabs = (index) => {
       state.current = index;
+    };
+    const onSort = () => {
+      state.sort = !state.sort;
+      state.chapterList.reverse();
     };
     const onLoadMore = () => {
       if (state.current === 1) {
@@ -165,10 +184,11 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         p: common_vendor.t(state.chapterList.length),
         q: common_vendor.p({
           name: "list",
-          label: state.sort,
+          label: state.sort ? "正序" : "倒序",
           ["label-size"]: "26"
         }),
-        r: common_vendor.f(state.chapterList, (item, k0, i0) => {
+        r: common_vendor.o(onSort),
+        s: common_vendor.f(state.chapterList, (item, k0, i0) => {
           return {
             a: "eca06f3c-6-" + i0,
             b: common_vendor.p({
@@ -178,18 +198,20 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             }),
             c: common_vendor.t(item.title_alias),
             d: common_vendor.t(common_vendor.unref(utils_date.formatDate)(item.create_time)),
-            e: item.title_alias
+            e: common_vendor.o(onCatalogPage, item.title_alias),
+            f: item.chapter_id,
+            g: item.title_alias
           };
         }),
-        s: common_vendor.o(onLoadMore),
-        t: common_vendor.p({
+        t: common_vendor.o(onLoadMore),
+        v: common_vendor.p({
           status: status.value,
           ["load-text"]: state.loadText,
           ["font-size"]: "22",
           color: "#b4b4b4",
           ["margin-top"]: "20"
         }),
-        v: state.current === 1
+        w: state.current === 1
       };
     };
   }

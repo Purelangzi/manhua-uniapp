@@ -17,9 +17,9 @@ const request = async(options : ReqParams) : Promise<any> => {
 	// 拦截器
 	uni.addInterceptor('request', {
 		invoke: (args) => {
-			uni.showLoading({
-				title: '加载中'
-			})
+			// uni.showLoading({
+			// 	title: '加载中'
+			// })
 			switch (options.method) {
 				case 'GET':
 					args.header = {
@@ -38,7 +38,7 @@ const request = async(options : ReqParams) : Promise<any> => {
 			}
 		},
 		complete: () => {
-			uni.hideLoading()
+			// uni.hideLoading()
 		}
 	})
 
@@ -50,6 +50,9 @@ const request = async(options : ReqParams) : Promise<any> => {
 			success: res => {
 				switch (res.statusCode) {
 					case 200:
+						resolve(res.data)
+						break;
+					case 201 :
 						resolve(res.data)
 						break;
 					case 400:
@@ -113,9 +116,10 @@ const request = async(options : ReqParams) : Promise<any> => {
 				reject(err)
 			}
 		})
-	}).catch(e=>{
-		console.log(e);
 	})
+	// .catch(e=>{
+	// 	console.log(e);
+	// })
 }
 
 

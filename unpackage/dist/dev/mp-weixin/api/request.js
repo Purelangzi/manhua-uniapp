@@ -10,9 +10,6 @@ const userStore = stores_user.useUser();
 const request = async (options) => {
   common_vendor.index.addInterceptor("request", {
     invoke: (args) => {
-      common_vendor.index.showLoading({
-        title: "加载中"
-      });
       switch (options.method) {
         case "GET":
           args.header = {
@@ -31,7 +28,6 @@ const request = async (options) => {
       }
     },
     complete: () => {
-      common_vendor.index.hideLoading();
     }
   });
   return new Promise((resolve, reject) => {
@@ -42,6 +38,9 @@ const request = async (options) => {
       success: (res) => {
         switch (res.statusCode) {
           case 200:
+            resolve(res.data);
+            break;
+          case 201:
             resolve(res.data);
             break;
           case 400:
@@ -84,8 +83,6 @@ const request = async (options) => {
         reject(err);
       }
     });
-  }).catch((e) => {
-    console.log(e);
   });
 };
 const request$1 = {

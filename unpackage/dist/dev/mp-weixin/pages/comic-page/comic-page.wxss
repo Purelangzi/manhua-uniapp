@@ -26,8 +26,14 @@
 .comic-page.data-v-d62b69dd {
   height: 100vh;
 }
-.comic-page .comic-list.data-v-d62b69dd .u-image {
-  margin-bottom: -8rpx;
+.comic-page .comic-end.data-v-d62b69dd {
+  padding-top: 40rpx;
+}
+.comic-page .comic-end .end-btn.data-v-d62b69dd {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100rpx;
 }
 .comic-page .comic-tool-show.data-v-d62b69dd {
   opacity: 1;
@@ -47,8 +53,12 @@
 }
 .comic-page .comic-tool .tool-content.data-v-d62b69dd {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
+}
+.comic-page .comic-tool .tool-content .tool-item.data-v-d62b69dd {
+  width: 30%;
+  text-align: center;
 }
 .comic-page .popup-content .comic-title.data-v-d62b69dd {
   font-size: 32rpx;
@@ -72,8 +82,13 @@
   margin-bottom: 40rpx;
 }
 .comic-page .popup-content .chapter-list .chapter-item .current-icon.data-v-d62b69dd {
+  display: none;
   padding-right: 10rpx;
 }
 .comic-page .popup-content .chapter-list .chapter-item-current.data-v-d62b69dd {
+  display: flex;
   color: #ff7830;
+}
+.comic-page .popup-content .chapter-list .chapter-item-current .current-icon.data-v-d62b69dd {
+  display: inline-flex;
 }

@@ -34,9 +34,11 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       console.log("index-onShow");
       if (utils_wxLogin.wxIsLogin())
         return;
+      if (!state.bannerList.length) {
+        getData();
+      }
     });
     common_vendor.onMounted(() => {
-      getData();
     });
     const getData = async () => {
       try {
@@ -56,6 +58,11 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const goSearchPage = () => {
       common_vendor.index.navigateTo({
         url: "/pages/search/search"
+      });
+    };
+    const goCartoonDetail = (id) => {
+      common_vendor.index.navigateTo({
+        url: `/pages/detail/detail?id=${id}`
       });
     };
     const scroll = (e) => {
@@ -113,7 +120,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
                 }),
                 c: common_vendor.t(item.name),
                 d: common_vendor.t(item.cartoon_introduction),
-                e: item.id
+                e: common_vendor.o(($event) => goCartoonDetail(item.id), item.id),
+                f: item.id
               };
             }),
             c: index

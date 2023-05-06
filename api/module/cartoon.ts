@@ -8,7 +8,7 @@ export default {
 	getCartoonDetail: (id:string | number) => request.get(`/api/product/getCartoonDetail?id=${id}`),
 	getChapterList:(data:ChapterList) => request.get('/api/cartoon/getChapterList',data),
 	
-	getChapterPage: (chapter_id:string) => request.get(`/api/cartoon/getChapterPage?chapter_id=${chapter_id}`),
+	getChapterPage: (chapter_id:string | number) => request.get(`/api/cartoon/getChapterPage?chapter_id=${chapter_id}`),
 	addChapterRead: (data : AddChapterRead) => request.post('/api/chapter/read/add/', data),
 	getHistoricalRecord:(data : {uid:string | number,comic_id?:string|number }) => request.get('/api/cartoon/historicalRecord', data),
 }
