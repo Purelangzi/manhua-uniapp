@@ -2,7 +2,7 @@ export interface CartoonList {
 	page ?: string | number,
 	pageSize ?: string | number,
 	isAll ?: string,
-	category_id ?: string
+	category_id ?: string | number
 }
 export interface ChapterList {
 	page ?: string | number,

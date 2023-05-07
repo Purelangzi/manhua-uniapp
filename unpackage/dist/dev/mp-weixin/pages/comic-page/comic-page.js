@@ -28,7 +28,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       // 章节内容
       toolStatus: false,
       showCatalog: false,
-      sort: "正序",
+      sort: true,
       chapterList: [],
       // 章节列表
       detailData: {},
@@ -48,7 +48,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       chapterItemRef.value.push(el);
     };
     common_vendor.onLoad((option) => {
-      const { comic_id, chapter_id } = option;
+      const { comic_id, chapter_id, name, read, price, charge } = option;
+      state.detailData = { name, read, price, charge };
       init(comic_id, chapter_id);
     });
     common_vendor.onMounted(() => {
@@ -62,12 +63,11 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       toolStatus.value = !toolStatus.value;
     };
     const onTool = (id) => {
-      const index = state.chapterList.findIndex((item2) => item2.chapter_id == state.curChapterId);
+      let index = state.chapterList.findIndex((item2) => item2.chapter_id == state.curChapterId);
       state.curChapterRefIndex = index;
       let el = chapterItemRef.value[index];
       if (id === 0) {
-        el.$el.classList.value = "chapter-item";
-        el.$el.classList.value += " chapter-item-current";
+        el.$el.classList.value = "chapter-item chapter-item-current";
         state.showCatalog = true;
         return;
       }
@@ -93,7 +93,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       }
       const item = state.chapterList[page];
       common_vendor.index.setNavigationBarTitle({
-        title: item.title
+        title: (item == null ? void 0 : item.title) || "阅读"
       });
       init(item.comic_id, item.chapter_id);
     };
@@ -110,9 +110,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         common_vendor.index.setNavigationBarTitle({
           title: item.title || "阅读"
         });
-        const { data } = await api_index.api.getCartoonDetail(comic_id);
-        state.detailData = data;
-        const { read, price, charge } = data;
+        const { read, price, charge } = state.detailData;
         const readParams = {
           chapter_id,
           comic_id,
@@ -123,9 +121,12 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         };
         const res1 = await api_index.api.getChapterPage(chapter_id);
         state.pageContentList = res1.data;
-        const addRead = await api_index.api.addChapterRead(readParams);
+        await api_index.api.addChapterRead(readParams);
         state.loading = false;
-        console.log(addRead, "addRead");
+        common_vendor.index.pageScrollTo({
+          scrollTop: 0,
+          duration: 0
+        });
       } catch (e) {
         console.log(e);
       }
@@ -135,6 +136,22 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       state.showCatalog = false;
       let el = chapterItemRef.value[state.curChapterRefIndex];
       el.$el.classList.value = "chapter-item";
+    };
+    const changeSort = () => {
+      state.sort = !state.sort;
+      let el = chapterItemRef.value[state.curChapterRefIndex];
+      if (state.sort) {
+        el.$el.classList.value = "chapter-item chapter-item-current";
+      } else {
+        el.$el.classList.value = "chapter-item";
+      }
+      state.chapterList.reverse();
+    };
+    const closePopup = () => {
+      if (!state.sort) {
+        state.sort = true;
+        state.chapterList.reverse();
+      }
     };
     const scroll = (e) => {
     };
@@ -147,45 +164,49 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           };
         }),
         b: common_vendor.o(showTool),
-        c: common_vendor.p({
+        c: common_vendor.o(($event) => onTool(-1)),
+        d: common_vendor.p({
           name: "arrow-left",
           label: "上一话",
           ["label-pos"]: "right"
         }),
-        d: common_vendor.p({
+        e: common_vendor.o(($event) => onTool(1)),
+        f: common_vendor.p({
           name: "arrow-right",
           label: "下一话",
           ["label-pos"]: "left"
         }),
-        e: !state.loading,
-        f: common_vendor.t(state.detailData.name),
-        g: common_vendor.p({
+        g: !state.loading,
+        h: common_vendor.t(state.detailData.name),
+        i: common_vendor.p({
           name: "list",
-          label: state.sort,
+          label: state.sort ? "正序" : "倒序",
           ["margin-right"]: "20",
           ["label-size"]: "26"
         }),
-        h: common_vendor.f(state.chapterList, (item, k0, i0) => {
+        j: common_vendor.o(changeSort),
+        k: common_vendor.f(state.chapterList, (item, index, i0) => {
           return {
             a: "d62b69dd-4-" + i0 + ",d62b69dd-2",
             b: common_vendor.t(item.title),
-            c: common_vendor.o(($event) => onComicPage(item.comic_id, item.chapter_id), item.title_alias),
-            d: item.title_alias
+            c: common_vendor.o(($event) => onComicPage(item.comic_id, item.chapter_id), index),
+            d: index
           };
         }),
-        i: common_vendor.p({
+        l: common_vendor.p({
           name: "map-fill"
         }),
-        j: setChapterItemRef,
-        k: common_vendor.o(scroll),
-        l: state.scrollTop,
-        m: common_vendor.o(($event) => state.showCatalog = $event),
-        n: common_vendor.p({
+        m: setChapterItemRef,
+        n: common_vendor.o(scroll),
+        o: state.scrollTop,
+        p: common_vendor.o(closePopup),
+        q: common_vendor.o(($event) => state.showCatalog = $event),
+        r: common_vendor.p({
           mode: "right",
           width: "72%",
           modelValue: state.showCatalog
         }),
-        o: common_vendor.f(state.toolColumn, (item, index, i0) => {
+        s: common_vendor.f(state.toolColumn, (item, index, i0) => {
           return {
             a: "d62b69dd-5-" + i0,
             b: common_vendor.p({
@@ -198,8 +219,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             d: index
           };
         }),
-        p: toolStatus.value ? 1 : "",
-        q: !toolStatus.value ? 1 : ""
+        t: toolStatus.value ? 1 : "",
+        v: !toolStatus.value ? 1 : ""
       };
     };
   }

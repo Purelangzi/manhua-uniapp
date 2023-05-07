@@ -52,7 +52,7 @@
   padding: 30rpx;
 }
 .detail-btn .btn-collect.data-v-eca06f3c {
-  margin-left: 100rpx;
+  margin-left: 50rpx;
 }
 .data-v-eca06f3c .u-tabs {
   margin: 0 100rpx;

@@ -1,5 +1,8 @@
 {
   "navigationBarTitleText": "分类",
   "enablePullDownRefresh": false,
-  "usingComponents": {}
+  "usingComponents": {
+    "u-image": "../../uni_modules/vk-uview-ui/components/u-image/u-image",
+    "u-loadmore": "../../uni_modules/vk-uview-ui/components/u-loadmore/u-loadmore"
+  }
 }

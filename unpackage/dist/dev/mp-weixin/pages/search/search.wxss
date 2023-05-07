@@ -72,6 +72,7 @@
 }
 .search .search-result .comic-item.data-v-c10c040c {
   display: flex;
+  align-items: center;
   padding: 20rpx 0;
   border-bottom: 1px solid #ebebeb;
 }
@@ -91,6 +92,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.search .search-result .comic-item .comic-chapter-go.data-v-c10c040c {
+  margin-left: 76rpx;
 }
 .search .search-result.data-v-c10c040c .u-load-more-wrap {
   height: 100rpx !important;

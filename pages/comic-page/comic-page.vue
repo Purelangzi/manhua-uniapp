@@ -8,25 +8,25 @@
 		</view>
 		<view class="comic-end" v-show="!state.loading">
 			<view class="end-btn">
-				<u-icon name="arrow-left" label="上一话" label-pos="right"></u-icon>
-				<u-icon name="arrow-right" label="下一话" label-pos="left"></u-icon>
+				<u-icon name="arrow-left" @click="onTool(-1)" label="上一话" label-pos="right"></u-icon>
+				<u-icon name="arrow-right" @click="onTool(1)" label="下一话" label-pos="left"></u-icon>
 			</view>
 		</view>
-		<u-popup v-model="state.showCatalog" mode="right" width="72%">
+		<u-popup v-model="state.showCatalog" mode="right" width="72%" @close="closePopup">
 			<view class="popup-content">
 				<view class="comic-title">{{state.detailData.name}}</view>
 				<view class="comic-status">
 					<view class="status">
 						连载中
 					</view>
-					<view class="sort">
-						<u-icon name="list" :label="state.sort" margin-right="20" label-size="26"></u-icon>
+					<view class="sort" @click="changeSort">
+						<u-icon name="list" :label="state.sort?'正序':'倒序'" margin-right="20" label-size="26"></u-icon>
 					</view>
 				</view>
 				<scroll-view scroll-y="true" style="height: 100vh;" @scroll="scroll" :show-scrollbar="true"
 					:scroll-top="state.scrollTop">
 					<view class="chapter-list">
-						<view class="chapter-item" @click="onComicPage(item.comic_id,item.chapter_id)" v-for="item in state.chapterList" :ref="setChapterItemRef" :key="item.title_alias">
+						<view class="chapter-item" @click="onComicPage(item.comic_id,item.chapter_id)" v-for="(item,index) in state.chapterList" :ref="setChapterItemRef" :key="index">
 							<view class="current-icon">
 								<u-icon name="map-fill"></u-icon>
 							</view>
@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts" setup>
-	import { onMounted, reactive, ref,getCurrentInstance,toRaw, nextTick } from 'vue'
+	import { onMounted, reactive, ref } from 'vue'
 	import { onLoad, onShow,onReady } from '@dcloudio/uni-app'
 	import api from '@/api/index'
 	import { useUser } from '@/stores/user'
@@ -66,7 +66,7 @@
 		pageContentList: [], // 章节内容
 		toolStatus: false,
 		showCatalog: false,
-		sort: '正序',
+		sort: true,
 		chapterList: [], // 章节列表
 		detailData: {} as any, // 漫画详情
 		scrollTop: 0,
@@ -84,7 +84,8 @@
 	  chapterItemRef.value.push(el)
 	}
 	onLoad((option) => {
-		const { comic_id, chapter_id } = option
+		const { comic_id, chapter_id,name,read, price, charge } = option
+		state.detailData = {name,read, price, charge}
 		init(comic_id, chapter_id)
 	})
 	onMounted(() => {
@@ -100,14 +101,14 @@
 	}
 	const onTool = (id : number) => {
 		
-		const index = state.chapterList.findIndex(item => item.chapter_id == state.curChapterId)
+		let index = state.chapterList.findIndex(item => item.chapter_id == state.curChapterId)
 		state.curChapterRefIndex = index
 		// 此处 如果chapterItemRef.length为空，但target属性有原始数组，因为在u-view的u-popup源码用v-if而不是v-show，这里我改了源码
 		let el = chapterItemRef.value[index]
-		
+		// 目录
 		if (id === 0) {
-			el.$el.classList.value  = 'chapter-item'
-			el.$el.classList.value  +=  ' chapter-item-current'
+			
+			el.$el.classList.value  = 'chapter-item chapter-item-current'
 			state.showCatalog = true
 
 			return
@@ -134,9 +135,10 @@
 		}
 		const item = state.chapterList[page]
 		uni.setNavigationBarTitle({
-			title: item.title,
+			title: item?.title || '阅读',
 		})
 		init(item.comic_id, item.chapter_id)
+		
 	}
 	const init = async (comic_id : number, chapter_id : number) => {
 		state.curChapterId = chapter_id
@@ -146,16 +148,14 @@
 		}
 
 		try {
-			const res = await api.getChapterList(params)
+			const res = await api.getChapterList(params) // 章节列表
 			state.chapterList = res.data.data
 			const item = state.chapterList.find(el => el.chapter_id == chapter_id)
 			uni.setNavigationBarTitle({
 				title: item.title || '阅读'
 			})
 
-			const { data } = await api.getCartoonDetail(comic_id)
-			state.detailData = data
-			const { read, price, charge } = data
+			const { read, price, charge } = state.detailData
 			const readParams = {
 				chapter_id,
 				comic_id,
@@ -164,11 +164,14 @@
 				uid: userStore.userInfo.id,
 				read
 			}
-			const res1 = await api.getChapterPage(chapter_id)
+			const res1 = await api.getChapterPage(chapter_id) //章节内容
 			state.pageContentList = res1.data
-			const addRead = await api.addChapterRead(readParams)
+			await api.addChapterRead(readParams) // 历史记录
 			state.loading = false
-			console.log(addRead, 'addRead');
+			uni.pageScrollTo({
+				scrollTop: 0,
+				duration:0
+			})
 		} catch (e) {
 			console.log(e);
 		}
@@ -180,12 +183,29 @@
 		el.$el.classList.value  = 'chapter-item'
 		
 	}
+	const changeSort = ()=>{
+		state.sort = !state.sort
+		let el = chapterItemRef.value[state.curChapterRefIndex]
+		if(state.sort){
+			el.$el.classList.value  = 'chapter-item chapter-item-current'
+		}else{
+			el.$el.classList.value  = 'chapter-item'
+		}
+		
+		state.chapterList.reverse()
+	}
+	const closePopup = () =>{
+		// 重置排序
+		if(!state.sort){
+			state.sort = true
+			state.chapterList.reverse()
+		} 
+	}
 	const scroll = (e : any) => {
 		// #ifndef MP-WEIXIN
 		state.scrollTop = e.detail.scrollTop
 
 		// #endif
-
 	}
 </script>
 
@@ -194,9 +214,9 @@
 		height: 100vh;
 
 		.comic-list {
-			// :deep(.u-image){
-			// 	margin-bottom: -8rpx;
-			// }
+			:deep(image){
+				margin-bottom: -10rpx;
+			}
 		}
 
 		.comic-end {

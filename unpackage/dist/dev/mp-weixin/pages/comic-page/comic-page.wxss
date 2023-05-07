@@ -26,6 +26,9 @@
 .comic-page.data-v-d62b69dd {
   height: 100vh;
 }
+.comic-page .comic-list.data-v-d62b69dd image {
+  margin-bottom: -10rpx;
+}
 .comic-page .comic-end.data-v-d62b69dd {
   padding-top: 40rpx;
 }

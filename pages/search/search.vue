@@ -58,8 +58,8 @@
 					<view v-show="item.read!==0" class="info-other read">阅读量：{{ + item.read }}</view>
 
 				</view>
-				<view class="comic-chapter-go">
-					ddd
+				<view class="comic-chapter-go" @click="onComicPage(item.id)">
+					<u-icon name="coupon" label-pos="bottom" label="速看" label-color="#ff7830" label-size="24" color="#ff7830" size="60"></u-icon>
 				</view>
 			</view>
 			
@@ -190,6 +190,25 @@
 			url: `/pages/detail/detail?id=${id}`,
 		})
 	}
+	// 快速阅读
+	const onComicPage = async(comic_id:number) => {
+		try{
+			const res = await api.getCartoonDetail(comic_id)
+			const {read, price, charge,name} = res.data
+			const { data } = await api.getChapterList({
+				page: 1,
+				pageSize: 1,
+				comic_id
+			})
+			const chapter_id = `chapter_id=${data.data[0].chapter_id}`
+			const params = `${chapter_id}&comic_id=${comic_id}&name=${name}&read=${read}&price=${price}&charge=${charge}`
+			uni.navigateTo({
+				url: `/pages/comic-page/comic-page?${params}`
+			})
+		}catch(e){
+			console.log(e);
+		}
+	}
 	const onRecord = (val : string) => {
 		state.searchKeyWord = val
 		queryCartoon(val)
@@ -281,6 +300,7 @@
 		.search-result {
 			.comic-item {
 				display: flex;
+				align-items: center;
 				padding: 20rpx 0;
 				border-bottom: 1px solid #ebebeb;
 
@@ -305,6 +325,9 @@
 						text-overflow: ellipsis;
 						white-space: nowrap;
 					}
+				}
+				.comic-chapter-go{
+					margin-left: 76rpx;
 				}
 			}
 

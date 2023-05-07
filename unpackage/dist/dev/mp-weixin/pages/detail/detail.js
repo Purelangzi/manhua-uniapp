@@ -72,9 +72,9 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     });
     common_vendor.onMounted(() => {
     });
-    const getCartoonDetail = async (id) => {
+    const getCartoonDetail = async (comic_id) => {
       try {
-        const { data } = await api_index.api.getCartoonDetail(id);
+        const { data } = await api_index.api.getCartoonDetail(comic_id);
         state.detailData = data;
         common_vendor.index.setNavigationBarTitle({
           title: detailData.value.name
@@ -98,10 +98,11 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         console.log(e);
       }
     };
-    const getChapterList = async (id) => {
-      if (id) {
-        state.queryCpList.comic_id = id;
+    const getChapterList = async (comic_id) => {
+      if (comic_id) {
+        state.queryCpList.comic_id = comic_id;
       }
+      console.log(status.value);
       if (status.value === "nomore")
         return;
       try {
@@ -121,7 +122,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
     const onComicPage = (chapter_id) => {
       let chapterId = `chapter_id=${(chapter_id == null ? void 0 : chapter_id.target) ? state.chapter_id : chapter_id}`;
-      const params = `${chapterId}&name=${detailData.value.name}&comic_id=${detailData.value.id}`;
+      const { read, price, charge, name } = detailData.value;
+      const params = `${chapterId}&comic_id=${detailData.value.id}&name=${name}&read=${read}&price=${price}&charge=${charge}`;
       common_vendor.index.navigateTo({
         url: `/pages/comic-page/comic-page?${params}`
       });
