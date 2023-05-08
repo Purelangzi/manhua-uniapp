@@ -55,7 +55,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       console.log(category_id);
       state.cartoonList = [];
       state.active = category_id;
-      state.queryPrams.category_id = category_id == 0 ? void 0 : category_id;
+      state.queryPrams.category_id = category_id == 0 ? "" : category_id;
       getCartoonList();
     };
     const getCtcategory = async () => {
@@ -90,7 +90,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       });
     };
     const onLoadMore = () => {
-      console.log(1);
       status.value = "loading";
       setTimeout(() => {
         status.value = "nomore";

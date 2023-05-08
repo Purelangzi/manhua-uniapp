@@ -149,8 +149,8 @@
 		if (comic_id) {
 			state.queryCpList.comic_id = comic_id
 		}
-		console.log(status.value);
 		if (status.value === 'nomore') return
+		status.value = 'loading'
 		try {
 			const { data } = await api.getChapterList(state.queryCpList)
 			if (!data.data.length) {

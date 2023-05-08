@@ -70,6 +70,21 @@
 .search .record .record-content .record-item .item-icon.data-v-c10c040c {
   padding: 0 20rpx;
 }
+.search .search-active.data-v-c10c040c {
+  padding: 0 20rpx;
+}
+.search .search-active .search-active-item.data-v-c10c040c {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20rpx 0;
+  border-bottom: 1px solid #ebebeb;
+}
+.search .search-active .search-active-item .item-vip.data-v-c10c040c {
+  padding-top: 10rpx;
+  font-size: 24rpx;
+  color: #999;
+}
 .search .search-result .comic-item.data-v-c10c040c {
   display: flex;
   align-items: center;

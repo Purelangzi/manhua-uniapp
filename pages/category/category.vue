@@ -21,8 +21,8 @@
 </template>
 
 <script lang="ts" setup>
-	import { onMounted, reactive, ref } from 'vue'
-	import { onLoad, onShow,onReachBottom } from '@dcloudio/uni-app'
+	import { reactive, ref } from 'vue'
+	import { onShow,onReachBottom } from '@dcloudio/uni-app'
 	import { wxIsLogin } from '@/utils/wxLogin'
 	import api from '@/api/index'
 	const status = ref('loadmore')
@@ -61,9 +61,7 @@
 		console.log(category_id);
 		state.cartoonList = []
 		state.active = category_id
-		state.queryPrams.category_id = category_id==0?undefined:category_id
-		
-		
+		state.queryPrams.category_id = category_id==0?'':category_id
 		getCartoonList()
 	}
 	const getCtcategory = async()=> {
@@ -98,7 +96,6 @@
 		})
 	}
 	const onLoadMore = () =>{
-		console.log(1);
 		status.value = 'loading'
 		setTimeout(()=>{
 			status.value = 'nomore'

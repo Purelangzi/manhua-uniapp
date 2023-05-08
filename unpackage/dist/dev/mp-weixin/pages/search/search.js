@@ -33,6 +33,9 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         pageSize: 9
       },
       isSearch: false,
+      // 是否已输入
+      isActive: false,
+      // 是否开启关键词下拉列表
       searchHotList: [],
       searchAllList: [],
       searchList: [],
@@ -44,7 +47,9 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         loadmore: "点击加载更多",
         loading: "加载中",
         nomore: "没有更多了"
-      }
+      },
+      isRequest: false
+      // 控制点击历史记录后，不重复请求
     });
     const { searchHotList } = common_vendor.toRefs(state);
     common_vendor.onLoad(() => {
@@ -53,7 +58,10 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       getHotData();
     });
     common_vendor.onReachBottom(() => {
+      if (state.isActive)
+        return;
       if (!state.searchAllList.length || state.end >= state.searchAllList.length) {
+        status.value = "nomore";
         return;
       }
       status.value = "loading";
@@ -65,9 +73,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         status.value = "nomore";
         return;
       }
-      setTimeout(() => {
-        state.searchList = [...state.searchList, ...state.searchAllList.slice(state.start, state.end)];
-      }, 1e3);
+      state.searchList = [...state.searchList, ...state.searchAllList.slice(state.start, state.end)];
     });
     const recordList = common_vendor.computed(() => {
       return searchStore.searchHistory;
@@ -80,28 +86,29 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       } catch (e) {
       }
     };
-    const searchCartoon = (val) => {
-      if (!val)
-        return;
-      queryCartoon(state.searchKeyWord);
-    };
-    const queryCartoon = async (val) => {
+    const queryCartoon = async (val, size) => {
+      state.isRequest = true;
       try {
-        const { data } = await api_index.api.queryCartoon(val);
+        const { data } = await api_index.api.queryCartoon(val ? val : state.searchKeyWord);
         state.isSearch = true;
         if (data.length < 10) {
           state.searchList = data;
         } else {
           state.searchAllList = data;
-          state.searchList = state.searchAllList.slice(0, 10);
+          state.searchList = state.searchAllList.slice(0, size ? size : 15);
         }
       } catch (e) {
         console.log(e);
       }
-      searchStore.searchHistory.push(val);
+      const flag = searchStore.searchHistory.findIndex((item) => item === val);
+      if (flag === -1) {
+        searchStore.searchHistory.push(val);
+      }
     };
     const clearSearch = () => {
       state.isSearch = false;
+      state.isActive = false;
+      state.isRequest = false;
       state.searchList = [];
       status.value = "loadmore";
     };
@@ -140,8 +147,9 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       }
     };
     const onRecord = (val) => {
-      state.searchKeyWord = val;
       queryCartoon(val);
+      state.isRequest = true;
+      state.searchKeyWord = val;
     };
     const onLoadMore = () => {
       status.value = "loading";
@@ -149,12 +157,27 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         status.value = "nomore";
       }, 500);
     };
+    const searchCartoon = (val) => {
+      if (!val)
+        return;
+      state.isActive = false;
+    };
+    common_vendor.watch(() => state.searchKeyWord, (newVal) => {
+      if (newVal !== "" && !state.isRequest) {
+        state.isActive = true;
+        queryCartoon(newVal);
+      } else {
+        clearSearch();
+      }
+    });
     return (_ctx, _cache) => {
       return {
         a: common_vendor.o(searchCartoon),
         b: common_vendor.o(searchCartoon),
         c: common_vendor.o(clearSearch),
-        d: common_vendor.o(($event) => state.searchKeyWord = $event),
+        d: common_vendor.o(common_vendor.m(($event) => state.searchKeyWord = $event, {
+          trim: true
+        }, true)),
         e: common_vendor.p({
           placeholder: "输入作品名",
           ["action-style"]: {
@@ -192,6 +215,15 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         l: !state.isSearch,
         m: common_vendor.f(state.searchList, (item, k0, i0) => {
           return {
+            a: common_vendor.t(item.name),
+            b: common_vendor.t(item.charge === 1 ? "收费" : "免费"),
+            c: common_vendor.o(($event) => onComicDetail(item.id), item.id),
+            d: item.id
+          };
+        }),
+        n: state.isActive,
+        o: common_vendor.f(state.searchList, (item, k0, i0) => {
+          return {
             a: "c10c040c-3-" + i0,
             b: common_vendor.p({
               width: "165rpx",
@@ -212,7 +244,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             n: item.id
           };
         }),
-        n: common_vendor.p({
+        p: common_vendor.p({
           name: "coupon",
           ["label-pos"]: "bottom",
           label: "速看",
@@ -221,17 +253,17 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           color: "#ff7830",
           size: "60"
         }),
-        o: state.searchList.length,
-        p: common_vendor.o(onLoadMore),
-        q: common_vendor.p({
+        q: state.searchList.length,
+        r: common_vendor.o(onLoadMore),
+        s: common_vendor.p({
           status: status.value,
           ["font-size"]: "22",
           color: "#b4b4b4",
           ["margin-top"]: "20",
           ["load-text"]: state.loadText
         }),
-        r: state.isSearch,
-        s: state.isSearch && !state.searchList.length
+        t: state.isSearch && !state.isActive,
+        v: state.isSearch && !state.searchList.length
       };
     };
   }

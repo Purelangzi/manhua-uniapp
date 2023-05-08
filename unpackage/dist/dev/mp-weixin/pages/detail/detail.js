@@ -102,9 +102,9 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       if (comic_id) {
         state.queryCpList.comic_id = comic_id;
       }
-      console.log(status.value);
       if (status.value === "nomore")
         return;
+      status.value = "loading";
       try {
         const { data } = await api_index.api.getChapterList(state.queryCpList);
         if (!data.data.length) {

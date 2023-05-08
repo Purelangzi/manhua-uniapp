@@ -60,7 +60,8 @@
             {
                 "navigationBarTitleText": "漫画详情",
                 "enablePullDownRefresh": false,
-				"onReachBottomDistance": 400
+				"onReachBottomDistance": 500
+				
             }
             
         }
@@ -70,6 +71,7 @@
             {
                 "navigationBarTitleText": "阅读",
                 "enablePullDownRefresh": false
+				
             }
             
         }

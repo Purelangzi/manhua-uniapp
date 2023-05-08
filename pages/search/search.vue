@@ -2,7 +2,7 @@
 	<view class="search">
 		<!-- <SearchInput /> -->
 		<view class="search-header">
-			<u-search placeholder="输入作品名" v-model="state.searchKeyWord" @search="searchCartoon" @custom="searchCartoon"
+			<u-search placeholder="输入作品名" v-model.trim="state.searchKeyWord" @search="searchCartoon" @custom="searchCartoon"
 				@clear="clearSearch" :action-style="{color:'#ff7830'}">
 			</u-search>
 		</view>
@@ -43,9 +43,14 @@
 				</view>
 			</view>
 		</view>
+		<view class="search-active" v-show="state.isActive">
+			<view class="search-active-item" @click="onComicDetail(item.id)" v-for="item in state.searchList" :key="item.id">
+				<view class="item-name">{{item.name}}</view>
+				<view class="item-vip">{{item.charge===1?'收费':'免费'}}</view>
+			</view>
+		</view>
 
-
-		<view class="search-result" v-show="state.isSearch">
+		<view class="search-result" v-show="state.isSearch && !state.isActive">
 			<view class="comic-item"  v-for="item in state.searchList" :key="item.id">
 				<view class="cover" @click="onComicDetail(item.id)">
 					<u-image width="165rpx" height="225rpx" :src="item.cover_lateral"></u-image>
@@ -79,8 +84,7 @@
 
 <script lang="ts" setup>
 	import api from '@/api/index'
-	// import SearchInput from './component/search-input.vue'
-	import { computed, reactive, ref, toRefs } from 'vue'
+	import { computed, reactive, ref, toRefs,watch } from 'vue'
 	import { onLoad, onShow, onReachBottom } from '@dcloudio/uni-app'
 	import { useSearch } from '@/stores/user'
 	const searchStore = useSearch()
@@ -91,7 +95,8 @@
 			page: 0,
 			pageSize: 9
 		},
-		isSearch: false,
+		isSearch: false, // 是否已输入
+		isActive:false, // 是否开启关键词下拉列表
 		searchHotList: [],
 		searchAllList: [],
 		searchList: [],
@@ -101,8 +106,8 @@
 			loadmore: '点击加载更多',
 			loading: '加载中',
 			nomore: '没有更多了'
-		}
-
+		},
+		isRequest:false // 控制点击历史记录后，不重复请求
 	})
 	const { searchHotList } = toRefs(state)
 	onLoad(() => {
@@ -114,10 +119,13 @@
 
 	})
 	onReachBottom(() => {
+		if(state.isActive) return // 防止搜索下拉列表触发
 		// 不超过十条或没有数据了
 		if (!state.searchAllList.length || state.end >= state.searchAllList.length) {
+			status.value = 'nomore'
 			return
 		}
+		
 		status.value = 'loading'
 		// 每次显示十条数据
 		state.start += 10
@@ -129,10 +137,7 @@
 			status.value = 'nomore'
 			return
 		}
-
-		setTimeout(() => {
-			state.searchList = [...state.searchList, ...state.searchAllList.slice(state.start, state.end)]
-		}, 1000)
+		state.searchList = [...state.searchList, ...state.searchAllList.slice(state.start, state.end)]
 
 	})
 	const recordList = computed(() => {
@@ -148,29 +153,33 @@
 		}
 	}
 
-	const searchCartoon = (val : string) => {
-		if (!val) return
-		queryCartoon(state.searchKeyWord)
-	}
-	const queryCartoon = async (val : string) => {
+	const queryCartoon = async (val? : string,size?:number) => {
+		// if(state.isRequest) return
+		state.isRequest = true
 		try {
-			const { data } = await api.queryCartoon(val)
+			const { data } = await api.queryCartoon(val?val:state.searchKeyWord)
 			state.isSearch = true
 			if (data.length < 10) {
 				state.searchList = data
 			} else {
 				// 切割数据
 				state.searchAllList = data
-				state.searchList = state.searchAllList.slice(0, 10)
+				state.searchList = state.searchAllList.slice(0, size?size:15)
 			}
 
 		} catch (e) {
 			console.log(e);
 		}
-		searchStore.searchHistory.push(val)
+		const flag:number = searchStore.searchHistory.findIndex((item:string)=>item === val)
+		if(flag === -1){
+			searchStore.searchHistory.push(val)
+		}
+		
 	}
 	const clearSearch = () => {
 		state.isSearch = false
+		state.isActive = false
+		state.isRequest =false
 		state.searchList = []
 		status.value = 'loadmore'
 	}
@@ -192,6 +201,7 @@
 	}
 	// 快速阅读
 	const onComicPage = async(comic_id:number) => {
+		
 		try{
 			const res = await api.getCartoonDetail(comic_id)
 			const {read, price, charge,name} = res.data
@@ -208,18 +218,35 @@
 		}catch(e){
 			console.log(e);
 		}
+		
 	}
 	const onRecord = (val : string) => {
-		state.searchKeyWord = val
 		queryCartoon(val)
+		state.isRequest = true
+		state.searchKeyWord = val
+		
 	}
 	const onLoadMore = ()=>{
 		status.value = 'loading'
 		setTimeout(()=>{
 			status.value = 'nomore'
 		},500)
-		
 	}
+	const searchCartoon = (val : string) => {
+		if (!val) return
+		state.isActive = false
+	}
+
+	watch(()=>state.searchKeyWord,(newVal:string)=>{
+		if(newVal!=='' && !state.isRequest){
+			state.isActive = true
+			queryCartoon(newVal)
+			// state.isRequest = false
+		}else{
+			
+			clearSearch()
+		}
+	})
 </script>
 
 <style lang="scss" scoped>
@@ -264,7 +291,6 @@
 				}
 			}
 		}
-
 		.record {
 			.record-title {
 				margin-top: 20rpx;
@@ -296,7 +322,23 @@
 				}
 			}
 		}
-
+		.search-active{
+			padding:  0 20rpx;
+			.search-active-item{
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				padding: 20rpx 0;
+				// height: 140rpx;
+				border-bottom:1px solid #ebebeb;
+				.item-vip{
+					padding-top: 10rpx;
+					font-size: 24rpx;
+					color: $uni-text-color-grey;
+				}
+			}
+		}
+		
 		.search-result {
 			.comic-item {
 				display: flex;

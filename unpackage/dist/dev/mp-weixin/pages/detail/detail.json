@@ -1,7 +1,7 @@
 {
   "navigationBarTitleText": "漫画详情",
   "enablePullDownRefresh": false,
-  "onReachBottomDistance": 400,
+  "onReachBottomDistance": 500,
   "usingComponents": {
     "u-image": "../../uni_modules/vk-uview-ui/components/u-image/u-image",
     "u-button": "../../uni_modules/vk-uview-ui/components/u-button/u-button",
