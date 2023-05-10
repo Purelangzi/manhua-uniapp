@@ -51,26 +51,14 @@
 		</view>
 
 		<view class="search-result" v-show="state.isSearch && !state.isActive">
-			<view class="comic-item"  v-for="item in state.searchList" :key="item.id">
-				<view class="cover" @click="onComicDetail(item.id)">
-					<u-image width="165rpx" height="225rpx" :src="item.cover_lateral"></u-image>
-				</view>
-				<view class="comic-info" @click="onComicDetail(item.id)">
-					<view class="info-title">{{item.name}}</view>
-					<view class="info-other intro">{{item.cartoon_introduction}}</view>
-					<view class="info-other vip">{{item.charge === 0?'免费':'会员'}}</view>
-					<view v-show="item.charge!==0" class="info-other price">价格：{{'¥' + item.price }}</view>
-					<view v-show="item.read!==0" class="info-other read">阅读量：{{ + item.read }}</view>
-
-				</view>
-				<view class="comic-chapter-go" @click="onComicPage(item.id)">
-					<u-icon name="coupon" label-pos="bottom" label="速看" label-color="#ff7830" label-size="24" color="#ff7830" size="60"></u-icon>
-				</view>
-			</view>
+			<comic-list :list="state.searchList"></comic-list>
 			
 			<!-- 加载更多 -->
-			<u-loadmore v-show="state.searchList.length" :status="status" font-size="22"
-				color="#b4b4b4" margin-top="20" :load-text="state.loadText" @loadmore="onLoadMore" />
+			<view class="more">
+				<u-loadmore v-show="state.searchList.length" :status="status" font-size="22"
+					color="#b4b4b4" margin-top="20" :load-text="state.loadText" @loadmore="onLoadMore" />
+			</view>
+			
 		</view>
 
 		<view class="search-result-null" v-show="state.isSearch && !state.searchList.length">
@@ -339,42 +327,9 @@
 			}
 		}
 		
-		.search-result {
-			.comic-item {
-				display: flex;
-				align-items: center;
-				padding: 20rpx 0;
-				border-bottom: 1px solid #ebebeb;
-
-				.cover {}
-
-				.comic-info {
-					margin-left: 25rpx;
-					width: 50%;
-
-					.info-title {
-						padding: 10rpx 0 10rpx 0;
-					}
-
-					.info-other {
-						margin: 10rpx 0;
-						font-size: 24rpx;
-						color: $uni-text-color-grey;
-					}
-
-					.intro {
-						overflow: hidden;
-						text-overflow: ellipsis;
-						white-space: nowrap;
-					}
-				}
-				.comic-chapter-go{
-					margin-left: 76rpx;
-				}
-			}
-
-			 :deep(.u-load-more-wrap) {
-				height: 100rpx !important;
+		.search-result{
+			.more{
+				height: 50rpx;
 			}
 		}
 

@@ -152,7 +152,7 @@
 			state.chapterList = res.data.data
 			const item = state.chapterList.find(el => el.chapter_id == chapter_id)
 			uni.setNavigationBarTitle({
-				title: item.title || '阅读'
+				title: item?.title || '阅读'
 			})
 
 			const { read, price, charge } = state.detailData

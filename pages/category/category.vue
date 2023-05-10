@@ -6,13 +6,9 @@
 			</view>
 		</view>
 		<view class="cateogry-main">
+			
 			<view class="box-detail">
-				<view class="detail-item" @click="goCartoonDetail(item.id)" v-for="item in state.cartoonList" :key="item.id">
-					<u-image :src="item.cover_lateral" height="275rpx" />
-					<view v-show="item.charge ==1" class="t-icon detail-vip t-icon-vip"></view>
-					<view class="detail-name">{{item.name}}</view>
-					<view class="detail-introduction">{{item.cartoon_introduction}}</view>
-				</view>
+				<comic-box :detail="state.cartoonList"></comic-box>
 			</view>
 			<u-loadmore :status="status" font-size="22"
 				color="#b4b4b4" margin-top="20" margin-bottom="20" :load-text="state.loadText" @loadmore="onLoadMore" />
@@ -58,7 +54,6 @@
 		getCartoonList()
 	})
 	const onCategory = (category_id : number) => {
-		console.log(category_id);
 		state.cartoonList = []
 		state.active = category_id
 		state.queryPrams.category_id = category_id==0?'':category_id
@@ -86,15 +81,7 @@
 			console.log(e);
 		}
 	}
-	const goCartoonDetail = (id : number) => {
-		uni.navigateTo({
-			url: `/pages/detail/detail?id=${id}`,
-		})
-		uni.pageScrollTo({
-			scrollTop: 0,
-			duration: 0
-		})
-	}
+	
 	const onLoadMore = () =>{
 		status.value = 'loading'
 		setTimeout(()=>{
@@ -127,35 +114,6 @@
 		display: flex;
 		justify-content: space-between;
 		flex-wrap: wrap;
-		.detail-item{
-			position: relative;
-			margin-bottom: 30rpx;
-			width: calc(90% / 3);
-			.detail-vip{
-				position: absolute;
-				top: 0;
-				right: 0;
-				padding: 0 18rpx;
-				border-bottom-left-radius: 50%;
-				background-color: #f6caa8;
-				
-			}
-			.detail-name{
-				margin-top: 10rpx;
-				overflow: hidden;
-				white-space: nowrap;
-				text-overflow: ellipsis;
-				
-			}
-			.detail-introduction{
-				margin-top: 6rpx;
-				font-size: 24rpx;
-				color: $uni-text-color-grey;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-			}
-		}
 	}
 }
 </style>

@@ -38,14 +38,11 @@
 							<view class="title-right">更多 ></view>
 						</view>
 						<view class="box-detail">
-							<view class="detail-item" @click="goCartoonDetail(item.id)" v-for="item in detail.data" :key="item.id">
-								<u-image :src="item.cover_lateral" height="275rpx" />
-								<view class="detail-name">{{item.name}}</view>
-								<view class="detail-introduction">{{item.cartoon_introduction}}</view>
-							</view>
+							<comic-box :detail="detail.data"></comic-box>
+							
 						</view>
 					</view>
-					<view class="footer">
+					<view class="footer" v-show="state.detailList.length">
 						<view class="footer-title">我是有底线的</view>
 						<view class="footer-image">
 							<u-image mode="aspectFit" src="https://static.mkzcdn.com/mobile/img/pic_home_footimg.png" width="70rpx" height="70rpx"></u-image>
@@ -192,8 +189,6 @@
 			display: flex;
 			justify-content: space-around;
 			padding: 30rpx 0;
-			// border-top-left-radius: 30rpx;
-			// border-top-right-radius: 0rpx;
 			.nav-item{
 				width: 200rpx;
 				height: 90rpx;
@@ -228,25 +223,7 @@
 				display: flex;
 				justify-content: space-between;
 				flex-wrap: wrap;
-				.detail-item{
-					margin-bottom: 30rpx;
-					width: calc(90% / 3);
-					.detail-name{
-						margin-top: 10rpx;
-						overflow: hidden;
-						white-space: nowrap;
-						text-overflow: ellipsis;
-						
-					}
-					.detail-introduction{
-						margin-top: 6rpx;
-						font-size: 24rpx;
-						color: $uni-text-color-grey;
-						overflow: hidden;
-						text-overflow: ellipsis;
-						white-space: nowrap;
-					}
-				}
+				
 			}
 		}
 		.footer{

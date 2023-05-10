@@ -7,19 +7,7 @@
 		</view>
 		<scroll-view scroll-y="true" style="height: 100vh;" @scroll="scroll" :show-scrollbar="true">
 			<view v-show="state.current ==0 " class="book-history">
-				<view class="comic-item" v-for="item in state.historyList" :key="item.id">
-					<view class="cover" @click="onComicDetail(item.id)">
-						<u-image width="165rpx" height="225rpx" :src="item.img_url"></u-image>
-					</view>
-					<view class="comic-info" @click="onComicDetail(item.id)">
-						<view class="info-title">{{item.name}}</view>
-						<view class="info-other">上次看到：{{item.title}}</view>
-					</view>
-					<view class="comic-chapter-go" @click="onComicPage(item.id)">
-						<u-icon name="coupon" label-pos="bottom" label="续看" label-color="#ff7830" label-size="24"
-							color="#ff7830" size="60"></u-icon>
-					</view>
-				</view>
+				<comic-list :list="state.historyList"></comic-list>
 			</view>
 			
 		</scroll-view>
@@ -29,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-	import { onMounted, reactive, ref } from 'vue'
+	import {  reactive, } from 'vue'
 	import { onLoad, onShow } from '@dcloudio/uni-app'
 	import { wxIsLogin } from '@/utils/wxLogin'
 	import {useUser} from '@/stores/user'
@@ -104,27 +92,5 @@
 }
 .book-history{
 	margin: 0 20rpx;
-	.comic-item {
-		display: flex;
-		align-items: center;
-		padding: 20rpx 0;
-		border-bottom: 1px solid #ebebeb;
-		.comic-info {
-			margin-left: 25rpx;
-			width: 50%;
-	
-			.info-title {
-				padding: 10rpx 0 10rpx 0;
-			}
-			.info-other {
-				margin: 10rpx 0;
-				font-size: 24rpx;
-				color: $uni-text-color-grey;
-			}
-		}
-		.comic-chapter-go{
-			margin-left: 76rpx;
-		}
-	}
 }
 </style>
