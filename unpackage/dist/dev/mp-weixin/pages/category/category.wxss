@@ -48,30 +48,3 @@
   justify-content: space-between;
   flex-wrap: wrap;
 }
-.cateogry-main .box-detail .detail-item {
-  position: relative;
-  margin-bottom: 30rpx;
-  width: 30%;
-}
-.cateogry-main .box-detail .detail-item .detail-vip {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0 18rpx;
-  border-bottom-left-radius: 50%;
-  background-color: #f6caa8;
-}
-.cateogry-main .box-detail .detail-item .detail-name {
-  margin-top: 10rpx;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.cateogry-main .box-detail .detail-item .detail-introduction {
-  margin-top: 6rpx;
-  font-size: 24rpx;
-  color: #999;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}

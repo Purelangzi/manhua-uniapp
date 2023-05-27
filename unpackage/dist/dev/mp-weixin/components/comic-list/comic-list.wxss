@@ -23,9 +23,29 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-.book-tabs.data-v-e0cf4858 {
-  border-bottom: 4rpx solid #eee;
+.comic-item.data-v-1d4fe43e {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1px solid #ebebeb;
 }
-.book-history.data-v-e0cf4858 {
-  margin: 0 20rpx;
+.comic-item .comic-info.data-v-1d4fe43e {
+  margin-left: 25rpx;
+  width: 50%;
+}
+.comic-item .comic-info .info-title.data-v-1d4fe43e {
+  padding: 10rpx 0 10rpx 0;
+}
+.comic-item .comic-info .info-other.data-v-1d4fe43e {
+  margin: 10rpx 0;
+  font-size: 24rpx;
+  color: #999;
+}
+.comic-item .comic-info .intro.data-v-1d4fe43e {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.comic-item .comic-chapter-go.data-v-1d4fe43e {
+  margin-left: 76rpx;
 }

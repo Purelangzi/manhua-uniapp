@@ -9,15 +9,13 @@ require("../../api/request.js");
 require("../../api/module/cartoon.js");
 if (!Array) {
   const _easycom_u_tabs2 = common_vendor.resolveComponent("u-tabs");
-  const _easycom_u_image2 = common_vendor.resolveComponent("u-image");
-  const _easycom_u_icon2 = common_vendor.resolveComponent("u-icon");
-  (_easycom_u_tabs2 + _easycom_u_image2 + _easycom_u_icon2)();
+  const _easycom_comic_list2 = common_vendor.resolveComponent("comic-list");
+  (_easycom_u_tabs2 + _easycom_comic_list2)();
 }
 const _easycom_u_tabs = () => "../../uni_modules/vk-uview-ui/components/u-tabs/u-tabs.js";
-const _easycom_u_image = () => "../../uni_modules/vk-uview-ui/components/u-image/u-image.js";
-const _easycom_u_icon = () => "../../uni_modules/vk-uview-ui/components/u-icon/u-icon.js";
+const _easycom_comic_list = () => "../../components/comic-list/comic-list.js";
 if (!Math) {
-  (_easycom_u_tabs + _easycom_u_image + _easycom_u_icon)();
+  (_easycom_u_tabs + _easycom_comic_list)();
 }
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "book",
@@ -54,29 +52,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         console.log(e);
       }
     };
-    const onComicDetail = (id) => {
-      common_vendor.index.navigateTo({
-        url: `/pages/detail/detail?id=${id}`
-      });
-    };
-    const onComicPage = async (comic_id) => {
-      try {
-        const res = await api_index.api.getCartoonDetail(comic_id);
-        const { read, price, charge, name } = res.data;
-        const { data } = await api_index.api.getChapterList({
-          page: 1,
-          pageSize: 1,
-          comic_id
-        });
-        const chapter_id = `chapter_id=${data.data[0].chapter_id}`;
-        const params = `${chapter_id}&comic_id=${comic_id}&name=${name}&read=${read}&price=${price}&charge=${charge}`;
-        common_vendor.index.navigateTo({
-          url: `/pages/comic-page/comic-page?${params}`
-        });
-      } catch (e) {
-        console.log(e);
-      }
-    };
     return (_ctx, _cache) => {
       return {
         a: common_vendor.o(changeTabs),
@@ -91,34 +66,11 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           },
           modelValue: state.current
         }),
-        d: common_vendor.f(state.historyList, (item, k0, i0) => {
-          return {
-            a: "e0cf4858-1-" + i0,
-            b: common_vendor.p({
-              width: "165rpx",
-              height: "225rpx",
-              src: item.img_url
-            }),
-            c: common_vendor.o(($event) => onComicDetail(item.id), item.id),
-            d: common_vendor.t(item.name),
-            e: common_vendor.t(item.title),
-            f: common_vendor.o(($event) => onComicDetail(item.id), item.id),
-            g: "e0cf4858-2-" + i0,
-            h: common_vendor.o(($event) => onComicPage(item.id), item.id),
-            i: item.id
-          };
+        d: common_vendor.p({
+          list: state.historyList
         }),
-        e: common_vendor.p({
-          name: "coupon",
-          ["label-pos"]: "bottom",
-          label: "续看",
-          ["label-color"]: "#ff7830",
-          ["label-size"]: "24",
-          color: "#ff7830",
-          size: "60"
-        }),
-        f: state.current == 0,
-        g: common_vendor.o(scroll)
+        e: state.current == 0,
+        f: common_vendor.o(scroll)
       };
     };
   }

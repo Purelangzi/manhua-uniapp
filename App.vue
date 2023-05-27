@@ -1,13 +1,11 @@
 <script>
 	export default {
 		onPageNotFound:function(){
-			console.log('onPageNotFound');
 			uni.redirectTo({
 				url: "/pages/404/404", // 404 页面的路径
 			  });
 		},
 		onLaunch: function() {
-			console.log('App Launch')
 			// #ifdef MP-WEIXIN
 			// 页面实际上已经打开了(比如通过分享卡片、小程序码)且发现页面不存在,才会触发,
 			// api 跳转不存在的页面不会触发(如 uni.navigateTo) 
@@ -30,10 +28,8 @@
 			// #endif
 		},
 		onShow: function() {
-			console.log('App Show')
 		},
 		onHide: function() {
-			console.log('App Hide')
 		},
 	}
 </script>

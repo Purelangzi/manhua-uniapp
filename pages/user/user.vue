@@ -45,7 +45,6 @@
 
 	})
 	onShow(() => {
-		console.log('onShow');
 		// load()
 	})
 	onActivated(() => {

@@ -113,24 +113,25 @@
 		const option = regStatus.value
 			? api.userRegister(state.userForm)
 			: api.userLogin({ account: account.value, password: password.value })
-		try {
-			const { data, msg } = await option
-			if (!regStatus.value) {
-				userStore.$patch((state : any) => {
-					state.userInfo = data.userInfo
-					state.token = data.token
-				})
-				uni.switchTab({
-					url: '/pages/user/user'
-				})
-			} else {
-				state.isRegist = false
-				loginFrom.value.resetFields()
-			}
+
+		const { code,data, msg } = await option
+		if(code!==200){
 			showMsg({ title: msg })
-		} catch (e) {
-			console.log(e);
+			return
 		}
+		if (!regStatus.value) {
+			userStore.$patch((state : any) => {
+				state.userInfo = data.userInfo
+				state.token = data.token
+			})
+			uni.switchTab({
+				url: '/pages/user/user'
+			})
+		} else {
+			state.isRegist = false
+			loginFrom.value.resetFields()
+		}
+		showMsg({ title: msg })
 	}
 	const switchRegister = () => {
 		loginFrom.value.resetFields()

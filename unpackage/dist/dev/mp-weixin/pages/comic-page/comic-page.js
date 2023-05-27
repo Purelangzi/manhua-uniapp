@@ -108,7 +108,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         state.chapterList = res.data.data;
         const item = state.chapterList.find((el) => el.chapter_id == chapter_id);
         common_vendor.index.setNavigationBarTitle({
-          title: item.title || "阅读"
+          title: (item == null ? void 0 : item.title) || "阅读"
         });
         const { read, price, charge } = state.detailData;
         const readParams = {

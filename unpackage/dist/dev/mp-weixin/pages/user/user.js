@@ -37,7 +37,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       userInfo.value.avatar = userStore.userInfo.avatar;
     });
     common_vendor.onShow(() => {
-      console.log("onShow");
     });
     common_vendor.onActivated(() => {
     });

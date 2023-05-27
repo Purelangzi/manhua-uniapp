@@ -62,7 +62,6 @@ const request = async(options : ReqParams) : Promise<any> => {
 						
 					case 401:
 						// #ifndef MP-WEIXIN
-						console.log('h5')
 						showMsg({ title: '登录过期（token过期）', icon: 'error', duration: 3000 })
 						userStore.logOut()
 						reject(res.data)

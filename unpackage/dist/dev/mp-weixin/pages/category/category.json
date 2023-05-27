@@ -2,7 +2,7 @@
   "navigationBarTitleText": "分类",
   "enablePullDownRefresh": false,
   "usingComponents": {
-    "u-image": "../../uni_modules/vk-uview-ui/components/u-image/u-image",
+    "comic-box": "../../components/comic-box/comic-box",
     "u-loadmore": "../../uni_modules/vk-uview-ui/components/u-loadmore/u-loadmore"
   }
 }

@@ -44,14 +44,12 @@ if (!Math) {
 }
 const _sfc_main = {
   onPageNotFound: function() {
-    console.log("onPageNotFound");
     common_vendor.index.redirectTo({
       url: "/pages/404/404"
       // 404 页面的路径
     });
   },
   onLaunch: function() {
-    console.log("App Launch");
     common_vendor.index.onPageNotFound(() => {
       common_vendor.index.redirectTo({
         url: "/pages/404/404"
@@ -59,10 +57,8 @@ const _sfc_main = {
     });
   },
   onShow: function() {
-    console.log("App Show");
   },
   onHide: function() {
-    console.log("App Hide");
   }
 };
 const App = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__file", "F:/HBuilderProjects/manhua/App.vue"]]);

@@ -10,16 +10,16 @@ require("../../api/module/cartoon.js");
 if (!Array) {
   const _easycom_u_search2 = common_vendor.resolveComponent("u-search");
   const _easycom_u_icon2 = common_vendor.resolveComponent("u-icon");
-  const _easycom_u_image2 = common_vendor.resolveComponent("u-image");
+  const _easycom_comic_list2 = common_vendor.resolveComponent("comic-list");
   const _easycom_u_loadmore2 = common_vendor.resolveComponent("u-loadmore");
-  (_easycom_u_search2 + _easycom_u_icon2 + _easycom_u_image2 + _easycom_u_loadmore2)();
+  (_easycom_u_search2 + _easycom_u_icon2 + _easycom_comic_list2 + _easycom_u_loadmore2)();
 }
 const _easycom_u_search = () => "../../uni_modules/vk-uview-ui/components/u-search/u-search.js";
 const _easycom_u_icon = () => "../../uni_modules/vk-uview-ui/components/u-icon/u-icon.js";
-const _easycom_u_image = () => "../../uni_modules/vk-uview-ui/components/u-image/u-image.js";
+const _easycom_comic_list = () => "../../components/comic-list/comic-list.js";
 const _easycom_u_loadmore = () => "../../uni_modules/vk-uview-ui/components/u-loadmore/u-loadmore.js";
 if (!Math) {
-  (_easycom_u_search + _easycom_u_icon + _easycom_u_image + _easycom_u_loadmore)();
+  (_easycom_u_search + _easycom_u_icon + _easycom_comic_list + _easycom_u_loadmore)();
 }
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "search",
@@ -128,24 +128,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         url: `/pages/detail/detail?id=${id}`
       });
     };
-    const onComicPage = async (comic_id) => {
-      try {
-        const res = await api_index.api.getCartoonDetail(comic_id);
-        const { read, price, charge, name } = res.data;
-        const { data } = await api_index.api.getChapterList({
-          page: 1,
-          pageSize: 1,
-          comic_id
-        });
-        const chapter_id = `chapter_id=${data.data[0].chapter_id}`;
-        const params = `${chapter_id}&comic_id=${comic_id}&name=${name}&read=${read}&price=${price}&charge=${charge}`;
-        common_vendor.index.navigateTo({
-          url: `/pages/comic-page/comic-page?${params}`
-        });
-      } catch (e) {
-        console.log(e);
-      }
-    };
     const onRecord = (val) => {
       queryCartoon(val);
       state.isRequest = true;
@@ -222,48 +204,20 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           };
         }),
         n: state.isActive,
-        o: common_vendor.f(state.searchList, (item, k0, i0) => {
-          return {
-            a: "c10c040c-3-" + i0,
-            b: common_vendor.p({
-              width: "165rpx",
-              height: "225rpx",
-              src: item.cover_lateral
-            }),
-            c: common_vendor.o(($event) => onComicDetail(item.id), item.id),
-            d: common_vendor.t(item.name),
-            e: common_vendor.t(item.cartoon_introduction),
-            f: common_vendor.t(item.charge === 0 ? "免费" : "会员"),
-            g: common_vendor.t("¥" + item.price),
-            h: item.charge !== 0,
-            i: common_vendor.t(+item.read),
-            j: item.read !== 0,
-            k: common_vendor.o(($event) => onComicDetail(item.id), item.id),
-            l: "c10c040c-4-" + i0,
-            m: common_vendor.o(($event) => onComicPage(item.id), item.id),
-            n: item.id
-          };
+        o: common_vendor.p({
+          list: state.searchList
         }),
-        p: common_vendor.p({
-          name: "coupon",
-          ["label-pos"]: "bottom",
-          label: "速看",
-          ["label-color"]: "#ff7830",
-          ["label-size"]: "24",
-          color: "#ff7830",
-          size: "60"
-        }),
-        q: state.searchList.length,
-        r: common_vendor.o(onLoadMore),
-        s: common_vendor.p({
+        p: state.searchList.length,
+        q: common_vendor.o(onLoadMore),
+        r: common_vendor.p({
           status: status.value,
           ["font-size"]: "22",
           color: "#b4b4b4",
           ["margin-top"]: "20",
           ["load-text"]: state.loadText
         }),
-        t: state.isSearch && !state.isActive,
-        v: state.isSearch && !state.searchList.length
+        s: state.isSearch && !state.isActive,
+        t: state.isSearch && !state.searchList.length
       };
     };
   }

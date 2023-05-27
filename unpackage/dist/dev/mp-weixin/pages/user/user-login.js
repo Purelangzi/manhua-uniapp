@@ -53,24 +53,24 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const handleLogin = async () => {
       const { account, password } = common_vendor.toRefs(state.userForm);
       const option = regStatus.value ? api_index.api.userRegister(state.userForm) : api_index.api.userLogin({ account: account.value, password: password.value });
-      try {
-        const { data, msg } = await option;
-        if (!regStatus.value) {
-          userStore.$patch((state2) => {
-            state2.userInfo = data.userInfo;
-            state2.token = data.token;
-          });
-          common_vendor.index.switchTab({
-            url: "/pages/user/user"
-          });
-        } else {
-          state.isRegist = false;
-          loginFrom.value.resetFields();
-        }
+      const { code, data, msg } = await option;
+      if (code !== 200) {
         utils_showMsg.showMsg({ title: msg });
-      } catch (e) {
-        console.log(e);
+        return;
       }
+      if (!regStatus.value) {
+        userStore.$patch((state2) => {
+          state2.userInfo = data.userInfo;
+          state2.token = data.token;
+        });
+        common_vendor.index.switchTab({
+          url: "/pages/user/user"
+        });
+      } else {
+        state.isRegist = false;
+        loginFrom.value.resetFields();
+      }
+      utils_showMsg.showMsg({ title: msg });
     };
     const switchRegister = () => {
       loginFrom.value.resetFields();

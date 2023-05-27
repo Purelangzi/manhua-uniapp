@@ -11,13 +11,15 @@ if (!Array) {
   const _easycom_u_icon2 = common_vendor.resolveComponent("u-icon");
   const _easycom_u_swiper2 = common_vendor.resolveComponent("u-swiper");
   const _easycom_u_image2 = common_vendor.resolveComponent("u-image");
-  (_easycom_u_icon2 + _easycom_u_swiper2 + _easycom_u_image2)();
+  const _easycom_comic_box2 = common_vendor.resolveComponent("comic-box");
+  (_easycom_u_icon2 + _easycom_u_swiper2 + _easycom_u_image2 + _easycom_comic_box2)();
 }
 const _easycom_u_icon = () => "../../uni_modules/vk-uview-ui/components/u-icon/u-icon.js";
 const _easycom_u_swiper = () => "../../uni_modules/vk-uview-ui/components/u-swiper/u-swiper.js";
 const _easycom_u_image = () => "../../uni_modules/vk-uview-ui/components/u-image/u-image.js";
+const _easycom_comic_box = () => "../../components/comic-box/comic-box.js";
 if (!Math) {
-  (_easycom_u_icon + _easycom_u_swiper + _easycom_u_image)();
+  (_easycom_u_icon + _easycom_u_swiper + _easycom_u_image + _easycom_comic_box)();
 }
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "index",
@@ -58,11 +60,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const goSearchPage = () => {
       common_vendor.index.navigateTo({
         url: "/pages/search/search"
-      });
-    };
-    const goCartoonDetail = (id) => {
-      common_vendor.index.navigateTo({
-        url: `/pages/detail/detail?id=${id}`
       });
     };
     const scroll = (e) => {
@@ -111,20 +108,11 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         n: common_vendor.f(state.detailList, (detail, index, i0) => {
           return {
             a: common_vendor.t(detail.title),
-            b: common_vendor.f(detail.data, (item, k1, i1) => {
-              return {
-                a: "1cf27b2a-5-" + i0 + "-" + i1,
-                b: common_vendor.p({
-                  src: item.cover_lateral,
-                  height: "275rpx"
-                }),
-                c: common_vendor.t(item.name),
-                d: common_vendor.t(item.cartoon_introduction),
-                e: common_vendor.o(($event) => goCartoonDetail(item.id), item.id),
-                f: item.id
-              };
+            b: "1cf27b2a-5-" + i0,
+            c: common_vendor.p({
+              detail: detail.data
             }),
-            c: index
+            d: index
           };
         }),
         o: common_vendor.p({
@@ -133,8 +121,9 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           width: "70rpx",
           height: "70rpx"
         }),
-        p: common_vendor.o(scroll),
-        q: state.scrollTop
+        p: state.detailList.length,
+        q: common_vendor.o(scroll),
+        r: state.scrollTop
       };
     };
   }

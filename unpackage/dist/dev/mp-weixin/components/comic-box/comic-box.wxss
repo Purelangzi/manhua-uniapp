@@ -23,9 +23,36 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-.book-tabs.data-v-e0cf4858 {
-  border-bottom: 4rpx solid #eee;
+.box-detail.data-v-fb7bc7f4 {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
-.book-history.data-v-e0cf4858 {
-  margin: 0 20rpx;
+.box-detail .detail-item.data-v-fb7bc7f4 {
+  position: relative;
+  margin-bottom: 30rpx;
+  width: 30%;
+}
+.box-detail .detail-item .detail-vip.data-v-fb7bc7f4 {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40rpx;
+  height: 40rpx;
+  border-bottom-left-radius: 40%;
+  background-color: #f6caa8;
+}
+.box-detail .detail-item .detail-name.data-v-fb7bc7f4 {
+  margin-top: 10rpx;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.box-detail .detail-item .detail-introduction.data-v-fb7bc7f4 {
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: #999;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

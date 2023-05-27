@@ -4,7 +4,7 @@
   "usingComponents": {
     "u-search": "../../uni_modules/vk-uview-ui/components/u-search/u-search",
     "u-icon": "../../uni_modules/vk-uview-ui/components/u-icon/u-icon",
-    "u-image": "../../uni_modules/vk-uview-ui/components/u-image/u-image",
+    "comic-list": "../../components/comic-list/comic-list",
     "u-loadmore": "../../uni_modules/vk-uview-ui/components/u-loadmore/u-loadmore"
   }
 }
