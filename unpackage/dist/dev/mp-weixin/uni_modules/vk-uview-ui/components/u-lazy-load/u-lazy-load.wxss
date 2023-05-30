@@ -23,31 +23,13 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-.detail-item.data-v-fb7bc7f4 {
-  position: relative;
-  margin-bottom: 30rpx;
-  width: 30%;
-}
-.detail-item .detail-vip.data-v-fb7bc7f4 {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 40rpx;
-  height: 40rpx;
-  border-bottom-left-radius: 40%;
-  background-color: #f6caa8;
-}
-.detail-item .detail-name.data-v-fb7bc7f4 {
-  margin-top: 10rpx;
+.u-wrap.data-v-974af813 {
+  background-color: #eee;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
-.detail-item .detail-introduction.data-v-fb7bc7f4 {
-  margin-top: 6rpx;
-  font-size: 24rpx;
-  color: #999;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.u-lazy-item.data-v-974af813 {
+  width: 100%;
+  transform: transition3d(0, 0, 0);
+  will-change: transform;
+  display: block;
 }

@@ -91,6 +91,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           height: "450"
         }),
         k: common_vendor.p({
+          ["lazy-load"]: "true",
           src: "https://static.mkzcdn.com/mobile/img/pic_index_gx.png",
           width: "100%",
           height: "100%"

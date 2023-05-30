@@ -26,40 +26,34 @@
 </script>
 
 <style lang="scss" scoped>
-	.box-detail {
-		display: flex;
-		justify-content: space-between;
-		flex-wrap: wrap;
-
-		.detail-item{
-			position: relative;
-			margin-bottom: 30rpx;
-			width: calc(90% / 3);
-			.detail-vip{
-				position: absolute;
-				top: 0;
-				right: 0;
-				width: 40rpx;
-				height: 40rpx;
-				border-bottom-left-radius: 40%;
-				background-color: #f6caa8;
-				
-			}
-			.detail-name{
-				margin-top: 10rpx;
-				overflow: hidden;
-				white-space: nowrap;
-				text-overflow: ellipsis;
-				
-			}
-			.detail-introduction{
-				margin-top: 6rpx;
-				font-size: 24rpx;
-				color: $uni-text-color-grey;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-			}
-		}
+.detail-item{
+	position: relative;
+	margin-bottom: 30rpx;
+	width: calc(90% / 3);
+	.detail-vip{
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 40rpx;
+		height: 40rpx;
+		border-bottom-left-radius: 40%;
+		background-color: #f6caa8;
+		
 	}
+	.detail-name{
+		margin-top: 10rpx;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		
+	}
+	.detail-introduction{
+		margin-top: 6rpx;
+		font-size: 24rpx;
+		color: $uni-text-color-grey;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+}
 </style>

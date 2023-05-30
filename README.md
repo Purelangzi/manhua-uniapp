@@ -1,2 +1,2 @@
-# 仿漫客栈小程序
+# 爱看漫画uniapp
 uniapp + vue3 + ts + pinia + uView 

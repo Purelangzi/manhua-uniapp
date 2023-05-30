@@ -5,11 +5,9 @@ const stores_user = require("../stores/user.js");
 const utils_showMsg = require("./showMsg.js");
 const userStore = stores_user.useUser();
 const wxLogin = () => {
-  console.log(1);
   common_vendor.index.getUserProfile({
     desc: "获取用户个人信息",
     success: async (infoRes) => {
-      console.log(2);
       const { avatarUrl, nickName } = infoRes.userInfo;
       const codeWx = await getWxCode();
       const params = {
@@ -65,7 +63,7 @@ const refreshWxLogin = () => {
           username: userStore.userInfo.username,
           code: res.code
         };
-        const { data } = await userWxLogin(params);
+        const { data } = await api_index.api.userWxLogin(params);
         userStore.token = data.token;
         console.log("微信登录过期,无感刷新token");
         reslove(true);

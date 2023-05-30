@@ -17,7 +17,7 @@
 				<view class="main">
 					<view class="main-nav">
 						<view class="nav-item">
-							<u-image class="u-skeleton-circle" src="https://static.mkzcdn.com/mobile/img/pic_index_gx.png" width="100%" height="100%"></u-image>
+							<u-image lazy-load="true" class="u-skeleton-circle" src="https://static.mkzcdn.com/mobile/img/pic_index_gx.png" width="100%" height="100%"></u-image>
 						</view>
 						<view class="nav-item">
 							<u-image class="u-skeleton-circle" src="https://static.mkzcdn.com/mobile/img/pic_index_ph.png" width="100%" height="100%"></u-image>
@@ -110,11 +110,7 @@
 			url:'/pages/search/search'
 		})
 	}
-	const goCartoonDetail = (id : number) => {
-		uni.navigateTo({
-			url: `/pages/detail/detail?id=${id}`,
-		})
-	}
+
 	// 微信小程序自带滚动条，不用赋值scrollTop，从而解决微信小程序滚动回弹Bug
 	const scroll = (e:any) =>{
 		// #ifndef MP-WEIXIN

@@ -49,7 +49,7 @@ const request = async (options) => {
             break;
           case 401:
             if (!userStore.userInfo.session_key) {
-              utils_showMsg.showMsg({ title: "登录过期（token过期）", icon: "error", duration: 3e3 });
+              utils_showMsg.showMsg({ title: "登录过期", icon: "error", duration: 3e3 });
               userStore.logOut();
               reject(res.data);
             } else {
@@ -59,7 +59,6 @@ const request = async (options) => {
                 utils_wxLogin.refreshWxLogin().then(() => {
                   resolve(request(options));
                   if (!requests.length) {
-                    console.log("ddddd");
                     requests.map((cb) => cb());
                     requests = [];
                   }

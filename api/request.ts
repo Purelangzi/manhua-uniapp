@@ -62,13 +62,13 @@ const request = async(options : ReqParams) : Promise<any> => {
 						
 					case 401:
 						// #ifndef MP-WEIXIN
-						showMsg({ title: '登录过期（token过期）', icon: 'error', duration: 3000 })
+						showMsg({ title: '登录过期', icon: 'error', duration: 3000 })
 						userStore.logOut()
 						reject(res.data)
 						// #endif
 						// #ifdef MP-WEIXIN
 						if(!userStore.userInfo.session_key){
-							showMsg({ title: '登录过期（token过期）', icon: 'error', duration: 3000 })
+							showMsg({ title: '登录过期', icon: 'error', duration: 3000 })
 							userStore.logOut()
 							reject(res.data)
 						}else{
@@ -80,7 +80,6 @@ const request = async(options : ReqParams) : Promise<any> => {
 									resolve(request(options))
 									// token 刷新后将数组的方法重新执行
 									if(!requests.length){
-										console.log('ddddd');
 										requests.map((cb) => cb())
 										requests = []  // 清空请求队列
 									}
