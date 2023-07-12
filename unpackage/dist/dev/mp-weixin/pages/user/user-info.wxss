@@ -43,7 +43,7 @@
   padding-bottom: 8rpx;
   border-bottom: 4rpx solid #eee;
 }
-.user-center .update-popup .update-form .update-input.data-v-5e1741c8 .u-input__input {
+.user-center .update-popup .update-form .update-input.data-v-5e1741c8 .uni-input-input {
   padding-bottom: 8rpx;
   border-bottom: 4rpx solid #eee;
 }

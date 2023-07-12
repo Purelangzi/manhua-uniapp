@@ -11,15 +11,20 @@
 				:value="userInfo[col.key] || '未设置'" 
 				@click="openUpdatePopup(col.title,col.key,col.type as string)">
 			</u-cell-item>
-			
-			<!-- <u-cell-item title="昵称" :value="userInfo.username?userInfo.username:'未设置'" @click="openUpdatePopup('昵称',userInfo.username)"></u-cell-item>
-			<u-cell-item title="手机号" :value="userInfo.phone?userInfo.phone:'未设置'" @click="openUpdatePopup('手机号',userInfo.phone)"></u-cell-item>
-			<u-cell-item title="密码" :value="userInfo.password?userInfo.password:'未设置'" @click="openUpdatePopup('密码',userInfo.password,'password')"></u-cell-item>
-			<u-cell-item title="邮箱" :value="userInfo.email?userInfo.email:'未设置'" @click="openUpdatePopup('邮箱',userInfo.email)" ></u-cell-item> -->
 		</u-cell-group>
-		<view class="logOut" v-if="userInfo.username" border-radius="20">
+		<view class="logOut" border-radius="20">
 			<u-button :ripple="true" @click="handleLogOut">退出登录</u-button>
 		</view>
+		<!-- <uni-popup ref="popup" type="bottom">
+			<view class="update-title">{{state.title}}</view>
+			<view class="update-form">
+				<u-input class="update-input" v-model="updateVal" :type="iType" :placeholder="place" />
+			</view>
+			<view class="update-btn">
+				<u-button shape="circle" @click="state.show = false">取消</u-button>
+				<u-button shape="circle" type="error" @click="handleUpdateUser()">确认</u-button>
+			</view>
+		</uni-popup> -->
 		<u-popup v-model="state.show" mode="bottom" class="update-popup" :closeable="true" @close="closePopup">
 			<view class="update-title">{{state.title}}</view>
 			<view class="update-form">
@@ -48,6 +53,7 @@
 	
 	const UPLOAD_URL = 'http://127.0.0.1:7001/api/ali/uploadFile';
 	const userStore = useUser()
+	// const popup = ref(null)
 	const state = reactive({
 		inputModel:{
 			updateKey:'',
@@ -70,11 +76,10 @@
 		
 	})
 	onShow(() => {
+		
 	})
 	onMounted(() => {
-
 	})
-
 	const handleLogOut = () => {
 		userStore.logOut()
 		showMsg({title:'退出成功'})
@@ -92,6 +97,7 @@
 			iType.value = type
 		}
 		state.show = true
+		// popup.value.open('button')
 	}
 
 	const handleUpdateUser = async() =>{
@@ -222,6 +228,11 @@
 </script>
 
 <style lang="scss" scoped>
+	/* #ifdef MP-WEIXIN */
+	// :deep(.u-drawer){
+	// 	display: none !important;
+	// }
+	/* #endif */
 	.user-center {
 		.logOut {
 			margin-top: 80rpx;
@@ -232,6 +243,8 @@
 			}
 		
 		}
+		
+		
 		.update-popup{
 			:deep(.u-drawer-content) {
 				padding: 25rpx 25rpx;
@@ -249,7 +262,7 @@
 						border-bottom: 4rpx solid #eee;
 					}
 					/* #ifdef MP-WEIXIN */
-					:deep(.u-input__input) {
+					:deep(.uni-input-input) {
 						padding-bottom: 8rpx;
 						border-bottom: 4rpx solid #eee;
 					}

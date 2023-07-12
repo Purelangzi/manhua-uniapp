@@ -165,7 +165,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       return true;
     };
     return (_ctx, _cache) => {
-      return common_vendor.e({
+      return {
         a: common_vendor.o(handleOnAvatar),
         b: common_vendor.p({
           src: common_vendor.unref(userInfo).avatar,
@@ -185,37 +185,34 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             })
           };
         }),
-        e: common_vendor.unref(userInfo).username
-      }, common_vendor.unref(userInfo).username ? {
-        f: common_vendor.o(handleLogOut),
-        g: common_vendor.p({
+        e: common_vendor.o(handleLogOut),
+        f: common_vendor.p({
           ripple: true
-        })
-      } : {}, {
-        h: common_vendor.t(state.title),
-        i: common_vendor.o(($event) => common_vendor.isRef(updateVal) ? updateVal.value = $event : null),
-        j: common_vendor.p({
+        }),
+        g: common_vendor.t(state.title),
+        h: common_vendor.o(($event) => common_vendor.isRef(updateVal) ? updateVal.value = $event : null),
+        i: common_vendor.p({
           type: common_vendor.unref(iType),
           placeholder: common_vendor.unref(place),
           modelValue: common_vendor.unref(updateVal)
         }),
-        k: common_vendor.o(($event) => state.show = false),
-        l: common_vendor.p({
+        j: common_vendor.o(($event) => state.show = false),
+        k: common_vendor.p({
           shape: "circle"
         }),
-        m: common_vendor.o(($event) => handleUpdateUser()),
-        n: common_vendor.p({
+        l: common_vendor.o(($event) => handleUpdateUser()),
+        m: common_vendor.p({
           shape: "circle",
           type: "error"
         }),
-        o: common_vendor.o(closePopup),
-        p: common_vendor.o(($event) => state.show = $event),
-        q: common_vendor.p({
+        n: common_vendor.o(closePopup),
+        o: common_vendor.o(($event) => state.show = $event),
+        p: common_vendor.p({
           mode: "bottom",
           closeable: true,
           modelValue: state.show
         })
-      });
+      };
     };
   }
 });

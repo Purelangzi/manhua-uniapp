@@ -7,9 +7,15 @@
 		</view>
 		<view class="cateogry-main">
 			
+			<!-- #ifndef MP-WEIXIN -->
 			<view class="box-detail">
 				<comic-box :detail="state.cartoonList"></comic-box>
 			</view>
+			<!-- #endif -->
+			<!-- #ifdef MP-WEIXIN -->
+			<comic-box :detail="state.cartoonList"></comic-box>
+			<!-- #endif -->
+			
 			<u-loadmore :status="status" font-size="22"
 				color="#b4b4b4" margin-top="20" margin-bottom="20" :load-text="state.loadText" @loadmore="onLoadMore" />
 		</view>
@@ -109,11 +115,21 @@
 }
 .cateogry-main{
 	margin-top: 20rpx;
+	/* #ifndef MP-WEIXIN */
 	.box-detail{
 		margin: 0 20rpx;
 		display: flex;
 		justify-content: space-between;
 		flex-wrap: wrap;
 	}
+	/* #endif */
+	/* #ifdef MP-WEIXIN */
+	comic-box{
+		margin: 0 20rpx;
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+	}
+	/* #endif */
 }
 </style>

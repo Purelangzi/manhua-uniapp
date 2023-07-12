@@ -100,7 +100,7 @@
   font-size: 12px;
   color: #b4b4b4;
 }
-.swiper-content .main .main-box .box-detail.data-v-1cf27b2a {
+.swiper-content .main .main-box comic-box.data-v-1cf27b2a {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;

@@ -42,7 +42,7 @@
 .cateogry-main {
   margin-top: 20rpx;
 }
-.cateogry-main .box-detail {
+.cateogry-main comic-box {
   margin: 0 20rpx;
   display: flex;
   justify-content: space-between;

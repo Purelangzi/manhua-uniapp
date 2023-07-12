@@ -37,10 +37,17 @@
 							</view>
 							<view class="title-right">更多 ></view>
 						</view>
+						
+						<!-- #ifndef MP-WEIXIN -->
 						<view class="box-detail">
 							<comic-box :detail="detail.data"></comic-box>
-							
 						</view>
+						<!-- #endif -->
+						
+						<!-- #ifdef MP-WEIXIN -->
+						<comic-box :detail="detail.data"></comic-box>
+						<!-- #endif -->
+						
 					</view>
 					<view class="footer" v-show="state.detailList.length">
 						<view class="footer-title">我是有底线的</view>
@@ -215,12 +222,22 @@
 					color: #b4b4b4;
 				}
 			}
+			/* #ifndef MP-WEIXIN */
 			.box-detail{
 				display: flex;
 				justify-content: space-between;
 				flex-wrap: wrap;
-				
 			}
+			/* #endif */
+			/* #ifdef MP-WEIXIN */
+			
+			comic-box{
+				display: flex;
+				justify-content: space-between;
+				flex-wrap: wrap;
+			}
+			/* #endif */
+			
 		}
 		.footer{
 			padding-top: 10rpx;
